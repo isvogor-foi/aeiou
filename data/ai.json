@@ -1,0 +1,345 @@
+{
+	"_comment": "Computer opponent tuning. Times are in seconds. Arrays indexed by age (1..6) are 0-based here (index 0 = Age 1).",
+	"difficulties": {
+		"easy": {
+			"name": "Easy",
+			"think_interval": 1.5,
+			"handicap": 1.0,
+			"omniscient": false,
+			"max_workers": 20,
+			"army_cap": 24,
+			"wave_scale": 0.6,
+			"first_wave_scale": 1.5,
+			"wave_interval_scale": 1.4
+		},
+		"normal": {
+			"name": "Normal",
+			"think_interval": 0.75,
+			"handicap": 1.0,
+			"omniscient": false,
+			"max_workers": 32,
+			"army_cap": 45,
+			"wave_scale": 1.0,
+			"first_wave_scale": 1.0,
+			"wave_interval_scale": 1.0
+		},
+		"hard": {
+			"name": "Hard",
+			"think_interval": 0.4,
+			"handicap": 1.25,
+			"omniscient": true,
+			"max_workers": 40,
+			"army_cap": 60,
+			"wave_scale": 1.3,
+			"first_wave_scale": 0.8,
+			"wave_interval_scale": 0.8
+		}
+	},
+	"_comment_est": "Rough income per worker per second, used to spread workers to fill each gather cap.",
+	"est_worker_rate": {
+		"gold": 0.45,
+		"timber": 0.4,
+		"herbs": 0.5,
+		"mana": 0.22,
+		"coal": 0.35
+	},
+	"personalities": {
+		"covenant": {
+			"name": "Raider",
+			"workers": [
+				16,
+				20,
+				24,
+				28,
+				30,
+				32
+			],
+			"age_up_workers": [
+				12,
+				18,
+				24,
+				26,
+				28
+			],
+			"expand_workers": [
+				16,
+				24,
+				30,
+				34,
+				36,
+				38
+			],
+			"military_buildings": [
+				1,
+				2,
+				2,
+				3,
+				3,
+				3
+			],
+			"library_at_workers": 14,
+			"army_mix": {
+				"reaver": 0.3,
+				"hexcaster": 0.12,
+				"bonebow": 0.17,
+				"necromancer": 0.1,
+				"grave_brute": 0.15,
+				"bat_swarm": 0.06,
+				"bone_drake": 0.06,
+				"warship": 0.04,
+				"vampire": 0.08,
+				"bone_golem": 0.06,
+				"wraith": 0.05,
+				"abomination": 0.06,
+				"ghoul_rider": 0.06,
+				"plague_catapult": 0.04,
+				"shadow_wyrm": 0.04,
+				"lich": 0.04,
+				"ghost_ship": 0.02,
+				"bone_colossus": 0.03
+			},
+			"first_wave": 300,
+			"wave_interval": 150,
+			"wave_base": 6,
+			"wave_growth": 3,
+			"retreat_below": 0.3,
+			"research": [
+				[
+					"military",
+					1
+				],
+				[
+					"charms",
+					1
+				],
+				[
+					"defense",
+					1
+				],
+				[
+					"military",
+					2
+				],
+				[
+					"charms",
+					2
+				],
+				[
+					"potions",
+					1
+				],
+				[
+					"military",
+					3
+				],
+				[
+					"charms",
+					3
+				],
+				[
+					"defense",
+					2
+				],
+				[
+					"potions",
+					2
+				]
+			],
+			"extra_buildings": [
+				[
+					"bone_range",
+					2
+				],
+				[
+					"ossuary",
+					2
+				],
+				[
+					"roost",
+					2
+				],
+				[
+					"bone_spire",
+					2
+				],
+				[
+					"docks",
+					2
+				],
+				[
+					"charnel_works",
+					4
+				],
+				[
+					"great_ossuary",
+					5
+				],
+				[
+					"obsidian_spire",
+					5
+				]
+			],
+			"crown_land_order": [
+				"blood",
+				"shadow",
+				"bone"
+			],
+			"hero": "blood_countess"
+		},
+		"monarchy": {
+			"name": "Boomer",
+			"workers": [
+				18,
+				24,
+				28,
+				32,
+				34,
+				36
+			],
+			"age_up_workers": [
+				12,
+				16,
+				22,
+				26,
+				28
+			],
+			"expand_workers": [
+				14,
+				20,
+				26,
+				32,
+				34,
+				36
+			],
+			"military_buildings": [
+				1,
+				1,
+				2,
+				2,
+				3,
+				3
+			],
+			"library_at_workers": 10,
+			"army_mix": {
+				"grenadier": 0.18,
+				"musketeer": 0.12,
+				"jaeger": 0.14,
+				"standschuetze": 0.12,
+				"field_alchemist": 0.1,
+				"kuerassier": 0.16,
+				"kress_flyer": 0.05,
+				"double_eagle": 0.07,
+				"warship": 0.04,
+				"war_wagon": 0.02,
+				"hussar": 0.07,
+				"steam_walker": 0.07,
+				"skoda_mortar": 0.04,
+				"kaiserjaeger": 0.06,
+				"aethership": 0.03,
+				"ironclad": 0.02,
+				"aether_colossus": 0.03
+			},
+			"first_wave": 480,
+			"wave_interval": 200,
+			"wave_base": 10,
+			"wave_growth": 4,
+			"retreat_below": 0.35,
+			"research": [
+				[
+					"charms",
+					1
+				],
+				[
+					"defense",
+					1
+				],
+				[
+					"charms",
+					2
+				],
+				[
+					"potions",
+					1
+				],
+				[
+					"military",
+					1
+				],
+				[
+					"defense",
+					2
+				],
+				[
+					"charms",
+					3
+				],
+				[
+					"military",
+					2
+				],
+				[
+					"potions",
+					2
+				],
+				[
+					"defense",
+					3
+				]
+			],
+			"extra_buildings": [
+				[
+					"schiessstand",
+					2
+				],
+				[
+					"laboratorium",
+					2
+				],
+				[
+					"adlerhorst",
+					2
+				],
+				[
+					"festungsturm",
+					2
+				],
+				[
+					"docks",
+					2
+				],
+				[
+					"fabrik",
+					4
+				],
+				[
+					"orloj",
+					4
+				],
+				[
+					"hofburg_treasury",
+					5
+				],
+				[
+					"pummerin",
+					5
+				],
+				[
+					"semmering",
+					5
+				]
+			],
+			"crown_land_order": [
+				"croatia",
+				"bohemia",
+				"tyrol",
+				"hungary"
+			],
+			"militia_share": 0.4,
+			"hero": "prince_eugene"
+		}
+	},
+	"_comment_extra": "extra_buildings: [building, from age]; each is built once the age is reached.",
+	"skiffs_per_docks": 3,
+	"_comment_coal": "Coal is only gathered from Age 4 (see coal_from_age).",
+	"coal_from_age": 4
+}

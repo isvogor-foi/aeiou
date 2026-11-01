@@ -1,0 +1,110 @@
+{
+	"_comment": "Crown lands (Monarchy) and Dark Pacts (Covenant). The capital land is assigned to the starting city; every other city can take one land of its faction (each only once). A land unlocks its units and adds its bonus (research-style modifiers).",
+	"austria": {
+		"name": "Archduchy of Austria",
+		"capital": true,
+		"description": "The heartland around Vienna.",
+		"mods": {},
+		"flag": "empire",
+		"faction": "monarchy"
+	},
+	"croatia": {
+		"name": "Kingdom of Croatia-Slavonia",
+		"hotkey": "Z",
+		"description": "The Military Frontier. Unlocks the Grenzer; invaders suffer more attrition in your land.",
+		"units": [
+			"grenzer"
+		],
+		"mods": {
+			"attrition": 0.004
+		},
+		"flag": "croatia",
+		"faction": "monarchy"
+	},
+	"bohemia": {
+		"name": "Kingdom of Bohemia",
+		"hotkey": "X",
+		"description": "Hussite wagon forts and Kutná Hora silver. Unlocks the War Wagon; +0.5/s Thaler cap.",
+		"units": [
+			"war_wagon"
+		],
+		"mods": {
+			"cap_gold": 0.5
+		},
+		"flag": "bohemia",
+		"faction": "monarchy"
+	},
+	"tyrol": {
+		"name": "County of Tyrol",
+		"hotkey": "C",
+		"description": "Alpine marksmen and forests. Unlocks the Standschütze; +0.5/s Timber cap.",
+		"units": [
+			"standschuetze"
+		],
+		"mods": {
+			"cap_timber": 0.5
+		},
+		"flag": "tyrol",
+		"faction": "monarchy"
+	},
+	"hungary": {
+		"name": "Kingdom of Hungary",
+		"hotkey": "V",
+		"flag": "hungary",
+		"description": "The Pannonian plains: grain and horses. Unlocks the Hussar; +0.5/s Provisions cap.",
+		"units": [
+			"hussar"
+		],
+		"mods": {
+			"cap_herbs": 0.5
+		},
+		"faction": "monarchy"
+	},
+	"throne": {
+		"name": "Umbral Throne",
+		"faction": "covenant",
+		"capital": true,
+		"flag": "throne",
+		"description": "The seat of the Covenant.",
+		"mods": {}
+	},
+	"blood": {
+		"name": "Blood Pact",
+		"faction": "covenant",
+		"hotkey": "Z",
+		"flag": "blood",
+		"description": "Unlocks the Vampire; +5% military damage.",
+		"units": [
+			"vampire"
+		],
+		"mods": {
+			"damage": 0.05
+		}
+	},
+	"bone": {
+		"name": "Bone Pact",
+		"faction": "covenant",
+		"hotkey": "X",
+		"flag": "bone",
+		"description": "Unlocks the Bone Golem; +10% military HP.",
+		"units": [
+			"bone_golem"
+		],
+		"mods": {
+			"unit_hp": 0.1
+		}
+	},
+	"shadow": {
+		"name": "Shadow Pact",
+		"faction": "covenant",
+		"hotkey": "C",
+		"flag": "shadow",
+		"description": "Unlocks the Wraith; invaders suffer more attrition in your land.",
+		"units": [
+			"wraith"
+		],
+		"mods": {
+			"attrition": 0.004
+		}
+	}
+}

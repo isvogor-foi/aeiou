@@ -1,0 +1,97 @@
+{
+	"_comment": "gather_rate is units per second per worker. amount -1 means inexhaustible. 'forest' describes forest tiles, not an entity.",
+	"gold_mine": {
+		"name": "Gold Mine",
+		"resource": "gold",
+		"amount": 4000,
+		"size": 2,
+		"gather_rate": 0.8
+	},
+	"herb_patch": {
+		"name": "Herb Patch",
+		"resource": "herbs",
+		"amount": 1500,
+		"size": 2,
+		"gather_rate": 0.9
+	},
+	"ley_node": {
+		"name": "Ley Node",
+		"resource": "mana",
+		"amount": -1,
+		"size": 2,
+		"gather_rate": 0.35
+	},
+	"forest": {
+		"name": "Forest",
+		"resource": "timber",
+		"amount": 100,
+		"size": 1,
+		"gather_rate": 0.7
+	},
+	"fish": {
+		"name": "Fish Shoal",
+		"resource": "herbs",
+		"amount": 2500,
+		"size": 1,
+		"gather_rate": 0.8,
+		"domain": "naval",
+		"blocking": false
+	},
+	"coal_seam": {
+		"name": "Coal Seam",
+		"resource": "coal",
+		"amount": 5000,
+		"size": 2,
+		"gather_rate": 0.6
+	},
+	"relic_crown": {
+		"name": "Imperial Crown",
+		"description": "The private crown of Rudolf II, made in Prague in 1602.",
+		"relic": true,
+		"size": 1,
+		"blocking": false,
+		"resource": "relic",
+		"amount": -1,
+		"gather_rate": 0
+	},
+	"relic_lance": {
+		"name": "Holy Lance",
+		"description": "The Spear of Destiny from the Vienna treasury.",
+		"relic": true,
+		"size": 1,
+		"blocking": false,
+		"resource": "relic",
+		"amount": -1,
+		"gather_rate": 0
+	},
+	"relic_bowl": {
+		"name": "Agate Bowl",
+		"description": "Carved from one stone; long believed to be the Holy Grail.",
+		"relic": true,
+		"size": 1,
+		"blocking": false,
+		"resource": "relic",
+		"amount": -1,
+		"gather_rate": 0
+	},
+	"relic_horn": {
+		"name": "Unicorn Horn",
+		"description": "The 'Ainkhürn' - really a narwhal tusk, once worth a kingdom.",
+		"relic": true,
+		"size": 1,
+		"blocking": false,
+		"resource": "relic",
+		"amount": -1,
+		"gather_rate": 0
+	},
+	"relic_orb": {
+		"name": "Imperial Orb",
+		"description": "The golden globe of imperial rule.",
+		"relic": true,
+		"size": 1,
+		"blocking": false,
+		"resource": "relic",
+		"amount": -1,
+		"gather_rate": 0
+	}
+}

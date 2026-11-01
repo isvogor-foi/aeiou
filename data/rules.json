@@ -1,0 +1,162 @@
+{
+	"_comment_pop": "Base population ceiling; Transfiguration research raises it.",
+	"pop_limit": 50,
+	"_comment_caps": "Gather caps: max resource income per second per player, before research.",
+	"gather_caps": {
+		"gold": 2.5,
+		"timber": 2.5,
+		"herbs": 3.5,
+		"mana": 0.8,
+		"coal": 1.5
+	},
+	"_comment_attrition": "Fraction of max HP lost per second inside enemy territory, before research.",
+	"attrition": 0.01,
+	"city_min_distance": 12,
+	"capture_radius": 8,
+	"capture_hp": 0.25,
+	"_comment_fog": "true: once explored, a tile stays fully visible (no grey fog of war, only the black shroud).",
+	"explored_stays_visible": true,
+	"carry": 10,
+	"queue_limit": 5,
+	"map_size": 96,
+	"start_resources": {
+		"gold": 200,
+		"timber": 250,
+		"herbs": 250,
+		"mana": 50,
+		"coal": 0
+	},
+	"player_colors": [
+		[
+			0.25,
+			0.5,
+			1.0
+		],
+		[
+			0.9,
+			0.22,
+			0.2
+		],
+		[
+			0.95,
+			0.8,
+			0.2
+		],
+		[
+			0.3,
+			0.8,
+			0.35
+		]
+	],
+	"resource_colors": {
+		"gold": [
+			1.0,
+			0.82,
+			0.25
+		],
+		"timber": [
+			0.55,
+			0.35,
+			0.15
+		],
+		"herbs": [
+			0.45,
+			0.85,
+			0.35
+		],
+		"mana": [
+			0.45,
+			0.85,
+			1.0
+		],
+		"coal": [
+			0.35,
+			0.35,
+			0.38
+		],
+		"relic": [
+			1.0,
+			0.95,
+			0.6
+		]
+	},
+	"resource_names": {
+		"gold": "Thaler",
+		"timber": "Timber",
+		"herbs": "Provisions",
+		"mana": "Aether",
+		"coal": "Coal"
+	},
+	"victory": {
+		"_comment": "Alternative ways to win (conquest always applies).",
+		"territory_share": 0.7,
+		"territory_hold": 300,
+		"wonders_needed": 3,
+		"wonder_hold": 300,
+		"relic_hold": 180,
+		"relics_spawn_age": 5,
+		"enabled": {
+			"territory": true,
+			"wonders": true,
+			"relics": true
+		}
+	},
+	"loyalty": {
+		"_comment": "City loyalty (Dread for the Covenant), 0-100, updated once a second. It drifts toward a target built from the factors below; enemy troops inside the city's borders drain it directly. At 0 the city revolts to the Rebels.",
+		"base": 85,
+		"drift": 1.0,
+		"start_captured": 40,
+		"distance_free": 20,
+		"per_tile_far": 0.8,
+		"max_distance_penalty": 30,
+		"over_limit": 15,
+		"recent_capture": 25,
+		"recent_capture_time": 180,
+		"weariness_per_loss": 0.5,
+		"max_weariness": 20,
+		"weariness_decay": 0.02,
+		"garrison_radius": 6,
+		"max_garrison": 15,
+		"culture_radius": 10,
+		"library": 8,
+		"wonder": 15,
+		"hero_radius": 8,
+		"hero": 15,
+		"peace": 5,
+		"peace_time": 120,
+		"enemy_drain": 0.5,
+		"max_enemy_drain": 5,
+		"warning": 25,
+		"rebel_militia": 4,
+		"charter_age": 5,
+		"charter_floor": 50,
+		"charter_land_bonus": 0.5,
+		"charter_income": -0.2,
+		"charter_lock": 180,
+		"tithe_gain": 25,
+		"tithe_cooldown": 60,
+		"tithe_radius": 6
+	},
+	"skirmish": {
+		"_comment": "Choices on the skirmish screen.",
+		"map_sizes": {
+			"small": 64,
+			"normal": 96,
+			"large": 128
+		},
+		"resources": {
+			"standard": 1.0,
+			"high": 4.0,
+			"deathmatch": 80.0
+		}
+	},
+	"borders": {
+		"_comment": "Every completed building claims land around itself, so borders grow as you build. Cities also grow their own radius with each building nearby.",
+		"building": 3.0,
+		"tower": 5.0,
+		"wonder": 6.0,
+		"city_growth_per_building": 0.25,
+		"city_growth_max": 3.0,
+		"city_growth_reach": 3.0
+	}
+}

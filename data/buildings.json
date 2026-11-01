@@ -1,0 +1,693 @@
+{
+	"residenz": {
+		"name": "Residenz",
+		"faction": "monarchy",
+		"role": "city",
+		"description": "A city. Projects borders, trains Settlers, advances the age. Captured rather than destroyed.",
+		"size": 4,
+		"hp": 1500,
+		"armor": "structure",
+		"sight": 10,
+		"pop_provided": 15,
+		"border_radius": 8,
+		"dropoff": [
+			"gold",
+			"timber",
+			"herbs",
+			"mana",
+			"coal"
+		],
+		"trains": [
+			"settler",
+			"grenzer",
+			"rudolf",
+			"prince_eugene",
+			"maria_theresa"
+		],
+		"advances_age": true,
+		"damage": 8,
+		"dtype": "arcane",
+		"range": 7,
+		"cooldown": 2.0,
+		"cost": {
+			"timber": 200,
+			"gold": 100,
+			"herbs": 100
+		},
+		"build_time": 60,
+		"age": 1,
+		"buildable": true,
+		"hotkey": "C",
+		"glyph": "H"
+	},
+	"citadel": {
+		"name": "Dark Citadel",
+		"faction": "covenant",
+		"role": "city",
+		"description": "A city. Projects borders, trains Thralls, advances the age. Captured rather than destroyed.",
+		"size": 4,
+		"hp": 1500,
+		"armor": "structure",
+		"sight": 10,
+		"pop_provided": 15,
+		"border_radius": 8,
+		"dropoff": [
+			"gold",
+			"timber",
+			"herbs",
+			"mana",
+			"coal"
+		],
+		"trains": [
+			"thrall",
+			"shadow_sovereign",
+			"blood_countess",
+			"bone_herald"
+		],
+		"advances_age": true,
+		"damage": 8,
+		"dtype": "curse",
+		"range": 7,
+		"cooldown": 2.0,
+		"cost": {
+			"timber": 200,
+			"gold": 100,
+			"herbs": 100
+		},
+		"build_time": 60,
+		"age": 1,
+		"buildable": true,
+		"hotkey": "C",
+		"glyph": "C"
+	},
+	"dwelling": {
+		"faction": "any",
+		"names": {
+			"monarchy": "Bürgerhaus",
+			"covenant": "Hovel"
+		},
+		"name": "Dwelling",
+		"description": "Houses your people. +10 population.",
+		"size": 2,
+		"hp": 400,
+		"armor": "structure",
+		"sight": 4,
+		"pop_provided": 10,
+		"cost": {
+			"timber": 60
+		},
+		"build_time": 20,
+		"buildable": true,
+		"hotkey": "E",
+		"glyph": "D"
+	},
+	"storehouse": {
+		"faction": "any",
+		"names": {
+			"monarchy": "Magazin",
+			"covenant": "Hoard"
+		},
+		"name": "Storehouse",
+		"description": "Drop-off point for all resources.",
+		"size": 2,
+		"hp": 500,
+		"armor": "structure",
+		"sight": 5,
+		"dropoff": [
+			"gold",
+			"timber",
+			"herbs",
+			"mana",
+			"coal"
+		],
+		"cost": {
+			"timber": 80
+		},
+		"build_time": 25,
+		"buildable": true,
+		"hotkey": "R",
+		"glyph": "S"
+	},
+	"kaserne": {
+		"name": "Kaserne",
+		"faction": "monarchy",
+		"role": "military",
+		"description": "Barracks. Trains Grenadiers, Aether Musketeers, Tross Wagons, (Bohemia) War Wagons and (Age 3) Kürassiers.",
+		"size": 3,
+		"hp": 900,
+		"armor": "structure",
+		"sight": 5,
+		"trains": [
+			"grenadier",
+			"musketeer",
+			"tross_wagon",
+			"kuerassier",
+			"war_wagon",
+			"hussar"
+		],
+		"cost": {
+			"timber": 120,
+			"gold": 40
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "B",
+		"glyph": "B",
+		"research": [
+			"drill"
+		]
+	},
+	"blood_pit": {
+		"name": "Blood Pit",
+		"faction": "covenant",
+		"role": "military",
+		"description": "Trains Reavers, Hexcasters, Bone Carts and (Age 3) Grave Brutes.",
+		"size": 3,
+		"hp": 900,
+		"armor": "structure",
+		"sight": 5,
+		"trains": [
+			"reaver",
+			"hexcaster",
+			"bone_cart",
+			"grave_brute",
+			"abomination",
+			"ghoul_rider",
+			"vampire",
+			"bone_golem"
+		],
+		"cost": {
+			"timber": 120,
+			"gold": 40
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "B",
+		"glyph": "P",
+		"research": [
+			"flesh_craft"
+		]
+	},
+	"library": {
+		"faction": "any",
+		"names": {
+			"monarchy": "Hofbibliothek",
+			"covenant": "Black Archive"
+		},
+		"name": "Library",
+		"description": "Researches Charms, Defense, Transfiguration and Potions.",
+		"size": 3,
+		"hp": 700,
+		"armor": "structure",
+		"sight": 5,
+		"research": [
+			"charms",
+			"defense",
+			"potions"
+		],
+		"cost": {
+			"timber": 120,
+			"gold": 30
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "L",
+		"glyph": "L"
+	},
+	"garden": {
+		"faction": "any",
+		"names": {
+			"monarchy": "Gutshof",
+			"covenant": "Nightshade Plot"
+		},
+		"name": "Farmstead",
+		"description": "Endless provisions. Up to 2 workers tend it and store the harvest on the spot.",
+		"size": 2,
+		"hp": 300,
+		"armor": "structure",
+		"sight": 3,
+		"resource": "herbs",
+		"gather_rate": 0.6,
+		"max_gatherers": 2,
+		"dropoff": [
+			"herbs"
+		],
+		"cost": {
+			"timber": 60
+		},
+		"build_time": 15,
+		"buildable": true,
+		"hotkey": "G",
+		"glyph": "G"
+	},
+	"schiessstand": {
+		"name": "Schießstand",
+		"faction": "monarchy",
+		"role": "military",
+		"description": "Shooting range in the Tyrolean tradition. Trains Jäger and (Tyrol) Standschützen.",
+		"size": 3,
+		"hp": 800,
+		"armor": "structure",
+		"sight": 5,
+		"trains": [
+			"jaeger",
+			"standschuetze",
+			"kaiserjaeger"
+		],
+		"age": 2,
+		"cost": {
+			"timber": 130,
+			"gold": 30
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "Y",
+		"glyph": "A",
+		"research": [
+			"rifling"
+		]
+	},
+	"bone_range": {
+		"name": "Bone Range",
+		"faction": "covenant",
+		"role": "military",
+		"description": "Trains Bonebows.",
+		"size": 3,
+		"hp": 800,
+		"armor": "structure",
+		"sight": 5,
+		"trains": [
+			"bonebow"
+		],
+		"age": 2,
+		"cost": {
+			"timber": 130,
+			"gold": 30
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "Y",
+		"glyph": "A",
+		"research": [
+			"bone_fletching"
+		]
+	},
+	"laboratorium": {
+		"name": "Laboratorium",
+		"faction": "monarchy",
+		"role": "military",
+		"description": "Alchemists' workshop. Trains Field Alchemists.",
+		"size": 3,
+		"hp": 800,
+		"armor": "structure",
+		"sight": 6,
+		"trains": [
+			"field_alchemist"
+		],
+		"age": 2,
+		"cost": {
+			"timber": 100,
+			"gold": 80,
+			"mana": 40
+		},
+		"build_time": 40,
+		"buildable": true,
+		"hotkey": "U",
+		"glyph": "S",
+		"research": [
+			"aether_lore"
+		]
+	},
+	"ossuary": {
+		"name": "Ossuary",
+		"faction": "covenant",
+		"role": "military",
+		"description": "Trains Necromancers.",
+		"size": 3,
+		"hp": 800,
+		"armor": "structure",
+		"sight": 6,
+		"trains": [
+			"necromancer",
+			"lich",
+			"wraith"
+		],
+		"age": 2,
+		"cost": {
+			"timber": 100,
+			"gold": 80,
+			"mana": 40
+		},
+		"build_time": 40,
+		"buildable": true,
+		"hotkey": "U",
+		"glyph": "O",
+		"research": [
+			"necromancy"
+		]
+	},
+	"festungsturm": {
+		"name": "Festungsturm",
+		"faction": "monarchy",
+		"role": "tower",
+		"description": "Fortress tower that fires Aether bolts.",
+		"size": 2,
+		"hp": 900,
+		"armor": "structure",
+		"sight": 9,
+		"damage": 12,
+		"dtype": "arcane",
+		"range": 7,
+		"cooldown": 1.6,
+		"age": 2,
+		"cost": {
+			"timber": 100,
+			"gold": 60
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "T",
+		"glyph": "T"
+	},
+	"bone_spire": {
+		"name": "Bone Spire",
+		"faction": "covenant",
+		"role": "tower",
+		"description": "Defensive spire that spits curses.",
+		"size": 2,
+		"hp": 900,
+		"armor": "structure",
+		"sight": 9,
+		"damage": 12,
+		"dtype": "curse",
+		"range": 7,
+		"cooldown": 1.6,
+		"age": 2,
+		"cost": {
+			"timber": 100,
+			"gold": 60
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "T",
+		"glyph": "T"
+	},
+	"adlerhorst": {
+		"name": "Adlerhorst",
+		"faction": "monarchy",
+		"role": "military",
+		"description": "Eyrie and glider field. Trains Kress Flyers and (Age 3) Double Eagles.",
+		"size": 3,
+		"hp": 800,
+		"armor": "structure",
+		"sight": 7,
+		"trains": [
+			"kress_flyer",
+			"double_eagle",
+			"aethership"
+		],
+		"age": 2,
+		"cost": {
+			"timber": 120,
+			"gold": 60,
+			"mana": 20
+		},
+		"build_time": 40,
+		"buildable": true,
+		"hotkey": "F",
+		"glyph": "A",
+		"research": [
+			"aeronautics"
+		]
+	},
+	"roost": {
+		"name": "Roost",
+		"faction": "covenant",
+		"role": "military",
+		"description": "Trains Bat Swarms and (Age 3) Bone Drakes.",
+		"size": 3,
+		"hp": 800,
+		"armor": "structure",
+		"sight": 7,
+		"trains": [
+			"bat_swarm",
+			"bone_drake",
+			"shadow_wyrm"
+		],
+		"age": 2,
+		"cost": {
+			"timber": 120,
+			"gold": 60,
+			"mana": 20
+		},
+		"build_time": 40,
+		"buildable": true,
+		"hotkey": "F",
+		"glyph": "R",
+		"research": [
+			"wing_binding"
+		]
+	},
+	"docks": {
+		"faction": "any",
+		"names": {
+			"monarchy": "Arsenal",
+			"covenant": "Black Wharf"
+		},
+		"name": "Docks",
+		"role": "military",
+		"description": "Built on the shore. Builds Fishing Skiffs, Transports and Warships; skiffs land their catch here.",
+		"size": 3,
+		"hp": 900,
+		"armor": "structure",
+		"sight": 7,
+		"coastal": true,
+		"trains": [
+			"skiff",
+			"transport",
+			"warship",
+			"ironclad",
+			"ghost_ship"
+		],
+		"dropoff": [
+			"herbs"
+		],
+		"naval_dropoff": true,
+		"age": 2,
+		"cost": {
+			"timber": 150
+		},
+		"build_time": 35,
+		"buildable": true,
+		"hotkey": "K",
+		"glyph": "K",
+		"research": [
+			"seamanship"
+		]
+	},
+	"fabrik": {
+		"name": "Fabrik",
+		"faction": "monarchy",
+		"role": "military",
+		"description": "Aether-steam works. Builds Steam Walkers, Škoda Mortars and (Age 6) the Aether Colossus.",
+		"size": 3,
+		"hp": 1100,
+		"armor": "structure",
+		"sight": 6,
+		"trains": [
+			"steam_walker",
+			"skoda_mortar",
+			"aether_colossus"
+		],
+		"age": 4,
+		"cost": {
+			"timber": 200,
+			"gold": 150,
+			"coal": 50
+		},
+		"build_time": 50,
+		"buildable": true,
+		"hotkey": "W",
+		"glyph": "F",
+		"research": [
+			"steamworks"
+		]
+	},
+	"charnel_works": {
+		"name": "Charnel Works",
+		"faction": "covenant",
+		"role": "military",
+		"description": "Where the dead are reassembled. Builds Plague Catapults and (Age 6) the Bone Colossus.",
+		"size": 3,
+		"hp": 1100,
+		"armor": "structure",
+		"sight": 6,
+		"trains": [
+			"plague_catapult",
+			"bone_colossus"
+		],
+		"age": 4,
+		"cost": {
+			"timber": 200,
+			"gold": 150,
+			"coal": 50
+		},
+		"build_time": 50,
+		"buildable": true,
+		"hotkey": "W",
+		"glyph": "W",
+		"research": [
+			"siege_horrors"
+		]
+	},
+	"orloj": {
+		"name": "Prague Orloj",
+		"faction": "monarchy",
+		"age": 4,
+		"hp": 2500,
+		"build_time": 120,
+		"hotkey": "Q",
+		"glyph": "O",
+		"description": "Wonder: the astronomical clock of Prague (1410). All research and age advances are 30% faster.",
+		"mods": {
+			"research_speed": 0.3
+		},
+		"cost": {
+			"gold": 600,
+			"timber": 400,
+			"mana": 200,
+			"coal": 100
+		},
+		"role": "wonder",
+		"size": 4,
+		"armor": "structure",
+		"sight": 8,
+		"buildable": true,
+		"limit": 1
+	},
+	"pummerin": {
+		"name": "St. Stephen's & the Pummerin",
+		"faction": "monarchy",
+		"age": 5,
+		"hp": 3000,
+		"build_time": 140,
+		"hotkey": "W",
+		"glyph": "P",
+		"description": "Wonder: Vienna's cathedral and its great bell, cast from captured cannon. Enemies inside your borders deal 10% less damage.",
+		"mods": {
+			"home_defense": 0.1
+		},
+		"cost": {
+			"gold": 700,
+			"timber": 500,
+			"herbs": 300,
+			"coal": 150
+		},
+		"role": "wonder",
+		"size": 4,
+		"armor": "structure",
+		"sight": 8,
+		"buildable": true,
+		"limit": 1
+	},
+	"semmering": {
+		"name": "Semmering Railway",
+		"faction": "monarchy",
+		"age": 5,
+		"hp": 2500,
+		"build_time": 130,
+		"hotkey": "E",
+		"glyph": "S",
+		"description": "Wonder: the first mountain railway (1854). Your units move 30% faster inside your borders.",
+		"mods": {
+			"rail_speed": 0.3
+		},
+		"cost": {
+			"gold": 600,
+			"timber": 600,
+			"coal": 250
+		},
+		"role": "wonder",
+		"size": 4,
+		"armor": "structure",
+		"sight": 8,
+		"buildable": true,
+		"limit": 1
+	},
+	"hofburg_treasury": {
+		"name": "Hofburg Treasury",
+		"faction": "monarchy",
+		"age": 5,
+		"hp": 3000,
+		"build_time": 130,
+		"hotkey": "R",
+		"glyph": "T",
+		"description": "Wonder: the imperial Schatzkammer. Stores the AEIOU relics and adds +1/s to the Thaler cap.",
+		"mods": {
+			"cap_gold": 1.0
+		},
+		"relic_holder": true,
+		"cost": {
+			"gold": 800,
+			"timber": 400,
+			"mana": 200
+		},
+		"role": "wonder",
+		"size": 4,
+		"armor": "structure",
+		"sight": 8,
+		"buildable": true,
+		"limit": 1
+	},
+	"obsidian_spire": {
+		"name": "Obsidian Spire",
+		"faction": "covenant",
+		"age": 5,
+		"hp": 3000,
+		"build_time": 140,
+		"hotkey": "Q",
+		"glyph": "O",
+		"description": "Wonder: a black needle that drinks the light. Invaders suffer much more attrition and your borders reach 2 tiles further.",
+		"mods": {
+			"attrition": 0.008,
+			"border_radius": 2
+		},
+		"cost": {
+			"gold": 700,
+			"timber": 500,
+			"mana": 300,
+			"coal": 150
+		},
+		"role": "wonder",
+		"size": 4,
+		"armor": "structure",
+		"sight": 8,
+		"buildable": true,
+		"limit": 1
+	},
+	"great_ossuary": {
+		"name": "Great Ossuary",
+		"faction": "covenant",
+		"age": 5,
+		"hp": 3000,
+		"build_time": 130,
+		"hotkey": "W",
+		"glyph": "G",
+		"description": "Wonder: a cathedral of bones. Stores the relics and gives +10% HP to your military.",
+		"mods": {
+			"unit_hp": 0.1
+		},
+		"relic_holder": true,
+		"cost": {
+			"gold": 800,
+			"timber": 400,
+			"mana": 200
+		},
+		"role": "wonder",
+		"size": 4,
+		"armor": "structure",
+		"sight": 8,
+		"buildable": true,
+		"limit": 1
+	}
+}

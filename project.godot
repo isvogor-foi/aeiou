@@ -1,0 +1,22 @@
+; Engine configuration file.
+config_version=5
+
+[application]
+
+config/name="Rise of Magic"
+config/description="A wizarding-world real-time strategy game."
+run/main_scene="res://ui/main_menu.tscn"
+config/features=PackedStringArray("4.7")
+
+[display]
+
+window/size/viewport_width=1600
+window/size/viewport_height=900
+window/stretch/mode="canvas_items"
+window/stretch/aspect="expand"
+
+[rendering]
+
+environment/defaults/default_clear_color=Color(0.04, 0.04, 0.05, 1)
+
+textures/canvas_textures/default_texture_filter=0

@@ -1,0 +1,1509 @@
+{
+	"settler": {
+		"name": "Settler",
+		"faction": "monarchy",
+		"role": "worker",
+		"domain": "ground",
+		"description": "Imperial colonist. Gathers resources and raises buildings.",
+		"hp": 40,
+		"armor": "light",
+		"damage": 3,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.5,
+		"speed": 2.6,
+		"sight": 6,
+		"pop": 1,
+		"cost": {
+			"herbs": 50
+		},
+		"train_time": 12,
+		"hotkey": "Q",
+		"glyph": "a"
+	},
+	"grenadier": {
+		"name": "Grenadier",
+		"faction": "monarchy",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Bayonet infantry in white coats. Holds the line against raiders.",
+		"hp": 120,
+		"armor": "heavy",
+		"damage": 11,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.2,
+		"speed": 2.2,
+		"sight": 6,
+		"pop": 1,
+		"cost": {
+			"herbs": 60,
+			"gold": 35
+		},
+		"train_time": 18,
+		"hotkey": "W",
+		"glyph": "W"
+	},
+	"musketeer": {
+		"name": "Aether Musketeer",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Fires Aether-charged musket balls. Strong against heavy armour.",
+		"hp": 60,
+		"armor": "light",
+		"damage": 9,
+		"dtype": "arcane",
+		"range": 5,
+		"cooldown": 1.6,
+		"speed": 2.5,
+		"sight": 8,
+		"pop": 1,
+		"cost": {
+			"herbs": 40,
+			"gold": 30,
+			"timber": 20
+		},
+		"train_time": 20,
+		"hotkey": "E",
+		"glyph": "B"
+	},
+	"thrall": {
+		"name": "Thrall",
+		"faction": "covenant",
+		"role": "worker",
+		"domain": "ground",
+		"description": "Bound labourer. Gathers resources and raises buildings.",
+		"hp": 40,
+		"armor": "light",
+		"damage": 3,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.5,
+		"speed": 2.6,
+		"sight": 6,
+		"pop": 1,
+		"cost": {
+			"herbs": 50
+		},
+		"train_time": 12,
+		"hotkey": "Q",
+		"glyph": "t"
+	},
+	"reaver": {
+		"name": "Reaver",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Fast, cheap raider with a hooked blade.",
+		"hp": 95,
+		"armor": "light",
+		"damage": 13,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.0,
+		"speed": 3.0,
+		"sight": 6,
+		"pop": 1,
+		"cost": {
+			"herbs": 50,
+			"gold": 20
+		},
+		"train_time": 15,
+		"hotkey": "W",
+		"glyph": "R"
+	},
+	"hexcaster": {
+		"name": "Hexcaster",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Hurls withering curses. Deadly to light troops and beasts.",
+		"hp": 60,
+		"armor": "light",
+		"damage": 12,
+		"dtype": "curse",
+		"range": 5,
+		"cooldown": 1.7,
+		"speed": 2.4,
+		"sight": 8,
+		"pop": 1,
+		"cost": {
+			"herbs": 40,
+			"gold": 25,
+			"mana": 20
+		},
+		"train_time": 20,
+		"hotkey": "E",
+		"glyph": "H"
+	},
+	"tross_wagon": {
+		"name": "Tross Wagon",
+		"faction": "monarchy",
+		"role": "support",
+		"domain": "ground",
+		"description": "Baggage train. Keeps nearby troops supplied: no attrition in enemy territory.",
+		"hp": 120,
+		"armor": "heavy",
+		"damage": 0,
+		"dtype": "physical",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 2.4,
+		"sight": 6,
+		"pop": 1,
+		"supply_radius": 6,
+		"age": 2,
+		"cost": {
+			"timber": 60,
+			"gold": 40
+		},
+		"train_time": 20,
+		"hotkey": "R",
+		"glyph": "S"
+	},
+	"bone_cart": {
+		"name": "Bone Cart",
+		"faction": "covenant",
+		"role": "support",
+		"domain": "ground",
+		"description": "Keeps nearby troops supplied: no attrition in enemy territory.",
+		"hp": 120,
+		"armor": "heavy",
+		"damage": 0,
+		"dtype": "physical",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 2.4,
+		"sight": 6,
+		"pop": 1,
+		"supply_radius": 6,
+		"age": 2,
+		"cost": {
+			"timber": 60,
+			"gold": 40
+		},
+		"train_time": 20,
+		"hotkey": "R",
+		"glyph": "S"
+	},
+	"jaeger": {
+		"name": "Jäger",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Rifleman in pike-grey. Picks off light troops and flyers (+50% vs air).",
+		"hp": 65,
+		"armor": "light",
+		"damage": 11,
+		"dtype": "physical",
+		"range": 7,
+		"cooldown": 1.8,
+		"speed": 2.5,
+		"sight": 9,
+		"pop": 1,
+		"age": 2,
+		"cost": {
+			"herbs": 40,
+			"gold": 40,
+			"timber": 30
+		},
+		"train_time": 22,
+		"hotkey": "Q",
+		"glyph": "R",
+		"bonus_vs": {
+			"air": 0.5
+		}
+	},
+	"field_alchemist": {
+		"name": "Field Alchemist",
+		"faction": "monarchy",
+		"role": "caster",
+		"domain": "ground",
+		"description": "Golden Lane graduate. Patches wounds (autocast) and seals allies in an Aether Ward.",
+		"hp": 70,
+		"armor": "warded",
+		"damage": 5,
+		"dtype": "arcane",
+		"range": 5,
+		"cooldown": 2.0,
+		"speed": 2.4,
+		"sight": 8,
+		"pop": 1,
+		"age": 2,
+		"abilities": [
+			"heal",
+			"ward"
+		],
+		"cost": {
+			"herbs": 50,
+			"gold": 50,
+			"mana": 30
+		},
+		"train_time": 25,
+		"hotkey": "Q",
+		"glyph": "M"
+	},
+	"kuerassier": {
+		"name": "Kürassier",
+		"faction": "monarchy",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Armoured shock trooper. Charges: rushes in and strikes hard on the first blow.",
+		"hp": 220,
+		"armor": "heavy",
+		"damage": 22,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.4,
+		"speed": 2.6,
+		"sight": 6,
+		"pop": 2,
+		"age": 3,
+		"passives": {
+			"charge": {
+				"distance": 3.0,
+				"speed_mult": 1.7,
+				"bonus": 1.0
+			}
+		},
+		"cost": {
+			"herbs": 60,
+			"gold": 80,
+			"timber": 50
+		},
+		"train_time": 30,
+		"hotkey": "T",
+		"glyph": "K"
+	},
+	"rudolf": {
+		"name": "Rudolf II",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"hero": true,
+		"description": "Hero, the Alchemist Emperor. Hurls Philosopher's Fire and raises the Imperial Aegis. Nearby allies take 20% less damage.",
+		"hp": 650,
+		"armor": "warded",
+		"damage": 18,
+		"dtype": "arcane",
+		"range": 6,
+		"cooldown": 1.6,
+		"speed": 2.6,
+		"sight": 10,
+		"pop": 0,
+		"age": 3,
+		"abilities": [
+			"fireball",
+			"mass_ward"
+		],
+		"aura": {
+			"radius": 6,
+			"damage_taken": -0.2
+		},
+		"cost": {
+			"herbs": 120,
+			"gold": 300,
+			"timber": 150,
+			"mana": 150
+		},
+		"train_time": 45,
+		"revive_time": 60,
+		"hotkey": "W",
+		"glyph": "A"
+	},
+	"bonebow": {
+		"name": "Bonebow",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Skeletal crossbowman with a long reach (+50% vs air).",
+		"hp": 60,
+		"armor": "light",
+		"damage": 11,
+		"dtype": "physical",
+		"range": 7,
+		"cooldown": 1.8,
+		"speed": 2.5,
+		"sight": 9,
+		"pop": 1,
+		"age": 2,
+		"cost": {
+			"herbs": 40,
+			"gold": 35,
+			"timber": 30
+		},
+		"train_time": 22,
+		"hotkey": "Q",
+		"glyph": "B",
+		"bonus_vs": {
+			"air": 0.5
+		}
+	},
+	"necromancer": {
+		"name": "Necromancer",
+		"faction": "covenant",
+		"role": "caster",
+		"domain": "ground",
+		"description": "Drains life to heal itself (autocast) and Raises the Dead to fight for a while.",
+		"hp": 70,
+		"armor": "warded",
+		"damage": 6,
+		"dtype": "curse",
+		"range": 5,
+		"cooldown": 2.0,
+		"speed": 2.4,
+		"sight": 8,
+		"pop": 1,
+		"age": 2,
+		"abilities": [
+			"life_drain",
+			"raise_dead"
+		],
+		"cost": {
+			"herbs": 50,
+			"gold": 40,
+			"mana": 40
+		},
+		"train_time": 25,
+		"hotkey": "Q",
+		"glyph": "N"
+	},
+	"grave_brute": {
+		"name": "Grave Brute",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Hulking axe-wielder. Cleaves: every blow also hits enemies next to the target.",
+		"hp": 240,
+		"armor": "heavy",
+		"damage": 20,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.5,
+		"speed": 2.4,
+		"sight": 6,
+		"pop": 2,
+		"age": 3,
+		"passives": {
+			"cleave": {
+				"radius": 1.2,
+				"share": 0.5
+			}
+		},
+		"cost": {
+			"herbs": 60,
+			"gold": 70,
+			"timber": 50,
+			"mana": 10
+		},
+		"train_time": 30,
+		"hotkey": "T",
+		"glyph": "G"
+	},
+	"shadow_sovereign": {
+		"name": "Shadow Sovereign",
+		"faction": "covenant",
+		"role": "hero",
+		"domain": "ground",
+		"hero": true,
+		"description": "Hero. Death Coil wounds foes and heals the Sovereign; Summon Horde raises the dead. Nearby allies steal 15% of the damage they deal as life.",
+		"hp": 680,
+		"armor": "warded",
+		"damage": 20,
+		"dtype": "curse",
+		"range": 5,
+		"cooldown": 1.6,
+		"speed": 2.6,
+		"sight": 10,
+		"pop": 0,
+		"age": 3,
+		"abilities": [
+			"death_coil",
+			"summon_horde"
+		],
+		"aura": {
+			"radius": 6,
+			"lifesteal": 0.15
+		},
+		"cost": {
+			"herbs": 120,
+			"gold": 300,
+			"timber": 150,
+			"mana": 150
+		},
+		"train_time": 45,
+		"revive_time": 60,
+		"hotkey": "W",
+		"glyph": "S"
+	},
+	"risen": {
+		"name": "Risen",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"summon": true,
+		"description": "A corpse raised for a short while.",
+		"hp": 50,
+		"armor": "light",
+		"damage": 7,
+		"dtype": "physical",
+		"range": 0.5,
+		"cooldown": 1.2,
+		"speed": 2.8,
+		"sight": 6,
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"glyph": "r"
+	},
+	"kress_flyer": {
+		"name": "Kress Flyer",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "air",
+		"description": "Kite-winged Aether glider (after Wilhelm Kress of Vienna). Fast scout; only ranged units, towers and flyers can hit it.",
+		"hp": 70,
+		"armor": "air",
+		"damage": 8,
+		"dtype": "arcane",
+		"range": 3,
+		"cooldown": 1.4,
+		"speed": 4.5,
+		"sight": 10,
+		"pop": 1,
+		"age": 2,
+		"cost": {
+			"herbs": 40,
+			"gold": 50,
+			"mana": 20
+		},
+		"train_time": 22,
+		"hotkey": "Q",
+		"glyph": "b"
+	},
+	"double_eagle": {
+		"name": "Double Eagle",
+		"faction": "monarchy",
+		"role": "melee",
+		"domain": "air",
+		"description": "The two-headed eagle of the Empire, bred for war. Dives on ground troops and tears flyers apart (+50% vs air).",
+		"hp": 220,
+		"armor": "air",
+		"damage": 18,
+		"dtype": "physical",
+		"range": 0.6,
+		"cooldown": 1.3,
+		"speed": 3.8,
+		"sight": 9,
+		"pop": 2,
+		"age": 3,
+		"bonus_vs": {
+			"air": 0.5
+		},
+		"cost": {
+			"herbs": 80,
+			"gold": 90,
+			"timber": 30
+		},
+		"train_time": 30,
+		"hotkey": "W",
+		"glyph": "G"
+	},
+	"bat_swarm": {
+		"name": "Bat Swarm",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "air",
+		"description": "Fast flying swarm that nips at targets. Only ranged units, towers and flyers can hit it.",
+		"hp": 60,
+		"armor": "air",
+		"damage": 8,
+		"dtype": "curse",
+		"range": 2.5,
+		"cooldown": 1.3,
+		"speed": 4.8,
+		"sight": 10,
+		"pop": 1,
+		"age": 2,
+		"cost": {
+			"herbs": 40,
+			"gold": 40,
+			"mana": 20
+		},
+		"train_time": 20,
+		"hotkey": "Q",
+		"glyph": "v"
+	},
+	"bone_drake": {
+		"name": "Bone Drake",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "air",
+		"description": "Heavy flyer whose fire breath scorches everything around its target.",
+		"hp": 260,
+		"armor": "air",
+		"damage": 16,
+		"dtype": "fire",
+		"range": 3,
+		"cooldown": 1.8,
+		"speed": 3.4,
+		"sight": 9,
+		"pop": 2,
+		"age": 3,
+		"passives": {
+			"cleave": {
+				"radius": 1.4,
+				"share": 0.6
+			}
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 100,
+			"mana": 30
+		},
+		"train_time": 32,
+		"hotkey": "W",
+		"glyph": "D"
+	},
+	"skiff": {
+		"name": "Fishing Skiff",
+		"faction": "any",
+		"names": {
+			"monarchy": "Fischerboot",
+			"covenant": "Gutting Skiff"
+		},
+		"role": "fisher",
+		"domain": "naval",
+		"description": "Fishes the shoals for provisions and brings the catch back to the docks.",
+		"hp": 90,
+		"armor": "ship",
+		"damage": 0,
+		"dtype": "physical",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 3.0,
+		"sight": 6,
+		"pop": 1,
+		"age": 2,
+		"fisher": true,
+		"cost": {
+			"timber": 60
+		},
+		"train_time": 15,
+		"hotkey": "Q",
+		"glyph": "f"
+	},
+	"transport": {
+		"name": "Transport",
+		"faction": "any",
+		"names": {
+			"monarchy": "Danube Barge",
+			"covenant": "Corpse Barge"
+		},
+		"role": "transport",
+		"domain": "naval",
+		"description": "Carries up to 8 population of troops across water (uses no population itself). Right-click it with troops to board; select it and right-click a shore to unload.",
+		"hp": 320,
+		"armor": "ship",
+		"damage": 0,
+		"dtype": "physical",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 3.2,
+		"sight": 7,
+		"pop": 0,
+		"age": 2,
+		"capacity": 8,
+		"cost": {
+			"timber": 120,
+			"gold": 40
+		},
+		"train_time": 25,
+		"hotkey": "W",
+		"glyph": "T"
+	},
+	"warship": {
+		"name": "Warship",
+		"faction": "any",
+		"names": {
+			"monarchy": "Ironclad",
+			"covenant": "Black Galley"
+		},
+		"role": "ranged",
+		"domain": "naval",
+		"description": "Armed galley. Bombards ships and the shore (+50% vs ships).",
+		"hp": 340,
+		"armor": "ship",
+		"damage": 16,
+		"dtype": "fire",
+		"range": 7,
+		"cooldown": 2.0,
+		"speed": 3.0,
+		"sight": 9,
+		"pop": 2,
+		"age": 2,
+		"bonus_vs": {
+			"ship": 0.5
+		},
+		"cost": {
+			"timber": 150,
+			"gold": 80
+		},
+		"train_time": 30,
+		"hotkey": "E",
+		"glyph": "W"
+	},
+	"grenzer": {
+		"name": "Grenzer",
+		"faction": "monarchy",
+		"role": "militia",
+		"crown_land": "croatia",
+		"domain": "ground",
+		"description": "Farmer-soldier of the Military Frontier: gathers and builds like a Settler (80% speed) and shoots like a soldier. Fights 30% harder and takes 25% less damage inside your borders.",
+		"hp": 80,
+		"armor": "light",
+		"damage": 8,
+		"dtype": "physical",
+		"range": 4,
+		"cooldown": 1.6,
+		"speed": 2.6,
+		"sight": 7,
+		"pop": 1,
+		"age": 1,
+		"gathers": true,
+		"gather_mult": 0.8,
+		"passives": {
+			"home_guard": {
+				"damage": 0.3,
+				"damage_taken": -0.25
+			}
+		},
+		"cost": {
+			"herbs": 50,
+			"gold": 25
+		},
+		"train_time": 16,
+		"hotkey": "E",
+		"glyph": "g"
+	},
+	"standschuetze": {
+		"name": "Standschütze",
+		"faction": "monarchy",
+		"role": "ranged",
+		"crown_land": "tyrol",
+		"domain": "ground",
+		"description": "Tyrolean marksman. Longest reach of its age; from higher ground it gains +2 range and +30% damage.",
+		"hp": 60,
+		"armor": "light",
+		"damage": 13,
+		"dtype": "physical",
+		"range": 8,
+		"cooldown": 2.2,
+		"speed": 2.4,
+		"sight": 10,
+		"pop": 1,
+		"age": 2,
+		"passives": {
+			"high_ground": {
+				"rise": 0.12,
+				"range": 2,
+				"damage": 0.3
+			}
+		},
+		"cost": {
+			"herbs": 40,
+			"gold": 40,
+			"timber": 25
+		},
+		"train_time": 24,
+		"hotkey": "E",
+		"glyph": "S"
+	},
+	"war_wagon": {
+		"name": "Hussite War Wagon",
+		"faction": "monarchy",
+		"role": "support",
+		"crown_land": "bohemia",
+		"domain": "ground",
+		"description": "Armoured wagon that carries 4 troops. Deploy it (D) into a Wagenburg: it can't move, takes 40% less damage, and the troops inside fire out (7 damage each).",
+		"hp": 450,
+		"armor": "heavy",
+		"damage": 0,
+		"dtype": "physical",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 2.0,
+		"sight": 7,
+		"pop": 2,
+		"age": 2,
+		"capacity": 4,
+		"abilities": [
+			"wagenburg"
+		],
+		"deployed": {
+			"base": 4,
+			"per_passenger": 7,
+			"range": 5,
+			"cooldown": 1.5,
+			"dtype": "physical",
+			"damage_taken": -0.4
+		},
+		"cost": {
+			"timber": 120,
+			"gold": 60
+		},
+		"train_time": 28,
+		"hotkey": "Y",
+		"glyph": "W"
+	},
+	"steam_walker": {
+		"name": "Steam Walker",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Two-legged Aether-steam engine with a rotary gun. Shreds infantry (+50% vs light).",
+		"hp": 420,
+		"armor": "heavy",
+		"damage": 5,
+		"dtype": "physical",
+		"range": 4,
+		"cooldown": 0.35,
+		"speed": 2.2,
+		"sight": 8,
+		"pop": 3,
+		"age": 4,
+		"bonus_vs": {
+			"light": 0.5
+		},
+		"cost": {
+			"gold": 120,
+			"timber": 60,
+			"coal": 60
+		},
+		"train_time": 35,
+		"hotkey": "Q",
+		"glyph": "S"
+	},
+	"skoda_mortar": {
+		"name": "Škoda Mortar",
+		"faction": "monarchy",
+		"role": "siege",
+		"domain": "ground",
+		"description": "Plzeň siege mortar. Takes 3s to set up after moving; can't fire closer than 3 tiles. Shells splash and wreck buildings (+100% vs structures).",
+		"hp": 200,
+		"armor": "heavy",
+		"damage": 45,
+		"dtype": "fire",
+		"range": 12,
+		"cooldown": 4.5,
+		"speed": 1.6,
+		"sight": 8,
+		"pop": 3,
+		"age": 4,
+		"passives": {
+			"setup": {
+				"time": 3.0
+			},
+			"min_range": 3,
+			"cleave": {
+				"radius": 1.5,
+				"share": 0.7
+			}
+		},
+		"bonus_vs": {
+			"structure": 1.0
+		},
+		"cost": {
+			"gold": 150,
+			"timber": 80,
+			"coal": 80
+		},
+		"train_time": 40,
+		"hotkey": "W",
+		"glyph": "M"
+	},
+	"hussar": {
+		"name": "Hussar",
+		"faction": "monarchy",
+		"role": "melee",
+		"crown_land": "hungary",
+		"domain": "ground",
+		"description": "Hungarian light horse. Very fast; charges for double damage after a run-up.",
+		"hp": 150,
+		"armor": "light",
+		"damage": 14,
+		"dtype": "physical",
+		"range": 0.6,
+		"cooldown": 1.1,
+		"speed": 4.2,
+		"sight": 8,
+		"pop": 2,
+		"age": 4,
+		"passives": {
+			"charge": {
+				"distance": 3.0,
+				"speed_mult": 1.4,
+				"bonus": 1.0
+			}
+		},
+		"cost": {
+			"herbs": 80,
+			"gold": 70
+		},
+		"train_time": 26,
+		"hotkey": "H",
+		"glyph": "H"
+	},
+	"aethership": {
+		"name": "Lohner Aethership",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "air",
+		"description": "Armoured airship. Drops Aether bombs on everything below (splash) and carries 6 troops (board it like a transport; select it and use Unload).",
+		"hp": 700,
+		"armor": "air",
+		"damage": 24,
+		"dtype": "fire",
+		"range": 2,
+		"cooldown": 3.0,
+		"speed": 2.4,
+		"sight": 10,
+		"pop": 4,
+		"age": 5,
+		"capacity": 6,
+		"passives": {
+			"cleave": {
+				"radius": 1.5,
+				"share": 0.8
+			}
+		},
+		"bonus_vs": {
+			"structure": 0.5
+		},
+		"cost": {
+			"gold": 200,
+			"timber": 120,
+			"coal": 80,
+			"mana": 60
+		},
+		"train_time": 45,
+		"hotkey": "E",
+		"glyph": "Z"
+	},
+	"ironclad": {
+		"name": "Tegetthoff Ironclad",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "naval",
+		"description": "Steam ironclad. Heavy guns (+50% vs ships) and a Ram (D) that smashes enemy ships for huge damage.",
+		"hp": 700,
+		"armor": "ship",
+		"damage": 22,
+		"dtype": "fire",
+		"range": 7,
+		"cooldown": 2.4,
+		"speed": 2.8,
+		"sight": 9,
+		"pop": 3,
+		"age": 5,
+		"bonus_vs": {
+			"ship": 0.5
+		},
+		"abilities": [
+			"ram"
+		],
+		"cost": {
+			"gold": 180,
+			"timber": 120,
+			"coal": 80
+		},
+		"train_time": 40,
+		"hotkey": "R",
+		"glyph": "I"
+	},
+	"kaiserjaeger": {
+		"name": "Kaiserjäger",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Imperial rifleman with a Girandoni air rifle: fires 6 quick shots, then needs 6s to pump the air flask.",
+		"hp": 90,
+		"armor": "light",
+		"damage": 10,
+		"dtype": "physical",
+		"range": 7,
+		"cooldown": 0.5,
+		"speed": 2.6,
+		"sight": 10,
+		"pop": 1,
+		"age": 5,
+		"passives": {
+			"magazine": {
+				"shots": 6,
+				"reload": 6.0
+			}
+		},
+		"bonus_vs": {
+			"air": 0.5
+		},
+		"cost": {
+			"herbs": 60,
+			"gold": 60,
+			"timber": 20
+		},
+		"train_time": 26,
+		"hotkey": "R",
+		"glyph": "K"
+	},
+	"aether_colossus": {
+		"name": "Aether Colossus",
+		"faction": "monarchy",
+		"role": "melee",
+		"domain": "ground",
+		"limit": 1,
+		"description": "Brass giant animated by an Aether core (only one at a time). Crushes buildings (+100%), its blows splash, and allies near it fight 15% harder.",
+		"hp": 2200,
+		"armor": "heavy",
+		"damage": 70,
+		"dtype": "physical",
+		"range": 1.0,
+		"cooldown": 2.2,
+		"speed": 1.6,
+		"sight": 9,
+		"pop": 6,
+		"age": 6,
+		"passives": {
+			"cleave": {
+				"radius": 1.6,
+				"share": 0.6
+			}
+		},
+		"bonus_vs": {
+			"structure": 1.0
+		},
+		"aura": {
+			"radius": 6,
+			"damage": 0.15
+		},
+		"cost": {
+			"gold": 500,
+			"timber": 200,
+			"coal": 250,
+			"mana": 200
+		},
+		"train_time": 70,
+		"hotkey": "E",
+		"glyph": "C"
+	},
+	"abomination": {
+		"name": "Abomination",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Stitched flesh-golem. Its Hook (D) drags a distant enemy into its arms.",
+		"hp": 480,
+		"armor": "heavy",
+		"damage": 24,
+		"dtype": "physical",
+		"range": 0.7,
+		"cooldown": 1.6,
+		"speed": 2.1,
+		"sight": 7,
+		"pop": 3,
+		"age": 4,
+		"abilities": [
+			"hook"
+		],
+		"cost": {
+			"herbs": 100,
+			"gold": 90,
+			"coal": 40
+		},
+		"train_time": 34,
+		"hotkey": "H",
+		"glyph": "A"
+	},
+	"ghoul_rider": {
+		"name": "Ghoul Rider",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Ghoul on a skeletal horse. Very fast; charges for double damage after a run-up.",
+		"hp": 140,
+		"armor": "light",
+		"damage": 14,
+		"dtype": "physical",
+		"range": 0.6,
+		"cooldown": 1.1,
+		"speed": 4.3,
+		"sight": 8,
+		"pop": 2,
+		"age": 4,
+		"passives": {
+			"charge": {
+				"distance": 3.0,
+				"speed_mult": 1.4,
+				"bonus": 1.0
+			}
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 70
+		},
+		"train_time": 24,
+		"hotkey": "G",
+		"glyph": "R"
+	},
+	"plague_catapult": {
+		"name": "Plague Catapult",
+		"faction": "covenant",
+		"role": "siege",
+		"domain": "ground",
+		"description": "Hurls diseased corpses: splash damage plus a poison cloud that lingers for 8s. Sets up for 3s; minimum range 3.",
+		"hp": 200,
+		"armor": "heavy",
+		"damage": 35,
+		"dtype": "curse",
+		"range": 11,
+		"cooldown": 4.5,
+		"speed": 1.7,
+		"sight": 8,
+		"pop": 3,
+		"age": 4,
+		"passives": {
+			"setup": {
+				"time": 3.0
+			},
+			"min_range": 3,
+			"cleave": {
+				"radius": 1.5,
+				"share": 0.7
+			},
+			"cloud": {
+				"radius": 1.8,
+				"dps": 6,
+				"duration": 8
+			}
+		},
+		"bonus_vs": {
+			"structure": 0.6
+		},
+		"cost": {
+			"gold": 130,
+			"timber": 90,
+			"coal": 60
+		},
+		"train_time": 38,
+		"hotkey": "Q",
+		"glyph": "P"
+	},
+	"shadow_wyrm": {
+		"name": "Shadow Wyrm",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "air",
+		"description": "Great flying horror whose curse breath scorches a wide area.",
+		"hp": 620,
+		"armor": "air",
+		"damage": 26,
+		"dtype": "curse",
+		"range": 3,
+		"cooldown": 2.6,
+		"speed": 3.0,
+		"sight": 10,
+		"pop": 4,
+		"age": 5,
+		"passives": {
+			"cleave": {
+				"radius": 1.6,
+				"share": 0.7
+			}
+		},
+		"cost": {
+			"herbs": 120,
+			"gold": 160,
+			"coal": 60,
+			"mana": 80
+		},
+		"train_time": 45,
+		"hotkey": "E",
+		"glyph": "W"
+	},
+	"ghost_ship": {
+		"name": "Ghost Ship",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "naval",
+		"description": "Spectral galley. Invisible to the enemy while it stays still (unless enemies are within 3 tiles).",
+		"hp": 520,
+		"armor": "ship",
+		"damage": 20,
+		"dtype": "curse",
+		"range": 7,
+		"cooldown": 2.4,
+		"speed": 3.0,
+		"sight": 9,
+		"pop": 3,
+		"age": 5,
+		"passives": {
+			"stealth": {
+				"still": 3.0,
+				"detect": 3.0
+			}
+		},
+		"bonus_vs": {
+			"ship": 0.5
+		},
+		"cost": {
+			"gold": 160,
+			"timber": 120,
+			"coal": 60
+		},
+		"train_time": 40,
+		"hotkey": "R",
+		"glyph": "G"
+	},
+	"lich": {
+		"name": "Lich",
+		"faction": "covenant",
+		"role": "caster",
+		"domain": "ground",
+		"description": "Undying sorcerer. Frost Nova (D) chills and slows everything near it; Mass Raise (F) calls 4 Risen.",
+		"hp": 180,
+		"armor": "warded",
+		"damage": 12,
+		"dtype": "curse",
+		"range": 6,
+		"cooldown": 1.8,
+		"speed": 2.4,
+		"sight": 9,
+		"pop": 2,
+		"age": 5,
+		"abilities": [
+			"frost_nova",
+			"mass_raise"
+		],
+		"cost": {
+			"herbs": 90,
+			"gold": 90,
+			"mana": 120
+		},
+		"train_time": 34,
+		"hotkey": "W",
+		"glyph": "L"
+	},
+	"bone_colossus": {
+		"name": "Bone Colossus",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"limit": 1,
+		"description": "Towering construct of a thousand dead (only one at a time). Crushes buildings (+100%), its blows splash, and enemies near it deal 20% less damage.",
+		"hp": 2200,
+		"armor": "heavy",
+		"damage": 66,
+		"dtype": "physical",
+		"range": 1.0,
+		"cooldown": 2.2,
+		"speed": 1.6,
+		"sight": 9,
+		"pop": 6,
+		"age": 6,
+		"passives": {
+			"cleave": {
+				"radius": 1.6,
+				"share": 0.6
+			}
+		},
+		"bonus_vs": {
+			"structure": 1.0
+		},
+		"aura": {
+			"radius": 6,
+			"enemy_damage": -0.2
+		},
+		"cost": {
+			"gold": 450,
+			"timber": 150,
+			"coal": 250,
+			"herbs": 200
+		},
+		"train_time": 70,
+		"hotkey": "E",
+		"glyph": "C"
+	},
+	"vampire": {
+		"name": "Vampire",
+		"faction": "covenant",
+		"role": "melee",
+		"crown_land": "blood",
+		"domain": "ground",
+		"description": "Blood-drinker: heals for half the damage it deals.",
+		"hp": 130,
+		"armor": "light",
+		"damage": 15,
+		"dtype": "curse",
+		"range": 0.6,
+		"cooldown": 1.1,
+		"speed": 3.2,
+		"sight": 7,
+		"pop": 1,
+		"age": 2,
+		"passives": {
+			"lifesteal": 0.5
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 50,
+			"mana": 20
+		},
+		"train_time": 22,
+		"hotkey": "V",
+		"glyph": "V"
+	},
+	"bone_golem": {
+		"name": "Bone Golem",
+		"faction": "covenant",
+		"role": "melee",
+		"crown_land": "bone",
+		"domain": "ground",
+		"description": "Slow wall of fused bone. Very tough.",
+		"hp": 420,
+		"armor": "heavy",
+		"damage": 16,
+		"dtype": "physical",
+		"range": 0.6,
+		"cooldown": 1.6,
+		"speed": 1.9,
+		"sight": 6,
+		"pop": 2,
+		"age": 3,
+		"cost": {
+			"herbs": 90,
+			"gold": 60,
+			"timber": 40
+		},
+		"train_time": 30,
+		"hotkey": "Y",
+		"glyph": "B"
+	},
+	"wraith": {
+		"name": "Wraith",
+		"faction": "covenant",
+		"role": "ranged",
+		"crown_land": "shadow",
+		"domain": "ground",
+		"description": "Shade that fades from sight while it stands still (unless enemies come within 3 tiles).",
+		"hp": 70,
+		"armor": "warded",
+		"damage": 12,
+		"dtype": "curse",
+		"range": 5,
+		"cooldown": 1.6,
+		"speed": 3.0,
+		"sight": 9,
+		"pop": 1,
+		"age": 2,
+		"passives": {
+			"stealth": {
+				"still": 2.0,
+				"detect": 3.0
+			}
+		},
+		"cost": {
+			"herbs": 50,
+			"gold": 50,
+			"mana": 30
+		},
+		"train_time": 22,
+		"hotkey": "E",
+		"glyph": "W"
+	},
+	"prince_eugene": {
+		"name": "Prince Eugene",
+		"faction": "monarchy",
+		"role": "hero",
+		"description": "Hero, 'der edle Ritter', victor of Zenta and Belgrade. Allies near him hit 12% harder and +50% against buildings. Bombardment (D) shells an area; Rally (F) heals the troops around him.",
+		"hp": 760,
+		"armor": "heavy",
+		"damage": 24,
+		"dtype": "physical",
+		"range": 0.6,
+		"cooldown": 1.3,
+		"speed": 2.7,
+		"sight": 10,
+		"abilities": [
+			"bombardment",
+			"rally"
+		],
+		"aura": {
+			"radius": 7,
+			"damage": 0.12,
+			"siege": 0.5
+		},
+		"cost": {
+			"herbs": 120,
+			"gold": 300,
+			"timber": 150,
+			"mana": 100
+		},
+		"hotkey": "E",
+		"glyph": "E",
+		"hero": true,
+		"domain": "ground",
+		"pop": 0,
+		"age": 3,
+		"train_time": 45,
+		"revive_time": 60
+	},
+	"maria_theresa": {
+		"name": "Maria Theresa",
+		"faction": "monarchy",
+		"role": "hero",
+		"description": "Hero, the Empress-reformer. Workers near her gather 25% faster. Theresian Reform (D) fills the treasury; Inoculation (F) heals everyone around her.",
+		"hp": 600,
+		"armor": "warded",
+		"damage": 14,
+		"dtype": "arcane",
+		"range": 5,
+		"cooldown": 1.6,
+		"speed": 2.6,
+		"sight": 10,
+		"abilities": [
+			"theresian_reform",
+			"inoculation"
+		],
+		"aura": {
+			"radius": 8,
+			"gather": 0.25,
+			"damage_taken": -0.1
+		},
+		"cost": {
+			"herbs": 150,
+			"gold": 250,
+			"timber": 150,
+			"mana": 100
+		},
+		"hotkey": "R",
+		"glyph": "M",
+		"hero": true,
+		"domain": "ground",
+		"pop": 0,
+		"age": 3,
+		"train_time": 45,
+		"revive_time": 60
+	},
+	"blood_countess": {
+		"name": "Morvana, the Blood Countess",
+		"faction": "covenant",
+		"role": "hero",
+		"description": "Hero, a vampire noble. Heals for 40% of the damage she deals; allies near her steal 10% as life. Crimson Lance (D) drains a foe; Blood Frenzy (F) heals the troops around her.",
+		"hp": 640,
+		"armor": "light",
+		"damage": 26,
+		"dtype": "curse",
+		"range": 0.6,
+		"cooldown": 1.1,
+		"speed": 3.2,
+		"sight": 10,
+		"passives": {
+			"lifesteal": 0.4
+		},
+		"abilities": [
+			"crimson_lance",
+			"blood_frenzy"
+		],
+		"aura": {
+			"radius": 6,
+			"lifesteal": 0.1
+		},
+		"cost": {
+			"herbs": 200,
+			"gold": 300,
+			"mana": 150
+		},
+		"hotkey": "E",
+		"glyph": "B",
+		"hero": true,
+		"domain": "ground",
+		"pop": 0,
+		"age": 3,
+		"train_time": 45,
+		"revive_time": 60
+	},
+	"bone_herald": {
+		"name": "The Bone Herald",
+		"faction": "covenant",
+		"role": "hero",
+		"description": "Hero, a walking ossuary. Enemies near him deal 10% less damage. Bone Wall (D) shields the troops around him; Grave Call (F) raises 2 Bone Golems.",
+		"hp": 980,
+		"armor": "heavy",
+		"damage": 22,
+		"dtype": "physical",
+		"range": 0.6,
+		"cooldown": 1.5,
+		"speed": 2.3,
+		"sight": 9,
+		"abilities": [
+			"bone_wall",
+			"grave_call"
+		],
+		"aura": {
+			"radius": 6,
+			"enemy_damage": -0.1
+		},
+		"cost": {
+			"herbs": 200,
+			"gold": 300,
+			"timber": 100,
+			"mana": 100
+		},
+		"hotkey": "R",
+		"glyph": "H",
+		"hero": true,
+		"domain": "ground",
+		"pop": 0,
+		"age": 3,
+		"train_time": 45,
+		"revive_time": 60
+	},
+	"rebel_militia": {
+		"name": "Rebel Militia",
+		"faction": "any",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Townsfolk who took up arms when their city broke away.",
+		"hp": 90,
+		"armor": "light",
+		"damage": 8,
+		"dtype": "physical",
+		"range": 4,
+		"cooldown": 1.6,
+		"speed": 2.4,
+		"sight": 7,
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"glyph": "m"
+	},
+	"archduke": {
+		"name": "Archduke Franz Ferdinand",
+		"faction": "monarchy",
+		"role": "vip",
+		"domain": "ground",
+		"description": "Heir to the throne. In this history the shot in Sarajevo misses. Keep him alive.",
+		"hp": 700,
+		"armor": "heavy",
+		"damage": 7,
+		"dtype": "physical",
+		"range": 3,
+		"cooldown": 1.5,
+		"speed": 1.9,
+		"sight": 9,
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"glyph": "F"
+	}
+}

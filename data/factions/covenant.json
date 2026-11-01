@@ -1,0 +1,70 @@
+{
+	"name": "Umbral Covenant",
+	"short": "Covenant",
+	"alignment": "dark",
+	"description": "An aggressive order of curses, life-drain and cheap raiders that summons creatures to its side.",
+	"city": "citadel",
+	"worker": "thrall",
+	"start_workers": 3,
+	"buildable": [
+		"dwelling",
+		"garden",
+		"storehouse",
+		"blood_pit",
+		"library",
+		"bone_range",
+		"ossuary",
+		"bone_spire",
+		"roost",
+		"docks",
+		"charnel_works",
+		"citadel",
+		"obsidian_spire",
+		"great_ossuary"
+	],
+	"hero": "shadow_sovereign",
+	"color": [
+		0.85,
+		0.2,
+		0.22
+	],
+	"team_model": "red",
+	"flag": "covenant",
+	"color2": [
+		0.25,
+		0.1,
+		0.32
+	],
+	"ui": {
+		"border": [
+			0.5,
+			0.35,
+			0.6
+		],
+		"panel": [
+			0.08,
+			0.06,
+			0.09
+		],
+		"accent": [
+			0.55,
+			0.95,
+			0.45
+		]
+	},
+	"crown_lands": true,
+	"lands_label": "Dark pact",
+	"heroes": [
+		"shadow_sovereign",
+		"blood_countess",
+		"bone_herald"
+	],
+	"loyalty": {
+		"label": "Dread",
+		"garrison": 4,
+		"culture": false,
+		"charters": false,
+		"tithe": true
+	},
+	"playable": true
+}

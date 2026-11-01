@@ -1,0 +1,23 @@
+{
+	"name": "Rebels",
+	"short": "Rebels",
+	"playable": false,
+	"description": "Cities that broke away.",
+	"city": "residenz",
+	"worker": "settler",
+	"start_workers": 0,
+	"buildable": [],
+	"color": [
+		0.6,
+		0.6,
+		0.58
+	],
+	"color2": [
+		0.95,
+		0.95,
+		0.92
+	],
+	"team_model": "blue",
+	"flag": "rebel",
+	"ui": {}
+}
