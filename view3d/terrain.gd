@@ -181,9 +181,9 @@ func _scatter_nature() -> void:
 			var t := Vector2i(x, y)
 			var ter: int = map.get_terrain(t)
 			if ter == GameMap.FOREST:
-				for k in rng.randi_range(1, 2):
-					var p := Vector2(x + rng.randf_range(0.2, 0.8), y + rng.randf_range(0.2, 0.8))
-					var xf := Transform3D(Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3.ONE * rng.randf_range(1.0, 1.5)),
+				for k in 1:
+					var p := Vector2(x + rng.randf_range(0.3, 0.7), y + rng.randf_range(0.3, 0.7))
+					var xf := Transform3D(Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3.ONE * rng.randf_range(0.85, 1.2)),
 							Vector3(p.x, height_at(p.x, p.y), p.y))
 					tree_spots[rng.randi() % tree_spots.size()].append([map.idx(t), xf])
 			elif ter == GameMap.ROCK:
@@ -203,24 +203,76 @@ func _scatter_nature() -> void:
 		_multimesh(DB.visuals.rocks[i], rock_spots[i], false)
 
 
-func _multimesh(path: String, spots: Array, track: bool) -> void:
+## Size of the square chunks trees and rocks are batched into, so off-screen chunks
+## are culled and distant ones fall back to the meshes' generated LODs.
+const CHUNK := 16
+
+
+## `spec` is a model path, or {model, height (tiles), rotate_x (deg), colors
+## {surface-name fragment: [r, g, b]}} for imported nature that needs fitting.
+func _multimesh(spec, spots: Array, track: bool) -> void:
 	if spots.is_empty():
 		return
+	var d: Dictionary = spec if spec is Dictionary else {"model": spec}
+	var path: String = d.model
+	var fit := Transform3D.IDENTITY
+	if d.has("rotate_x"):
+		fit = Transform3D(Basis(Vector3.RIGHT, deg_to_rad(float(d.rotate_x))), Vector3.ZERO)
+	if d.has("height"):
+		var box: AABB = fit * Models.aabb_of(path)
+		fit = Transform3D(Basis().scaled(Vector3.ONE * float(d.height) / maxf(box.size.y, 0.01)), Vector3.ZERO) * fit
+	var tinted: bool = d.has("colors")
+	var chunks := {}
+	for j in spots.size():
+		var tile: int = spots[j][0]
+		var key := Vector2i((tile % map.width) / CHUNK, (tile / map.width) / CHUNK)
+		if not chunks.has(key):
+			chunks[key] = []
+		chunks[key].append(j)
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(path)
 	for part in Models.mesh_parts(path):
-		var mm := MultiMesh.new()
-		mm.transform_format = MultiMesh.TRANSFORM_3D
-		mm.mesh = part.mesh
-		mm.instance_count = spots.size()
-		for j in spots.size():
-			mm.set_instance_transform(j, spots[j][1] * part.xf)
-			if track:
-				var key: int = spots[j][0]
-				if not _tree_instances.has(key):
-					_tree_instances[key] = []
-				_tree_instances[key].append([mm, j])
-		var mmi := MultiMeshInstance3D.new()
-		mmi.multimesh = mm
-		add_child(mmi)
+		var mesh: Mesh = _recolored(part.mesh, d.colors) if tinted else part.mesh
+		for key in chunks:
+			var ids: Array = chunks[key]
+			var mm := MultiMesh.new()
+			mm.transform_format = MultiMesh.TRANSFORM_3D
+			mm.use_colors = tinted
+			mm.mesh = mesh
+			mm.instance_count = ids.size()
+			for n in ids.size():
+				var j: int = ids[n]
+				mm.set_instance_transform(n, spots[j][1] * fit * part.xf)
+				if tinted:
+					# A little per-tree variation so forests aren't uniform.
+					var v := rng.randf_range(0.82, 1.12)
+					mm.set_instance_color(n, Color(v * rng.randf_range(0.95, 1.05), v, v * rng.randf_range(0.9, 1.0)))
+				if track:
+					var tkey: int = spots[j][0]
+					if not _tree_instances.has(tkey):
+						_tree_instances[tkey] = []
+					_tree_instances[tkey].append([mm, n])
+			var mmi := MultiMeshInstance3D.new()
+			mmi.multimesh = mm
+			add_child(mmi)
+
+
+## A copy of `mesh` whose surfaces get flat stylized materials by name ("Bark",
+## "Leaves"), tinted per instance through the MultiMesh colour.
+func _recolored(mesh: Mesh, colors: Dictionary) -> Mesh:
+	var out: Mesh = mesh.duplicate()
+	for i in out.get_surface_count():
+		var old := out.surface_get_material(i)
+		var name: String = old.resource_name if old else ""
+		var m := StandardMaterial3D.new()
+		m.vertex_color_use_as_albedo = true
+		m.roughness = 0.9
+		m.albedo_color = Color(0.5, 0.5, 0.5)
+		for frag in colors:
+			if name.contains(frag):
+				m.albedo_color = DB.color_of(colors[frag])
+		out.surface_set_material(i, m)
+	return out
 
 
 # --- Updates ------------------------------------------------------------------------

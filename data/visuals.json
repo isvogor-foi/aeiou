@@ -8,7 +8,7 @@
 	],
 	"units": {
 		"settler": {
-			"model": "res://assets/kaykit/adventures/Rogue_Hooded.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_Hooded_hd.glb",
 			"height": 1.05,
 			"texture": "res://assets/recolor/rogue_schoenbrunn.png",
 			"hide": [
@@ -23,10 +23,30 @@
 				"attack": "1H_Melee_Attack_Stab",
 				"work": "1H_Melee_Attack_Chop",
 				"death": "Death_A"
+			},
+			"attach": {
+				"chest": {
+					"proc": "tool_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.8
+				},
+				"head": {
+					"proc": "goggles",
+					"offset": [
+						0,
+						0.78,
+						0.5
+					],
+					"scale": 1.0
+				}
 			}
 		},
 		"grenadier": {
-			"model": "res://assets/kaykit/adventures/Rogue.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_hd.glb",
 			"height": 1.25,
 			"texture": "res://assets/recolor/rogue_white.png",
 			"hide": [
@@ -45,6 +65,24 @@
 						0.05
 					],
 					"proc": "bearskin"
+				},
+				"upperarm.l": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
+				},
+				"upperarm.r": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
 				}
 			},
 			"anims": {
@@ -55,7 +93,7 @@
 			}
 		},
 		"musketeer": {
-			"model": "res://assets/kaykit/adventures/Rogue.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_hd.glb",
 			"height": 1.2,
 			"texture": "res://assets/recolor/rogue_white.png",
 			"hide": [
@@ -74,6 +112,15 @@
 						0.05
 					],
 					"proc": "shako"
+				},
+				"chest": {
+					"proc": "aether_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.65
 				}
 			},
 			"anims": {
@@ -100,10 +147,19 @@
 			]
 		},
 		"thrall": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Minion.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Minion_hd.glb",
 			"height": 1.05,
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf",
+				"chest": {
+					"proc": "grave_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.75
+				}
 			},
 			"anims": {
 				"idle": "Idle",
@@ -114,7 +170,7 @@
 			}
 		},
 		"reaver": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
 			"height": 1.25,
 			"attach": {
 				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Blade.gltf",
@@ -128,10 +184,28 @@
 			}
 		},
 		"hexcaster": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Mage.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Mage_hd.glb",
 			"height": 1.3,
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf",
+				"handslot.l": {
+					"proc": "soul_lantern",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"scale": 1.2
+				},
+				"head": {
+					"proc": "necro_circlet",
+					"offset": [
+						0,
+						0.72,
+						0.0
+					],
+					"scale": 0.9
+				}
 			},
 			"anims": {
 				"idle": "Idle",
@@ -139,7 +213,10 @@
 				"attack": "Spellcast_Shoot",
 				"death": "Death_C_Skeletons",
 				"cast": "Spellcast_Raise"
-			}
+			},
+			"hide": [
+				"Skeleton_Mage_Hat"
+			]
 		},
 		"bone_cart": {
 			"model": "res://assets/kaykit/medieval/decoration/props/wheelbarrow.gltf",
@@ -157,7 +234,7 @@
 			]
 		},
 		"jaeger": {
-			"model": "res://assets/kaykit/adventures/Rogue_Hooded.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_Hooded_hd.glb",
 			"height": 1.2,
 			"hide": [
 				"Knife",
@@ -167,7 +244,16 @@
 				"Throwable"
 			],
 			"attach": {
-				"handslot.r": "proc:rifle"
+				"handslot.r": "proc:rifle",
+				"head": {
+					"proc": "goggles",
+					"offset": [
+						0,
+						0.78,
+						0.5
+					],
+					"scale": 1.0
+				}
 			},
 			"anims": {
 				"idle": "Idle",
@@ -177,12 +263,14 @@
 			}
 		},
 		"field_alchemist": {
-			"model": "res://assets/kaykit/adventures/Mage.glb",
+			"model": "res://assets/kaykit/adventures/Mage_hd.glb",
 			"height": 1.3,
 			"hide": [
 				"1H_Wand",
 				"Spellbook",
-				"Spellbook_open"
+				"Spellbook_open",
+				"Mage_Hat",
+				"2H_Staff"
 			],
 			"tint": [
 				1.0,
@@ -195,10 +283,43 @@
 				"attack": "Spellcast_Shoot",
 				"cast": "Spellcast_Raise",
 				"death": "Death_A"
+			},
+			"attach": {
+				"head": {
+					"proc": "top_hat",
+					"offset": [
+						0,
+						0.78,
+						0.0
+					],
+					"scale": 1.4
+				},
+				"handslot.r": {
+					"proc": "aether_staff",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"rotation": [
+						0,
+						0,
+						90
+					]
+				},
+				"chest": {
+					"proc": "aether_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.65
+				}
 			}
 		},
 		"kuerassier": {
-			"model": "res://assets/kaykit/adventures/Knight.glb",
+			"model": "res://assets/kaykit/adventures/Knight_hd.glb",
 			"height": 1.5,
 			"hide": [
 				"1H_Sword",
@@ -213,15 +334,38 @@
 				"walk": "Running_A",
 				"attack": "2H_Melee_Attack_Slice",
 				"death": "Death_A"
+			},
+			"attach": {
+				"upperarm.l": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
+				},
+				"upperarm.r": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
+				}
 			}
 		},
 		"rudolf": {
-			"model": "res://assets/kaykit/adventures/Mage.glb",
+			"model": "res://assets/kaykit/adventures/Mage_hd.glb",
 			"height": 1.75,
 			"texture": "res://assets/recolor/mage_black_gold.png",
 			"hide": [
 				"1H_Wand",
-				"Spellbook"
+				"Spellbook",
+				"Mage_Hat",
+				"2H_Staff",
+				"Spellbook_open"
 			],
 			"hero": true,
 			"anims": {
@@ -230,10 +374,43 @@
 				"attack": "Spellcast_Shoot",
 				"cast": "Spellcast_Long",
 				"death": "Death_B"
+			},
+			"attach": {
+				"head": {
+					"proc": "top_hat",
+					"offset": [
+						0,
+						0.78,
+						0.0
+					],
+					"scale": 1.4
+				},
+				"handslot.r": {
+					"proc": "aether_staff",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"rotation": [
+						0,
+						0,
+						90
+					]
+				},
+				"chest": {
+					"proc": "aether_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.65
+				}
 			}
 		},
 		"bonebow": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Rogue.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Rogue_hd.glb",
 			"height": 1.2,
 			"attach": {
 				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Crossbow.gltf"
@@ -246,10 +423,28 @@
 			}
 		},
 		"necromancer": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Mage.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Mage_hd.glb",
 			"height": 1.35,
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf",
+				"handslot.l": {
+					"proc": "soul_lantern",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"scale": 1.2
+				},
+				"head": {
+					"proc": "necro_circlet",
+					"offset": [
+						0,
+						0.72,
+						0.0
+					],
+					"scale": 0.9
+				}
 			},
 			"tint": [
 				0.75,
@@ -262,13 +457,25 @@
 				"attack": "Spellcast_Shoot",
 				"cast": "Spellcast_Summon",
 				"death": "Death_C_Skeletons"
-			}
+			},
+			"hide": [
+				"Skeleton_Mage_Hat"
+			]
 		},
 		"grave_brute": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
 			"height": 1.55,
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf",
+				"chest": {
+					"proc": "grave_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.75
+				}
 			},
 			"tint": [
 				0.7,
@@ -283,10 +490,28 @@
 			}
 		},
 		"shadow_sovereign": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Mage.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Mage_hd.glb",
 			"height": 1.8,
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf",
+				"handslot.l": {
+					"proc": "soul_lantern",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"scale": 1.2
+				},
+				"head": {
+					"proc": "necro_circlet",
+					"offset": [
+						0,
+						0.72,
+						0.0
+					],
+					"scale": 0.9
+				}
 			},
 			"tint": [
 				0.55,
@@ -300,10 +525,13 @@
 				"attack": "Spellcast_Shoot",
 				"cast": "Spellcast_Summon",
 				"death": "Death_C_Skeletons"
-			}
+			},
+			"hide": [
+				"Skeleton_Mage_Hat"
+			]
 		},
 		"risen": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Minion.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Minion_hd.glb",
 			"height": 1.0,
 			"tint": [
 				0.7,
@@ -318,12 +546,14 @@
 			}
 		},
 		"kress_flyer": {
-			"model": "res://assets/kaykit/adventures/Mage.glb",
+			"model": "res://assets/kaykit/adventures/Mage_hd.glb",
 			"height": 1.1,
 			"hide": [
 				"2H_Staff",
 				"Spellbook",
-				"Spellbook_open"
+				"Spellbook_open",
+				"Mage_Hat",
+				"1H_Wand"
 			],
 			"fly_height": 1.8,
 			"props": [
@@ -334,6 +564,26 @@
 				"walk": "Sit_Chair_Idle",
 				"attack": "Spellcast_Shoot",
 				"death": "Death_A"
+			},
+			"attach": {
+				"head": {
+					"proc": "goggles",
+					"offset": [
+						0,
+						0.78,
+						0.5
+					],
+					"scale": 1.0
+				},
+				"chest": {
+					"proc": "aether_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.65
+				}
 			}
 		},
 		"double_eagle": {
@@ -367,7 +617,7 @@
 			"naval": true
 		},
 		"standschuetze": {
-			"model": "res://assets/kaykit/adventures/Rogue.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_hd.glb",
 			"height": 1.2,
 			"texture": "res://assets/recolor/rogue_loden.png",
 			"hide": [
@@ -396,7 +646,7 @@
 			}
 		},
 		"grenzer": {
-			"model": "res://assets/kaykit/adventures/Barbarian.glb",
+			"model": "res://assets/kaykit/adventures/Barbarian_hd.glb",
 			"height": 1.2,
 			"texture": "res://assets/recolor/barbarian_red.png",
 			"hide": [
@@ -421,7 +671,7 @@
 			"scale": 1.0
 		},
 		"prince_eugene": {
-			"model": "res://assets/kaykit/adventures/Knight.glb",
+			"model": "res://assets/kaykit/adventures/Knight_hd.glb",
 			"height": 1.7,
 			"hero": true,
 			"texture": "res://assets/recolor/knight_white.png",
@@ -442,6 +692,24 @@
 						0.95,
 						0.05
 					]
+				},
+				"upperarm.l": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
+				},
+				"upperarm.r": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
 				}
 			},
 			"anims": {
@@ -453,7 +721,7 @@
 			}
 		},
 		"maria_theresa": {
-			"model": "res://assets/kaykit/adventures/Mage.glb",
+			"model": "res://assets/kaykit/adventures/Mage_hd.glb",
 			"height": 1.6,
 			"hero": true,
 			"texture": "res://assets/recolor/mage_black_gold.png",
@@ -461,7 +729,8 @@
 				"Mage_Hat",
 				"1H_Wand",
 				"2H_Staff",
-				"Spellbook_open"
+				"Spellbook_open",
+				"Spellbook"
 			],
 			"attach": {
 				"head": {
@@ -470,6 +739,19 @@
 						0,
 						0.95,
 						0.0
+					]
+				},
+				"handslot.r": {
+					"proc": "aether_staff",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"rotation": [
+						0,
+						0,
+						90
 					]
 				}
 			},
@@ -482,7 +764,7 @@
 			}
 		},
 		"blood_countess": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Rogue.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Rogue_hd.glb",
 			"height": 1.6,
 			"hero": true,
 			"tint": [
@@ -502,7 +784,7 @@
 			}
 		},
 		"bone_herald": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
 			"height": 1.9,
 			"hero": true,
 			"tint": [
@@ -535,7 +817,7 @@
 			"scale": 1.0
 		},
 		"hussar": {
-			"model": "res://assets/kaykit/adventures/Rogue.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_hd.glb",
 			"height": 0.95,
 			"texture": "res://assets/recolor/rogue_white.png",
 			"hide": [
@@ -566,7 +848,7 @@
 			}
 		},
 		"ghoul_rider": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Minion.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Minion_hd.glb",
 			"height": 0.95,
 			"mount": "bone_horse",
 			"saddle": 0.7,
@@ -606,7 +888,7 @@
 			"fly_height": 3.0
 		},
 		"kaiserjaeger": {
-			"model": "res://assets/kaykit/adventures/Rogue.glb",
+			"model": "res://assets/kaykit/adventures/Rogue_hd.glb",
 			"height": 1.2,
 			"texture": "res://assets/recolor/rogue_loden.png",
 			"hide": [
@@ -625,6 +907,15 @@
 						0.05
 					],
 					"proc": "shako"
+				},
+				"chest": {
+					"proc": "aether_pack",
+					"offset": [
+						0,
+						0.0,
+						-0.42
+					],
+					"scale": 0.65
 				}
 			},
 			"anims": {
@@ -635,7 +926,7 @@
 			}
 		},
 		"aether_colossus": {
-			"model": "res://assets/kaykit/adventures/Knight.glb",
+			"model": "res://assets/kaykit/adventures/Knight_hd.glb",
 			"height": 3.4,
 			"tint": [
 				1.25,
@@ -657,7 +948,7 @@
 			}
 		},
 		"bone_colossus": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
 			"height": 3.4,
 			"tint": [
 				1.1,
@@ -675,7 +966,7 @@
 			}
 		},
 		"abomination": {
-			"model": "res://assets/kaykit/adventures/Barbarian.glb",
+			"model": "res://assets/kaykit/adventures/Barbarian_hd.glb",
 			"height": 1.9,
 			"tint": [
 				0.65,
@@ -697,7 +988,7 @@
 			}
 		},
 		"lich": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Mage.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Mage_hd.glb",
 			"height": 1.5,
 			"tint": [
 				0.7,
@@ -705,7 +996,25 @@
 				1.1
 			],
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf",
+				"handslot.l": {
+					"proc": "soul_lantern",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"scale": 1.2
+				},
+				"head": {
+					"proc": "necro_circlet",
+					"offset": [
+						0,
+						0.72,
+						0.0
+					],
+					"scale": 0.9
+				}
 			},
 			"anims": {
 				"idle": "Idle",
@@ -713,10 +1022,13 @@
 				"attack": "Spellcast_Shoot",
 				"cast": "Spellcast_Summon",
 				"death": "Death_C_Skeletons"
-			}
+			},
+			"hide": [
+				"Skeleton_Mage_Hat"
+			]
 		},
 		"vampire": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Rogue.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Rogue_hd.glb",
 			"height": 1.2,
 			"tint": [
 				1.0,
@@ -734,7 +1046,7 @@
 			}
 		},
 		"bone_golem": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
 			"height": 1.55,
 			"tint": [
 				1.1,
@@ -753,7 +1065,7 @@
 			}
 		},
 		"wraith": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Mage.glb",
+			"model": "res://assets/kaykit/skeletons/Skeleton_Mage_hd.glb",
 			"height": 1.25,
 			"tint": [
 				0.45,
@@ -761,17 +1073,38 @@
 				0.6
 			],
 			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf"
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Staff.gltf",
+				"handslot.l": {
+					"proc": "soul_lantern",
+					"offset": [
+						0,
+						0,
+						0
+					],
+					"scale": 1.2
+				},
+				"head": {
+					"proc": "necro_circlet",
+					"offset": [
+						0,
+						0.72,
+						0.0
+					],
+					"scale": 0.9
+				}
 			},
 			"anims": {
 				"idle": "Idle",
 				"walk": "Walking_D_Skeletons",
 				"attack": "Spellcast_Shoot",
 				"death": "Death_C_Skeletons"
-			}
+			},
+			"hide": [
+				"Skeleton_Mage_Hat"
+			]
 		},
 		"rebel_militia": {
-			"model": "res://assets/kaykit/adventures/Barbarian.glb",
+			"model": "res://assets/kaykit/adventures/Barbarian_hd.glb",
 			"height": 1.1,
 			"hide": [
 				"1H_Axe",
@@ -790,7 +1123,7 @@
 			}
 		},
 		"archduke": {
-			"model": "res://assets/kaykit/adventures/Knight.glb",
+			"model": "res://assets/kaykit/adventures/Knight_hd.glb",
 			"height": 1.7,
 			"hero": true,
 			"texture": "res://assets/recolor/knight_white.png",
@@ -811,6 +1144,24 @@
 						0.95,
 						0.05
 					]
+				},
+				"upperarm.l": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
+				},
+				"upperarm.r": {
+					"proc": "pauldron",
+					"offset": [
+						0,
+						0.05,
+						0
+					],
+					"scale": 1.3
 				}
 			},
 			"anims": {
@@ -831,6 +1182,32 @@
 				1.0,
 				0.9,
 				0.66
+			],
+			"props": [
+				{
+					"proc": "aether_lamp",
+					"offset": [
+						1.9,
+						0,
+						1.9
+					]
+				},
+				{
+					"proc": "aether_lamp",
+					"offset": [
+						-1.9,
+						0,
+						1.9
+					]
+				},
+				{
+					"proc": "wall_cog",
+					"offset": [
+						1.2,
+						0.9,
+						1.75
+					]
+				}
 			]
 		},
 		"citadel": {
@@ -841,6 +1218,32 @@
 				0.55,
 				0.5,
 				0.6
+			],
+			"props": [
+				{
+					"proc": "soul_lamp",
+					"offset": [
+						1.9,
+						0,
+						1.9
+					]
+				},
+				{
+					"proc": "soul_lamp",
+					"offset": [
+						-1.9,
+						0,
+						1.9
+					]
+				},
+				{
+					"proc": "soul_chimney",
+					"offset": [
+						-1.7,
+						0,
+						-1.7
+					]
+				}
 			]
 		},
 		"dwelling": {
@@ -852,7 +1255,17 @@
 					0.9,
 					0.66
 				]
-			}
+			},
+			"props": [
+				{
+					"proc": "chimney",
+					"offset": [
+						0.75,
+						0,
+						-0.75
+					]
+				}
+			]
 		},
 		"storehouse": {
 			"model": "res://assets/kaykit/medieval/buildings/{team}/building_market_{team}.gltf",
@@ -863,7 +1276,17 @@
 					0.9,
 					0.66
 				]
-			}
+			},
+			"props": [
+				{
+					"proc": "wall_cog",
+					"offset": [
+						0.0,
+						0.5,
+						0.95
+					]
+				}
+			]
 		},
 		"kaserne": {
 			"model": "res://assets/kaykit/medieval/buildings/{team}/building_barracks_{team}.gltf",
@@ -872,6 +1295,24 @@
 				1.0,
 				0.9,
 				0.66
+			],
+			"props": [
+				{
+					"proc": "chimney",
+					"offset": [
+						-1.25,
+						0,
+						-1.25
+					]
+				},
+				{
+					"proc": "aether_lamp",
+					"offset": [
+						1.4,
+						0,
+						1.4
+					]
+				}
 			]
 		},
 		"blood_pit": {
@@ -881,6 +1322,24 @@
 				0.55,
 				0.5,
 				0.6
+			],
+			"props": [
+				{
+					"proc": "soul_chimney",
+					"offset": [
+						-1.25,
+						0,
+						-1.25
+					]
+				},
+				{
+					"proc": "soul_lamp",
+					"offset": [
+						1.4,
+						0,
+						1.4
+					]
+				}
 			]
 		},
 		"garden": {
@@ -901,7 +1360,25 @@
 					0.9,
 					0.66
 				]
-			}
+			},
+			"props": [
+				{
+					"proc": "aether_lamp",
+					"offset": [
+						1.4,
+						0,
+						1.4
+					]
+				},
+				{
+					"proc": "aether_lamp",
+					"offset": [
+						-1.4,
+						0,
+						1.4
+					]
+				}
+			]
 		},
 		"schiessstand": {
 			"model": "res://assets/kaykit/medieval/buildings/{team}/building_archeryrange_{team}.gltf",
@@ -910,6 +1387,16 @@
 				1.0,
 				0.9,
 				0.66
+			],
+			"props": [
+				{
+					"proc": "aether_lamp",
+					"offset": [
+						1.4,
+						0,
+						1.4
+					]
+				}
 			]
 		},
 		"bone_range": {
@@ -928,6 +1415,24 @@
 				1.0,
 				0.9,
 				0.66
+			],
+			"props": [
+				{
+					"proc": "chimney",
+					"offset": [
+						1.2,
+						0,
+						-1.2
+					]
+				},
+				{
+					"proc": "pipes",
+					"offset": [
+						-0.8,
+						0,
+						1.35
+					]
+				}
 			]
 		},
 		"ossuary": {
@@ -937,6 +1442,24 @@
 				0.5,
 				0.45,
 				0.6
+			],
+			"props": [
+				{
+					"proc": "soul_chimney",
+					"offset": [
+						1.2,
+						0,
+						-1.2
+					]
+				},
+				{
+					"proc": "soul_lamp",
+					"offset": [
+						-1.4,
+						0,
+						1.4
+					]
+				}
 			]
 		},
 		"festungsturm": {
@@ -962,6 +1485,16 @@
 				1.0,
 				0.9,
 				0.66
+			],
+			"props": [
+				{
+					"proc": "pipes",
+					"offset": [
+						0.6,
+						0,
+						1.35
+					]
+				}
 			]
 		},
 		"roost": {
@@ -1053,6 +1586,22 @@
 						0,
 						-0.9
 					]
+				},
+				{
+					"proc": "pipes",
+					"offset": [
+						-0.6,
+						0,
+						1.35
+					]
+				},
+				{
+					"proc": "wall_cog",
+					"offset": [
+						0.5,
+						0.7,
+						1.35
+					]
 				}
 			]
 		},
@@ -1063,6 +1612,24 @@
 				0.45,
 				0.5,
 				0.4
+			],
+			"props": [
+				{
+					"proc": "soul_chimney",
+					"offset": [
+						1.2,
+						0,
+						-1.2
+					]
+				},
+				{
+					"proc": "soul_chimney",
+					"offset": [
+						-1.2,
+						0,
+						-1.2
+					]
+				}
 			]
 		}
 	},
@@ -1122,8 +1689,125 @@
 	"rubble": "res://assets/kaykit/medieval/buildings/neutral/building_destroyed.gltf",
 	"rally_flag": "res://assets/kaykit/medieval/decoration/props/flag_{team}.gltf",
 	"trees": [
-		"res://assets/kaykit/medieval/decoration/nature/tree_single_A.gltf",
-		"res://assets/kaykit/medieval/decoration/nature/tree_single_B.gltf"
+		{
+			"model": "res://assets/quaternius/nature/PineTree_1.fbx",
+			"height": 2.1,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.16,
+					0.36,
+					0.22
+				]
+			}
+		},
+		{
+			"model": "res://assets/quaternius/nature/PineTree_2.fbx",
+			"height": 2.3,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.16,
+					0.36,
+					0.22
+				]
+			}
+		},
+		{
+			"model": "res://assets/quaternius/nature/PineTree_3.fbx",
+			"height": 1.9,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.16,
+					0.36,
+					0.22
+				]
+			}
+		},
+		{
+			"model": "res://assets/quaternius/nature/PineTree_4.fbx",
+			"height": 2.0,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.16,
+					0.36,
+					0.22
+				]
+			}
+		},
+		{
+			"model": "res://assets/quaternius/nature/PineTree_5.fbx",
+			"height": 1.8,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.16,
+					0.36,
+					0.22
+				]
+			}
+		},
+		{
+			"model": "res://assets/quaternius/nature/NormalTree_5.fbx",
+			"height": 1.8,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.3,
+					0.5,
+					0.2
+				]
+			}
+		},
+		{
+			"model": "res://assets/quaternius/nature/NormalTree_5.fbx",
+			"height": 1.6,
+			"rotate_x": -90,
+			"colors": {
+				"Bark": [
+					0.36,
+					0.24,
+					0.16
+				],
+				"Leaves": [
+					0.36,
+					0.52,
+					0.18
+				]
+			}
+		}
 	],
 	"rocks": [
 		"res://assets/kaykit/medieval/decoration/nature/rock_single_A.gltf",
@@ -1164,6 +1848,6 @@
 			0.15
 		]
 	},
-	"_comment_air": "fly_height: flyers hover this high (tiles). naval: sits on the water surface. procedural: a model from view3d/procedural.gd; props: procedural extras (e.g. the broom).",
+	"_comment_air": "fly_height: flyers hover this high (tiles). naval: sits on the water surface. procedural: a model from view3d/procedural.gd; props: procedural extras (e.g. the Kress glider).",
 	"_comment_flags": "Every building flies its faction's flag (factions/*.json 'flag'); cities also fly their crown land's flag. tint/faction_tint give Monarchy buildings their Schönbrunn yellow."
 }

@@ -73,6 +73,7 @@ func show_entity(e) -> void:
 	match e.kind:
 		Entity.UNIT:
 			_model = Models.make_unit(e.type_id, e.owner)
+			_model.scale = Vector3.ONE  # close-ups use the full-size model
 			var v: Dictionary = DB.visuals.units.get(e.type_id, {})
 			_stage.add_child(_model)
 			# Characters face the camera; flyers' bodies sit at their flying height.

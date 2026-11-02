@@ -31,6 +31,9 @@ func _run():
 	gv.camera.update_transform()
 	for i in 60: await process_frame
 	gv.frame_profiling = true
+	if OS.has_environment("NO_TREES"):
+		for mmi in gv.terrain.find_children("*", "MultiMeshInstance3D", true, false):
+			mmi.visible = false
 	preload("res://sim/prof.gd").enabled = true
 	preload("res://sim/prof.gd").data = {}
 	print("quality ", preload("res://ui/graphics.gd").effective())

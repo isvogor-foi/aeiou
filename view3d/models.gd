@@ -69,9 +69,20 @@ static func _bounds(n: Node, xf: Transform3D) -> AABB:
 
 
 ## A unit model scaled to its data height, with equipment and animations prepared.
+## People and wagons are drawn at this fraction of their data height, so the
+## buildings dominate the map. Ships and flyers keep their size.
+const GROUND_UNIT_SCALE := 0.75
+
+
+static func unit_scale(type_id: String) -> float:
+	var d: Dictionary = DB.units.get(type_id, {})
+	return GROUND_UNIT_SCALE if d.get("domain", "ground") == "ground" else 1.0
+
+
 static func make_unit(type_id: String, owner: int) -> Node3D:
 	var v: Dictionary = DB.visuals.units.get(type_id, {})
 	var root := Node3D.new()
+	root.scale = Vector3.ONE * unit_scale(type_id)
 	if v.is_empty():
 		return root
 	if v.has("procedural"):
@@ -103,7 +114,10 @@ static func make_unit(type_id: String, owner: int) -> Node3D:
 				var ba := BoneAttachment3D.new()
 				ba.bone_name = bone
 				skel.add_child(ba)
-				ba.add_child(_attachment(attach[bone]))
+				# One spec or a list of them (e.g. a hat and goggles on the head).
+				var specs: Array = attach[bone] if attach[bone] is Array else [attach[bone]]
+				for spec in specs:
+					ba.add_child(_attachment(spec))
 	for prop in v.get("props", []):
 		root.add_child(Procedural.build(prop, Color.WHITE))
 	for extra in v.get("extra", []):

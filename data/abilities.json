@@ -58,7 +58,7 @@
 		"description": "Raises 2 Risen to fight for 30s."
 	},
 	"fireball": {
-		"name": "Philosopher's Fire",
+		"name": "Alchemic Fire",
 		"hotkey": "D",
 		"mana": 30,
 		"cooldown": 12.0,
@@ -70,7 +70,7 @@
 		"radius": 2.0,
 		"autocast": false,
 		"vfx": "fireball",
-		"description": "Explodes for 60 fire damage in a 2-tile radius."
+		"description": "A flask of alchemical fire: 60 fire damage in a 2-tile radius."
 	},
 	"mass_ward": {
 		"name": "Imperial Aegis",

@@ -47,3 +47,6 @@ static func apply(env: Environment, sun: DirectionalLight3D, viewport: Viewport)
 			else DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	sun.directional_shadow_max_distance = 70.0 if level == "high" else 50.0
 	viewport.scaling_3d_scale = 0.75 if level == "low" else 1.0
+	# Pixels of error allowed before switching to a simpler LOD mesh: higher means
+	# small, distant soldiers and trees use their lighter versions sooner.
+	viewport.mesh_lod_threshold = {"high": 1.0, "medium": 3.0, "low": 5.0}[level]

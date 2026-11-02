@@ -2,7 +2,7 @@
 	"name": "Aetheric Monarchy",
 	"short": "Monarchy",
 	"alignment": "imperial",
-	"description": "The Habsburg crowns, saved by Aether: Rudolf II's alchemists unlocked it, and by the 1800s it drives a steam-and-spell empire of many peoples. Viribus Unitis - with united forces.",
+	"description": "The Habsburg crowns, saved by Aether: Rudolf II's alchemists unlocked it, and by the 1800s it drives a steam-and-Aether empire of many peoples. Viribus Unitis - with united forces.",
 	"city": "residenz",
 	"worker": "settler",
 	"start_workers": 3,

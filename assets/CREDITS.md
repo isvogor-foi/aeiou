@@ -19,3 +19,14 @@ Which model each unit, building and resource uses is set in `data/visuals.json`.
 | `music/blue_danube.mp3` | Johann Strauss II, *An der schönen blauen Donau* | U.S. Marine Band | Public domain (U.S. government work) |
 
 Sound effects are synthesised in code (`audio/sfx.gd`).
+
+## Trees (CC0, Quaternius)
+
+`quaternius/nature/*.fbx`: from Quaternius's **Ultimate Stylized Nature** pack (CC0, quaternius.com),
+fetched from the Godot-adjusted repository `walterpalladino/godot-quaternius-ultimate-stylized-nature`
+(MIT for its Godot adjustments). Only the meshes are used; materials are set in code.
+
+## Derived models
+
+`kaykit/*/*_hd.glb` are smooth-subdivided copies of the KayKit characters (CC0), made by
+`devtools/subdivide.py`. Roof atlases in `recolor/roofs_*.png` come from `devtools/roofs.py`.

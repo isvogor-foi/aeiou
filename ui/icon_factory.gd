@@ -64,6 +64,7 @@ func _render(job: Array) -> void:
 	var model: Node3D
 	if job[1] == "unit":
 		model = Models.make_unit(job[2], job[3])
+		model.scale = Vector3.ONE
 	else:
 		var size := int(DB.buildings[job[2]].size)
 		model = Models.make_footprint_model(DB.visuals.buildings.get(job[2], {}), job[3], size)

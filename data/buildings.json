@@ -161,7 +161,7 @@
 		"name": "Blood Pit",
 		"faction": "covenant",
 		"role": "military",
-		"description": "Trains Reavers, Hexcasters, Bone Carts and (Age 3) Grave Brutes.",
+		"description": "Trains Reavers, Soul Callers, Bone Carts and (Age 3) Grave Brutes.",
 		"size": 3,
 		"hp": 900,
 		"armor": "structure",
@@ -195,7 +195,7 @@
 			"covenant": "Black Archive"
 		},
 		"name": "Library",
-		"description": "Researches Charms, Defense, Transfiguration and Potions.",
+		"description": "Researches Cameralism (economy), Fortification and Medicine.",
 		"size": 3,
 		"hp": 700,
 		"armor": "structure",

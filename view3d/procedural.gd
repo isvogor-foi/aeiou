@@ -1,7 +1,10 @@
 extends RefCounted
 ## Low-poly models built from primitives, for things the asset packs don't have:
-## flyers, ships, fish shoals, the broom and the pier. All face +Z, sizes in tiles.
+## flyers, ships, fish shoals and the pier. All face +Z, sizes in tiles.
 ## Parts tagged with meta "flap" (wings) or "spin" are animated by EntityViews.
+## Soldiers' steampunk kit lives in gear.gd.
+
+const Gear = preload("res://view3d/gear.gd")
 
 static var _mats := {}
 
@@ -98,8 +101,8 @@ static func build(kind: String, team: Color) -> Node3D:
 			return _fish_shoal()
 		"pier":
 			return _pier()
-		"broom":
-			return _broom()
+		"goggles", "top_hat", "aether_pack", "pauldron", "aether_staff", "soul_lantern", "grave_pack", "tool_pack", "necro_circlet", "chimney", "soul_chimney", "wall_cog", "aether_lamp", "soul_lamp", "pipes":
+			return Gear.build(kind)
 	return Node3D.new()
 
 
@@ -278,20 +281,6 @@ static func _pier() -> Node3D:
 	return root
 
 
-static func _broom() -> Node3D:
-	var root := Node3D.new()
-	var handle := mat(Color(0.5, 0.32, 0.16))
-	var bristles := mat(Color(0.85, 0.7, 0.35))
-	_part(root, _cyl(0.035, 1.2), handle, Vector3(0, 0, 0.1), Vector3(PI / 2, 0, 0))
-	_part(root, _cone(0.14, 0.4), bristles, Vector3(0, 0, -0.6), Vector3(-PI / 2, 0, 0))
-	return root
-
-
-# --- Aetheric Monarchy ---------------------------------------------------------------
-# Weapons and hats are sized in KayKit character units (a character is ~2.2 tall)
-# because they hang off the character's skeleton.
-
-## A musket held along the hand bone's +Y axis; optional bayonet or Aether glow.
 static func _musket(aether: bool, bayonet: bool, length := 1.0) -> Node3D:
 	var root := Node3D.new()
 	var wood := mat(Color(0.42, 0.26, 0.14))

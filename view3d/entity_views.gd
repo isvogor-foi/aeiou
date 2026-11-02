@@ -82,7 +82,7 @@ func _create(e) -> Dictionary:
 			r.anims = v.get("anims", {})
 			r.fly = float(v.get("fly_height", 0.0))
 			r.naval = v.get("naval", false)
-			r.bar_height = float(v.get("height", 0.9)) + 0.25 + r.fly
+			r.bar_height = (float(v.get("height", 0.9)) + 0.25) * Models.unit_scale(e.type_id) + r.fly
 			r.animated = _animated_parts(body)
 			if r.fly > 0.0:
 				body.position.y = r.fly

@@ -53,12 +53,12 @@
 				"cap_coal": 0.4
 			},
 			"levels": [
-				"Summoning Charms",
+				"Water-Wheel Mills",
 				"Imperial Ledgers",
-				"Self-Stirring Cauldrons",
+				"Clockwork Looms",
 				"Theresian Cadastre",
 				"Aether Mills",
-				"The Abundance Rite"
+				"The Abundance Engine"
 			],
 			"short": "Camer.",
 			"icon": "ledger"
@@ -81,12 +81,12 @@
 				"city_damage": 2
 			},
 			"levels": [
-				"Hedge Wards",
+				"Palisades",
 				"Boundary Stones",
 				"Star Forts",
 				"Military Frontier",
-				"Bastion Enchantments",
-				"The Unbreakable Ward"
+				"Aether-Charged Bastions",
+				"The Unbreakable Line"
 			],
 			"short": "Fort.",
 			"icon": "fort"
@@ -109,12 +109,12 @@
 				"pop_limit": 10
 			},
 			"levels": [
-				"Healing Draughts",
-				"Greenhouse Charms",
+				"Barber-Surgeons",
+				"Glasshouse Boilers",
 				"Semmelweis' Washing",
-				"Elixir Gardens",
-				"Restorative Brews",
-				"Elixir of Vigour"
+				"Schönbrunn Botanics",
+				"Aether Tonics",
+				"The Vigour Engine"
 			],
 			"short": "Medicine",
 			"icon": "medicine"
@@ -195,7 +195,7 @@
 			"levels": [
 				"Field Elixirs",
 				"Golden Lane Formulae",
-				"Philosopher's Fire"
+				"Alchemists' Fire"
 			],
 			"ages": [
 				2,

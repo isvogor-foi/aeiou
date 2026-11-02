@@ -2,10 +2,10 @@
 
 The setting is an alternate Habsburg empire.
 - Rudolf II's Prague alchemists unlocked **Aether**.
-- By the 1800s Aether drives a steam-and-spell empire of many peoples.
+- By the 1800s Aether drives a steam-and-Aether empire of many peoples.
 - In 1914 the shot in Sarajevo misses, and Franz Ferdinand federalises the crown lands (Popovici's *United States of Greater Austria*, 1906) instead of losing them.
 
-It replaces the Aurelian Collegium. The **Umbral Covenant** stays as a fictional necromantic enemy.
+It replaced the game's original light faction. The **Umbral Covenant** stays as a fictional necromantic enemy.
 
 ## Decided (Phase 5.5)
 - **Resources:** Thaler (gold), Timber, Provisions (herbs) and Aether (mana). The data keys stay `gold` / `timber` / `herbs` / `mana`. Coal arrives with Age 4 steam.

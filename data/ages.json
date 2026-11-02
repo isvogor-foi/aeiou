@@ -1,8 +1,8 @@
 [
-	{"age": 1, "name": "Age of the Margraves", "description": "Ostarrichi, 996: a border march of farmers, hedge charms and wooden halls.", "cost": {}, "time": 0},
-	{"age": 2, "name": "Age of AEIOU", "description": "Frederick III carves his five-vowel cipher; the first true wand-wielders appear.", "cost": {"herbs": 300, "gold": 150}, "time": 40},
+	{"age": 1, "name": "Age of the Margraves", "description": "Ostarrichi, 996: a border march of farmers, hedge-shrines and wooden halls.", "cost": {}, "time": 0},
+	{"age": 2, "name": "Age of AEIOU", "description": "Frederick III carves his five-vowel cipher; the first adepts learn to draw the Aether current.", "cost": {"herbs": 300, "gold": 150}, "time": 40},
 	{"age": 3, "name": "Age of the Golden Lane", "description": "Rudolf II's alchemists in Prague crack the secret of Aether; casters and heroes rise.", "cost": {"herbs": 500, "gold": 350, "mana": 100}, "time": 50},
 	{"age": 4, "name": "Age of Reform", "description": "Maria Theresa and Joseph II: Aether engines, air rifles and bound beasts.", "cost": {"herbs": 800, "gold": 600, "mana": 250}, "time": 60},
-	{"age": 5, "name": "Age of the Congress", "description": "The Empire is proclaimed and Vienna dances at the Congress: mass spells, steam and statecraft.", "cost": {"herbs": 1200, "gold": 900, "mana": 450, "timber": 400}, "time": 70},
+	{"age": 5, "name": "Age of the Congress", "description": "The Empire is proclaimed and Vienna dances at the Congress: great Aether-works, steam and statecraft.", "cost": {"herbs": 1200, "gold": 900, "mana": 450, "timber": 400}, "time": 70},
 	{"age": 6, "name": "Age of the Aether Monarchy", "description": "1914, the shot in Sarajevo misses: a federal empire of airships, wonders and the AEIOU ritual.", "cost": {"herbs": 1600, "gold": 1300, "mana": 800, "timber": 600}, "time": 80}
 ]

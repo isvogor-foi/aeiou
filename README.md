@@ -1,7 +1,7 @@
 # Rise of Magic
 
 A 3D steampunk-magic real-time strategy game for Godot 4 (typed GDScript).
-The **Aetheric Monarchy** faces the **Umbral Covenant** across six ages. The Monarchy is an alternate Habsburg empire where Aether powers steam and spell, and its motto is A.E.I.O.U. See `docs/aetheric_monarchy.md`.
+The **Aetheric Monarchy** faces the **Umbral Covenant** across six ages. The Monarchy is an alternate Habsburg empire where Aether powers steam and the arts of alchemy, and its motto is A.E.I.O.U. See `docs/aetheric_monarchy.md`.
 
 ## Running
 
@@ -72,12 +72,12 @@ Rules of thumb:
   - A city at 0 HP is captured if you have more troops near it than the defender. Otherwise it holds at 1 HP.
   - Losing all cities means defeat.
 - **Gather caps:** per-resource income limits, shown in the top bar as `+rate/cap`.
-- **Library:** Charms, Defense, Transfiguration and Potions, 6 levels each. Level N needs age N.
+- **Library:** Cameralism (economy), Fortification and Medicine, 6 levels each. Level N needs age N. Soldier upgrades come from the military buildings (see Phase 8 fixes).
 - **Ages:** advance at a city through all six ages. Age raises the city limit and unlocks content.
 
 **3D view:**
 - Gently rolling terrain, lakes, forests, and borders drawn on the ground.
-- Animated KayKit characters: Collegium knights and mages, Covenant skeletons.
+- Animated KayKit characters: Monarchy soldiers and Covenant skeletons.
 - Medieval buildings in team colours, construction scaffolding, and rubble when buildings are destroyed.
 - Fog of war done as a depth-based screen pass.
 
@@ -89,7 +89,7 @@ Rules of thumb:
   - It defends its cities against invaders.
   - It attacks in growing waves and retreats when a wave is broken.
   - It moves on to the next city after a capture.
-- **Faction styles:** the Covenant raids early with Reavers. The Collegium builds its economy first and attacks later in bigger waves.
+- **Faction styles:** the Covenant raids early with Reavers. The Monarchy builds its economy first and attacks later in bigger waves.
 - **Difficulty:**
   - Easy and Normal play by your rules (fog of war, same economy). Easy is slower and attacks with smaller waves.
   - Hard gathers 25% faster (caps included), sees the whole map and attacks sooner.
@@ -100,38 +100,38 @@ Rules of thumb:
 
   | Faction | Ranged | Caster | Elite (Age 3) |
   |---|---|---|---|
-  | Collegium | Ranger | Mender: Heal, Ward | Aegis Knight: Charge |
+  | Monarchy | Jäger | Field Alchemist: Field Dressing, Aether Ward | Kürassier: Charge |
   | Covenant | Bonebow | Necromancer: Life Drain, Raise Dead | Grave Brute: Cleave |
 
-- **New buildings:** Archery Range / Bone Range, Sanctum / Ossuary, and Ward Tower / Bone Spire defense towers.
+- **New buildings:** Schießstand / Bone Range, Laboratorium / Ossuary, and Festungsturm / Bone Spire defense towers.
 - **Heroes:** one per player from Age 3, trained at a city. A fallen hero can be revived (60s).
-  - **High Archmage:** Fireball, Mass Ward, and an aura that cuts damage taken by 20%.
+  - **Rudolf II:** Alchemic Fire, Imperial Aegis, and an aura that cuts damage taken by 20%.
   - **Shadow Sovereign:** Death Coil, Summon Horde, and a 15% life-steal aura.
-- **Spells:**
-  - Each one costs Mana and has a cooldown. Spell data lives in `data/abilities.json`.
-  - Heal and Life Drain cast themselves by default.
-  - Spell hotkeys are D and F, followed by a click on the target. Right-click a spell button to toggle autocast (`*`).
-- **AI:** it builds the new buildings, fields the full roster, autocasts every spell, trains its hero, reaches distant resources and favours founding cities near gold.
+- **Abilities (Aether arts and necromancy):**
+  - Each one costs Aether and has a cooldown. Ability data lives in `data/abilities.json`.
+  - Field Dressing and Life Drain cast themselves by default.
+  - Ability hotkeys are D and F, followed by a click on the target. Right-click an ability button to toggle autocast (`*`).
+- **AI:** it builds the new buildings, fields the full roster, autocasts every ability, trains its hero, reaches distant resources and favours founding cities near gold.
 
 **Phase 5 (air and naval)** is done:
 - **Map types:** pick Inland (lakes), Coastal (a shared central sea) or Islands (a strait splits the map) on the title screen.
   - On water maps every start has a bay to the open water.
   - Fish shoals are a new renewable-ish source of herbs.
 - **Air units:**
-  - Collegium: Broom Rider (Age 2) and Griffin (Age 3), from the Aerie.
+  - Monarchy: Kress Flyer (Age 2) and Double Eagle (Age 3), from the Adlerhorst.
   - Covenant: Bat Swarm (Age 2) and Bone Drake (Age 3), from the Roost.
   - Flyers ignore terrain. Melee can't reach them; ranged units, towers and other flyers can.
-  - Rangers, Bonebows and Griffins deal +50% to air.
+  - Jäger, Bonebows and Double Eagles deal +50% to air.
 - **Naval units** (from the Docks, built on the shore in Age 2):
   - **Fishing Skiff:** lands herbs at the docks.
   - **Transport:** holds 8 population and costs none. Right-click it with troops to board; select it and right-click a shore to unload.
   - **Warship:** +50% vs ships, and it shells the shore.
 - **Fog of war:** explored ground now stays visible (`explored_stays_visible` in `data/rules.json`).
 - **AI:** it builds docks wherever there's a usable shore, fishes, fields flyers and warships, and ferries attack waves across water on Islands maps.
-- **Models:** ships, flyers, the pier and fish shoals are procedural low-poly models (`view3d/procedural.gd`). The Broom Rider is the KayKit mage on a broom.
+- **Models:** ships, flyers, the pier and fish shoals are procedural low-poly models (`view3d/procedural.gd`). The Kress Flyer is a KayKit figure under an Aether glider.
 
 **Phase 5.5 (Aetheric Monarchy re-theme)** is done:
-- **The Collegium is now the Aetheric Monarchy**, in imperial gold.
+- **The original light faction is now the Aetheric Monarchy**, in imperial gold.
   - **Renamed resources:** Thaler, Timber, Provisions and Aether.
   - **Habsburg ages:** the Margraves through the Aether Monarchy.
   - **Re-themed roster:** Settler, Grenadier, Aether Musketeer, Jäger, Field Alchemist, Kürassier, Kress Flyer, Double Eagle, and the hero Rudolf II.
@@ -227,6 +227,21 @@ Rules of thumb:
   - A city proclaimed as a crown land or dark pact repaints its roofs in that nation's colour, e.g. Austria Schönbrunn gold, Croatia red, Bohemia white, Hungary green.
   - The textures are generated by `devtools/roofs.py`.
 - **Flags:** the Austrian crown land flies the Austrian Empire's black-over-gold.
+
+**Visual pass (steampunk meets magic):**
+- **Characters:**
+  - Smooth-subdivided bodies, about 4× the triangles, made by `devtools/subdivide.py`.
+  - People and wagons drawn at 75% size.
+  - Procedural steampunk kit (`view3d/gear.gd`, each piece baked into one mesh):
+    - Monarchy: brass goggles, top hats with cog bands, Aether backpacks with copper pipes, glowing vials and a gauge, brass pauldrons, and Aether staffs.
+    - Covenant: soul lanterns, grave packs and iron circlets.
+  - No wizard hats, wands or spellbooks remain.
+- **Trees:** Quaternius stylized pines and broadleaf trees (CC0), recoloured in code and batched in 16-tile chunks.
+- **Buildings:** chimneys with smoke, turning wall cogs, Aether or soul lamps, and pipe runs.
+- **Text:** all Potter-like wording is gone. Research levels, ages, the Soul Caller and Alchemic Fire now read as steampunk-meets-magic.
+- **Performance:**
+  - A 150-unit battle on an Intel Iris Xe laptop at Medium graphics runs at about 46 fps.
+  - Distant objects switch to simpler LOD meshes sooner on Medium and Low graphics.
 
 **Phase 8 (balance and performance)** is partly done.
 
