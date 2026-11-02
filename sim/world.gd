@@ -113,6 +113,8 @@ func new_game(seed_value: int, faction_ids: Array, human_index := 0, difficulty 
 	_update_territory()
 	_update_pop()
 	update_fog()
+	# Label the map's connected regions now (during loading), not on the first order.
+	map.region_of(Vector2i.ZERO)
 	if players[0].age >= int(rules.victory.relics_spawn_age):
 		_spawn_relics()
 
@@ -525,8 +527,37 @@ func capture_city(city: Entity, by: int) -> void:
 
 # --- Tick -----------------------------------------------------------------------
 
+## Path searches allowed per tick; the rest wait a tick (spreads big orders out).
+const PATH_BUDGET := 16
+var _paths_left := PATH_BUDGET
+
+
+func take_path_budget() -> bool:
+	if _paths_left <= 0:
+		return false
+	_paths_left -= 1
+	return true
+
+
+## When true, tick() adds microseconds per section to `profile` (benchmarks only).
+static var profiling := false
+static var profile := {}
+var _prof_t := 0
+
+
+func _lap(section: String) -> void:
+	if not profiling:
+		return
+	var now := Time.get_ticks_usec()
+	profile[section] = profile.get(section, 0) + now - _prof_t
+	_prof_t = now
+
+
 func tick() -> void:
+	if profiling:
+		_prof_t = Time.get_ticks_usec()
 	tick_count += 1
+	_paths_left = PATH_BUDGET
 	events.clear()
 	var all := entities.values()
 	_unit_grid.clear()
@@ -557,27 +588,43 @@ func tick() -> void:
 				e.tile = GameMap.to_tile(c.pos)
 	if tick_count % 10 == 0:
 		_tick_areas()
+	_lap("setup")
 	for e in all:
 		if not e.alive or e.inside >= 0:
 			continue
 		if e.kind == Entity.UNIT:
-			UnitAI.update(self, e)
-		elif e.kind == Entity.BUILDING:
+			if profiling:
+				var t0 := Time.get_ticks_usec()
+				var key: String = "u:" + (e.orders[0].type if not e.orders.is_empty() else "idle")
+				UnitAI.update(self, e)
+				profile[key] = profile.get(key, 0) + Time.get_ticks_usec() - t0
+				profile["n:" + key.substr(2)] = profile.get("n:" + key.substr(2), 0) + 1
+			else:
+				UnitAI.update(self, e)
+	_lap("units")
+	for e in _buildings:
+		if e.alive:
 			_update_building(e)
+	_lap("buildings")
 	_separate()
+	_lap("separate")
 	_update_pop()
 	for ai in ais:
 		if (tick_count + ai.tick_offset) % ai.think_ticks == 0:
 			ai.think()
+	_lap("ai")
 	if territory.dirty:
 		_update_territory()
+	_lap("territory")
 	if tick_count % FOG_INTERVAL == 0:
 		update_fog()
+	_lap("fog")
 	if tick_count % TICK_RATE == 0:
 		_attrition_and_healing()
 		Loyalty.update(self)
 		for p in players:
 			p.update_income()
+	_lap("per_second")
 	for e in all:
 		if not e.alive:
 			entities.erase(e.id)
@@ -585,6 +632,7 @@ func tick() -> void:
 		if scenario_logic and winner < 0:
 			scenario_logic.update(self, scenario)
 		_check_victory()
+	_lap("victory")
 
 
 ## Poison clouds hurt enemy units inside them twice a second, then fade.
@@ -810,18 +858,24 @@ func _separate() -> void:
 			else:
 				grid[c] = [e]
 	# Each pair once: within a cell, then against four "forward" neighbour cells.
+	# The distance test is inlined: most pairs are too far apart to push, and
+	# skipping the call for them is most of this function's cost in a crowd.
+	var sep2 := _SEPARATION * _SEPARATION
 	for c in grid:
 		var a: Array = grid[c]
 		var n := a.size()
 		for i in n:
+			var ai: Entity = a[i]
 			for j in range(i + 1, n):
-				_push_apart(a[i], a[j])
+				if ai.pos.distance_squared_to(a[j].pos) < sep2:
+					_push_apart(ai, a[j])
 		for off in _FORWARD:
 			var b = grid.get(c + off)
 			if b != null:
-				for x in a:
-					for y in b:
-						_push_apart(x, y)
+				for x: Entity in a:
+					for y: Entity in b:
+						if x.pos.distance_squared_to(y.pos) < sep2:
+							_push_apart(x, y)
 
 
 const _FORWARD: Array[Vector2i] = [Vector2i(1, 0), Vector2i(-1, 1), Vector2i(0, 1), Vector2i(1, 1)]
@@ -829,12 +883,12 @@ const _SEPARATION := UNIT_RADIUS * 1.8
 
 
 func _push_apart(e: Entity, o: Entity) -> void:
-	# Flyers, ships and ground troops don't jostle each other.
-	if e.domain() != o.domain():
-		return
 	var d := o.pos - e.pos
 	var dist_sq := d.length_squared()
 	if dist_sq >= _SEPARATION * _SEPARATION:
+		return
+	# Flyers, ships and ground troops don't jostle each other.
+	if e.domain() != o.domain():
 		return
 	var dist := sqrt(dist_sq)
 	if dist < 0.01:
@@ -861,11 +915,12 @@ func _nudge(e: Entity, v: Vector2) -> void:
 
 
 func update_fog() -> void:
+	var sticky: bool = rules.get("explored_stays_visible", false)
 	for p in players:
 		if not p.tracks_fog:
 			continue
 		var vis: PackedByteArray = p.vis
-		if not rules.get("explored_stays_visible", false):
+		if not sticky:
 			for i in vis.size():
 				if vis[i] == 2:
 					vis[i] = 1
@@ -879,6 +934,11 @@ func update_fog() -> void:
 				r = 3.0 if e.constructing else r + e.size.x * 0.5
 			var t := GameMap.to_tile(e.pos)
 			var key := Vector3i(t.x, t.y, int(r * 2.0))
+			# With explored land staying visible, a unit that hasn't changed tile (or
+			# sight) since its last reveal can't uncover anything new.
+			if sticky and e.fog_key == key:
+				continue
+			e.fog_key = key
 			if done.has(key):
 				continue
 			done[key] = true
@@ -1230,6 +1290,9 @@ func find_enemy_near(e: Entity, radius: float) -> Entity:
 	var best: Entity = null
 	var best_score := INF
 	var reach := radius + e.size.x * TILE
+	# Units: edge distance <= radius implies centre distance <= radius + both radii.
+	var lim: float = radius + TILE + e.size.x * TILE
+	var lim2 := lim * lim
 	var lo := _cell(e.pos - Vector2(reach, reach))
 	var hi := _cell(e.pos + Vector2(reach, reach))
 	for cy in range(lo.y, hi.y + 1):
@@ -1238,11 +1301,20 @@ func find_enemy_near(e: Entity, radius: float) -> Entity:
 			if cell_units == null:
 				continue
 			for o in cell_units:
+				# Cheap rejects (comrades, out of reach) before the full scoring.
+				if o.owner == e.owner or o.pos.distance_squared_to(e.pos) > lim2:
+					continue
 				var score := _enemy_score(e, o, radius)
 				if score < best_score:
 					best_score = score
 					best = o
 	for o in _buildings:
+		# Cheap rejects first: our own side, and anything clearly out of reach.
+		if o.owner == e.owner or o.owner < 0:
+			continue
+		var r2: float = reach + o.size.x * TILE
+		if o.pos.distance_squared_to(e.pos) > r2 * r2:
+			continue
 		var score := _enemy_score(e, o, radius)
 		if score < best_score:
 			best_score = score

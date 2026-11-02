@@ -29,6 +29,10 @@ var orders: Array = []
 var path := PackedVector2Array()
 var path_index := 0
 var path_goal := Vector2i(-1, -1)
+## The entity the current path approaches (lets _approach reuse its goal tile).
+var approach_id := -1
+## Tile and sight of this entity's last fog reveal (skips repeats when fog is sticky).
+var fog_key := Vector3i(-1, -1, -1)
 var repath := 0
 var stuck := 0
 var attack_cd := 0.0
@@ -96,7 +100,12 @@ func is_worker() -> bool:
 
 
 func domain() -> String:
-	return def.get("domain", "ground")
+	if _domain == "":
+		_domain = def.get("domain", "ground")
+	return _domain
+
+
+var _domain := ""
 
 
 func is_hero() -> bool:

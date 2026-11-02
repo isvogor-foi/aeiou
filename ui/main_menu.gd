@@ -11,6 +11,7 @@ const GameMenu = preload("res://ui/game_menu.gd")
 const AudioManager = preload("res://audio/audio_manager.gd")
 const Scenario = preload("res://scenarios/scenario.gd")
 const MenuTheme = preload("res://ui/menu_theme.gd")
+const Graphics = preload("res://ui/graphics.gd")
 
 const MAP_TYPES := {"inland": "Inland (lakes)", "coastal": "Coastal (central sea)", "islands": "Islands (transports needed)"}
 const MAP_SIZES := {"small": "Small (64)", "normal": "Normal (96)", "large": "Large (128)"}
@@ -559,6 +560,21 @@ func _fill_settings() -> void:
 			_audio.refresh_volumes())
 	_content.add_child(_gap(6))
 	_content.add_child(MenuTheme.section("Display"))
+	var gfx := OptionButton.new()
+	var names := {"auto": "Auto (%s)" % Graphics.effective().capitalize() if Graphics.quality == "auto" else "Auto",
+			"high": "High: ambient occlusion, glow, detailed shadows",
+			"medium": "Medium: no ambient occlusion",
+			"low": "Low: also no glow, simple shadows, 75% resolution"}
+	Graphics.load_settings()
+	for id in Graphics.LEVELS:
+		gfx.add_item(names[id])
+	gfx.select(Graphics.LEVELS.find(Graphics.quality))
+	gfx.item_selected.connect(func(i):
+		Graphics.quality = Graphics.LEVELS[i]
+		Graphics.save_settings())
+	var gg := _grid()
+	_grid_row(gg, "Graphics", gfx)
+	_content.add_child(gg)
 	var full := CheckBox.new()
 	full.text = "Fullscreen"
 	full.button_pressed = DisplayServer.window_get_mode() in [DisplayServer.WINDOW_MODE_FULLSCREEN, DisplayServer.WINDOW_MODE_EXCLUSIVE_FULLSCREEN]

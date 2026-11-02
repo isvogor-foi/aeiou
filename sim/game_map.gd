@@ -3,6 +3,7 @@ extends RefCounted
 ## pathfinding for each movement domain: "ground" (open land), "naval" (water)
 ## and "air" (anywhere, straight lines).
 
+const Prof = preload("res://sim/prof.gd")
 const TILE := 32
 enum { GRASS, WATER, FOREST, ROCK, DIRT }
 
@@ -14,6 +15,18 @@ var timber := PackedFloat32Array()
 var occupant := PackedInt32Array()
 var astar := AStarGrid2D.new()
 var naval_astar := AStarGrid2D.new()
+## Connected-region label per tile for each domain (0 = impassable). Built once by
+## flood fill, then kept up incrementally: a tile that opens joins (and merges) its
+## neighbours' regions; a tile that closes is just marked solid, so a split is never
+## detected and find_path falls back to an ordinary search. Lets find_path skip
+## hopeless whole-map searches for unreachable goals.
+var _regions := {"ground": PackedInt32Array(), "naval": PackedInt32Array()}
+## Union-find over labels, per domain: label -> parent label.
+var _parents := {"ground": {}, "naval": {}}
+var _next_label := 1
+var _regions_dirty := true
+## Cache for _nearest_in_region: [domain, goal, region] -> tile; cleared on changes.
+var _nearest_cache := {}
 ## Ground height per tile corner, (width + 1) x (height + 1), in tiles (see mapgen/heights.gd).
 var heights := PackedFloat32Array()
 ## Tiles whose terrain changed since the view last consumed them (forest cut down).
@@ -46,6 +59,7 @@ func rebuild_solids() -> void:
 			var t := Vector2i(x, y)
 			astar.set_point_solid(t, not is_walkable(t))
 			naval_astar.set_point_solid(t, not is_sailable(t))
+	_regions_dirty = true
 
 
 func idx(t: Vector2i) -> int:
@@ -105,6 +119,7 @@ func set_terrain(t: Vector2i, ter: int) -> void:
 	terrain[idx(t)] = ter
 	astar.set_point_solid(t, not is_walkable(t))
 	naval_astar.set_point_solid(t, not is_sailable(t))
+	_retag(t)
 	dirty_tiles.append(t)
 	version += 1
 
@@ -132,6 +147,7 @@ func occupy(top_left: Vector2i, size: Vector2i, id: int) -> void:
 			if in_bounds(t):
 				occupant[idx(t)] = id
 				astar.set_point_solid(t, true)
+				_retag(t)
 
 
 func vacate(top_left: Vector2i, size: Vector2i) -> void:
@@ -141,6 +157,7 @@ func vacate(top_left: Vector2i, size: Vector2i) -> void:
 			if in_bounds(t):
 				occupant[idx(t)] = -1
 				astar.set_point_solid(t, not is_walkable(t))
+				_retag(t)
 
 
 func timber_at(t: Vector2i) -> float:
@@ -247,17 +264,152 @@ func find_path(from: Vector2, goal: Vector2i, domain := "ground") -> PackedVecto
 		if in_bounds(goal) and goal != here:
 			out.append(tile_center(goal))
 		return out
+	var pw := Prof.start()
 	var start := nearest_walkable(here, 6, domain)
 	var end := nearest_walkable(goal, 12, domain)
+	Prof.stop("fp_walkable", pw)
 	if start.x < 0 or end.x < 0:
 		return out
 	if start != here:
 		out.append(tile_center(start))
 	var grid: AStarGrid2D = naval_astar if domain == "naval" else astar
+	var r_start := region_of(start, domain)
+	var r_end := region_of(end, domain)
+	if r_start > 0 and r_end > 0 and r_start != r_end:
+		# Unreachable: head for the closest tile we *can* reach instead of letting
+		# A* exhaust the whole map looking for a partial path.
+		end = _nearest_in_region(end, r_start, domain)
+		if end.x < 0:
+			return out
+	var pa := Prof.start()
 	var ids := grid.get_id_path(start, end, true)
+	Prof.stop("fp_astar", pa)
 	for i in range(1, ids.size()):
 		out.append(tile_center(ids[i]))
 	return out
+
+
+## Region label of `t` (0 when impassable).
+func region_of(t: Vector2i, domain := "ground") -> int:
+	if _regions_dirty:
+		_build_regions()
+	if not in_bounds(t):
+		return 0
+	var dom := "naval" if domain == "naval" else "ground"
+	return _find(dom, _regions[dom][idx(t)])
+
+
+func _find(dom: String, label: int) -> int:
+	var parents: Dictionary = _parents[dom]
+	while parents.has(label):
+		label = parents[label]
+	return label
+
+
+## Keeps the region labels in step after tile `t` changed.
+func _retag(t: Vector2i) -> void:
+	if _regions_dirty or not in_bounds(t):
+		return
+	_nearest_cache.clear()
+	for dom in ["ground", "naval"]:
+		var lab: PackedInt32Array = _regions[dom]
+		var i := idx(t)
+		if not is_passable(t, dom):
+			lab[i] = 0
+			continue
+		if lab[i] != 0:
+			continue
+		var mine := 0
+		for dy in [-1, 0, 1]:
+			for dx in [-1, 0, 1]:
+				var c := t + Vector2i(dx, dy)
+				if (dx == 0 and dy == 0) or not in_bounds(c):
+					continue
+				var other := _find(dom, lab[idx(c)])
+				if other == 0:
+					continue
+				if mine == 0:
+					mine = other
+				elif other != mine:
+					_parents[dom][other] = mine
+		if mine == 0:
+			mine = _next_label
+			_next_label += 1
+		lab[i] = mine
+
+
+## Flood-fills both domains into connected regions (8-way, like the pathfinder).
+func _build_regions() -> void:
+	_regions_dirty = false
+	_nearest_cache.clear()
+	_parents = {"ground": {}, "naval": {}}
+	for dom in ["ground", "naval"]:
+		var lab := PackedInt32Array()
+		lab.resize(width * height)
+		lab.fill(0)
+		var next := 1
+		var stack: Array[int] = []
+		for start in width * height:
+			if lab[start] != 0:
+				continue
+			var st := Vector2i(start % width, start / width)
+			if not is_passable(st, dom):
+				continue
+			lab[start] = next
+			stack.append(start)
+			while not stack.is_empty():
+				var i: int = stack.pop_back()
+				var x := i % width
+				var y := i / width
+				for dy in [-1, 0, 1]:
+					for dx in [-1, 0, 1]:
+						var nx: int = x + dx
+						var ny: int = y + dy
+						if nx < 0 or ny < 0 or nx >= width or ny >= height:
+							continue
+						var j := ny * width + nx
+						if lab[j] != 0 or not is_passable(Vector2i(nx, ny), dom):
+							continue
+						if dx != 0 and dy != 0 and (not is_passable(Vector2i(x + dx, y), dom) or not is_passable(Vector2i(x, y + dy), dom)):
+							continue
+						lab[j] = next
+						stack.append(j)
+			next += 1
+		_regions[dom] = lab
+		_next_label = maxi(_next_label, next)
+
+
+func _nearest_in_region(t: Vector2i, region: int, domain: String) -> Vector2i:
+	var key := [domain, t, region]
+	if _nearest_cache.has(key):
+		return _nearest_cache[key]
+	var found := _search_region(t, region, domain)
+	_nearest_cache[key] = found
+	return found
+
+
+func _search_region(t: Vector2i, region: int, domain: String) -> Vector2i:
+	var dom := "naval" if domain == "naval" else "ground"
+	var lab: PackedInt32Array = _regions["naval" if domain == "naval" else "ground"]
+	for r in range(1, 13):
+		var best := Vector2i(-1, -1)
+		var best_d := INF
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var c := t + Vector2i(dx, dy)
+				if not in_bounds(c):
+					continue
+				var l := lab[idx(c)]
+				if l != 0 and (l == region or _find(dom, l) == region):
+					var d := float(dx * dx + dy * dy)
+					if d < best_d:
+						best_d = d
+						best = c
+		if best.x >= 0:
+			return best
+	return Vector2i(-1, -1)
 
 
 ## Nearest water tile beside open land, searching outward from `t` (for unloading).

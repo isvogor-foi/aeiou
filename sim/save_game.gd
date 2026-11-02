@@ -12,7 +12,7 @@ const SAVE_DIR := "user://saves"
 const VERSION := 1
 ## Script variables that are references or per-tick caches, not state.
 const SKIP_WORLD := ["map", "territory", "players", "entities", "ais", "events", "scenario_logic", "_unit_grid", "_buildings", "_aura_units"]
-const SKIP_ENTITY := ["def"]
+const SKIP_ENTITY := ["def", "_domain", "fog_key"]
 const SKIP_AI := ["w", "p", "diff", "style", "_units", "_workers", "_army", "_buildings", "_cities", "_queued"]
 
 
@@ -133,6 +133,7 @@ static func _restore_world(w, d: Dictionary) -> void:
 		if e.kind != Entity.UNIT and e.def.get("blocking", true):
 			m.occupy(e.tile, e.size, e.id)
 	m.rebuild_solids()
+	m.region_of(Vector2i.ZERO)
 	w.ais.clear()
 	for ad in d.ais:
 		var ai := AIPlayer.new()

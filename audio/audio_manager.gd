@@ -74,6 +74,7 @@ static func set_volume(key: String, v: float) -> void:
 
 static func save_settings() -> void:
 	var cfg := ConfigFile.new()
+	cfg.load(SETTINGS)
 	cfg.set_value("audio", "master", master_volume)
 	cfg.set_value("audio", "music", music_volume)
 	cfg.set_value("audio", "sfx", sfx_volume)

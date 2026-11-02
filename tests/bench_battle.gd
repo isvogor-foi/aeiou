@@ -1,15 +1,18 @@
-## Benchmark: 100 v 100 attack-move battle, tick timings.
-##   tools/godot --headless --path . -s tests/bench_battle.gd
+## Benchmark: N v N attack-move battle (default 100), tick timings.
+##   tools/godot --headless --path . -s tests/bench_battle.gd -- [per_side]
 extends SceneTree
 const World = preload("res://sim/world.gd")
 func _initialize():
+	var args = OS.get_cmdline_user_args()
+	var n = int(args[0]) if args.size() > 0 else 100
 	var w = World.new()
-	w.new_game(5, ["monarchy","covenant"], 0)
-	var c0 = Vector2(30, 48) * 32
-	var c1 = Vector2(66, 48) * 32
+	w.new_game(5, ["monarchy","covenant"], 0, "normal", "inland", {"map_size": "large"})
+	w.ais.clear()
+	var c0 = Vector2(44, 64) * 32
+	var c1 = Vector2(84, 64) * 32
 	var a = []; var b = []
-	for i in 100:
-		var off = Vector2((i % 10) * 20, (i / 10) * 20)
+	for i in n:
+		var off = Vector2((i % 15) * 20, (i / 15) * 20)
 		a.append(w.spawn_unit(["grenadier","musketeer"][i % 2], 0, w.map.tile_center(w.map.nearest_walkable(w.map.to_tile(c0 + off)))).id)
 		b.append(w.spawn_unit(["reaver","hexcaster"][i % 2], 1, w.map.tile_center(w.map.nearest_walkable(w.map.to_tile(c1 + off)))).id)
 	w.issue({"type":"attack_move","player":0,"ids":a,"pos":c1})

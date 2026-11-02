@@ -2,6 +2,7 @@ extends RefCounted
 ## Per-tick unit behaviour: run the front order of each unit's queue, auto-acquire
 ## enemies when idle, and walk paths.
 
+const Prof = preload("res://sim/prof.gd")
 const GameMap = preload("res://sim/game_map.gd")
 const Entity = preload("res://sim/entity.gd")
 const Abilities = preload("res://sim/abilities.gd")
@@ -124,13 +125,17 @@ static func _idle(w, e) -> void:
 		return
 	if (w.tick_count + e.id) % SCAN_INTERVAL != 0:
 		return
+	var pt := Prof.start()
 	var t = w.find_enemy_near(e, float(e.def.sight) * TILE)
+	Prof.stop("idle_scan", pt)
 	if t:
 		e.orders.push_front({"type": "attack", "target": t.id, "auto": true, "leash": e.pos})
 
 
 static func _move(w, e, o: Dictionary) -> bool:
 	if not o.get("started", false):
+		if not w.take_path_budget():
+			return false
 		o.started = true
 		_path_to(w, e, GameMap.to_tile(o.pos), o.pos)
 	return _follow(e)
@@ -220,6 +225,8 @@ static func _unload(w, e, o: Dictionary) -> bool:
 			w.unload_all(e, o.pos)
 			return true
 		if not o.get("started", false):
+			if not w.take_path_budget():
+				return false
 			o.started = true
 			_path_to(w, e, GameMap.to_tile(o.pos), o.pos)
 		return _follow(e)
@@ -278,7 +285,9 @@ static func _speed(e) -> float:
 
 
 static func _attack_move(w, e, o: Dictionary) -> bool:
-	if (w.tick_count + e.id) % SCAN_INTERVAL == 0:
+	# Scan on the usual cadence, and always right after a fight ends (before paying
+	# for a fresh long path): in a melee the next enemy is usually right there.
+	if not o.get("started", false) or (w.tick_count + e.id) % SCAN_INTERVAL == 0:
 		var t = w.find_enemy_near(e, float(e.def.sight) * TILE)
 		if t:
 			o.started = false
@@ -295,7 +304,10 @@ static func _gather(w, e, o: Dictionary) -> bool:
 		e.carry_type = ""
 		e.carry_amount = 0.0
 	if o.get("returning", false) or e.carry_amount >= cap:
-		return _deliver(w, e, o)
+		var pd := Prof.start()
+		var r := _deliver(w, e, o)
+		Prof.stop("g_deliver", pd)
+		return r
 
 	if o.has("tile"):
 		var tile: Vector2i = o.tile
@@ -327,11 +339,15 @@ static func _gather(w, e, o: Dictionary) -> bool:
 		o.target = t.id
 		reset_path(e)
 	o.last_pos = t.pos
+	var pa := Prof.start()
 	var state := _approach(w, e, t, INTERACT_RANGE)
+	Prof.stop("g_approach", pa)
 	if state == UNREACHABLE:
 		return _finish_gather(w, e, o)
 	if state == IN_RANGE:
+		var ph := Prof.start()
 		var amt := minf(w.harvest_take(e.owner, res, float(o.rate), e.pos), cap - e.carry_amount)
+		Prof.stop("g_harvest", ph)
 		if t.amount >= 0.0:
 			amt = minf(amt, t.amount)
 			t.amount -= amt
@@ -348,7 +364,13 @@ static func _deliver(w, e, o: Dictionary) -> bool:
 	if e.carry_amount <= 0.0:
 		o.returning = false
 		return o.get("stop_after_drop", false)
-	var drop = w.nearest_dropoff(e.owner, e.carry_type, e.pos, domain(e))
+	# Pick the drop-off once per trip home; re-pick only if it is lost.
+	var drop = w.get_entity(int(o.get("drop", -1)))
+	if drop == null or not drop.alive or drop.owner != e.owner:
+		var pt := Prof.start()
+		drop = w.nearest_dropoff(e.owner, e.carry_type, e.pos, domain(e))
+		Prof.stop("nearest_dropoff", pt)
+		o.drop = drop.id if drop else -1
 	if drop == null:
 		return true
 	var state := _approach(w, e, drop, INTERACT_RANGE)
@@ -359,6 +381,7 @@ static func _deliver(w, e, o: Dictionary) -> bool:
 		e.carry_amount = 0.0
 		e.carry_type = ""
 		o.returning = false
+		o.erase("drop")
 		reset_path(e)
 		return o.get("stop_after_drop", false)
 	return false
@@ -405,8 +428,14 @@ static func _approach(w, e, t, range_px: float) -> int:
 			_step_toward(e, t.pos)
 			return MOVING
 		goal = GameMap.to_tile(t.pos)
+	elif e.approach_id == t.id and e.path_index < e.path.size() and e.repath > 1:
+		# Still walking an approach path to the same building or node: keep its goal.
+		goal = e.path_goal
 	else:
+		var pt := Prof.start()
 		goal = w.map.approach_tile(t.tile, t.size, e.pos, dom)
+		Prof.stop("approach_tile", pt)
+		e.approach_id = t.id
 	return _travel(w, e, goal)
 
 
@@ -422,6 +451,11 @@ static func _travel(w, e, goal: Vector2i) -> int:
 	e.repath -= 1
 	var path_done: bool = e.path_index >= e.path.size()
 	if path_done or (goal != e.path_goal and e.repath <= 0):
+		if not w.take_path_budget():
+			# Too many searches this tick: keep walking the old path, retry next tick.
+			if not path_done:
+				_follow(e)
+			return MOVING
 		_path_to(w, e, goal)
 		e.repath = REPATH_TICKS
 		if e.path.is_empty():
@@ -438,7 +472,9 @@ static func _travel(w, e, goal: Vector2i) -> int:
 
 
 static func _path_to(w, e, goal: Vector2i, exact: Variant = null) -> void:
+	var pt := Prof.start()
 	e.path = w.map.find_path(e.pos, goal, domain(e))
+	Prof.stop("find_path", pt)
 	e.path_index = 0
 	e.path_goal = goal
 	if exact != null and w.map.is_passable(GameMap.to_tile(exact), domain(e)):

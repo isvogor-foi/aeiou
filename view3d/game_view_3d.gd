@@ -20,6 +20,7 @@ const GameMenu = preload("res://ui/game_menu.gd")
 const SaveGame = preload("res://sim/save_game.gd")
 const AudioManager = preload("res://audio/audio_manager.gd")
 const Scenario = preload("res://scenarios/scenario.gd")
+const Graphics = preload("res://ui/graphics.gd")
 const Abilities = preload("res://sim/abilities.gd")
 
 const TILE := GameMap.TILE
@@ -28,7 +29,9 @@ const SPEED_NAMES := ["Slow", "Normal", "Fast", "Very fast"]
 const EDGE_MARGIN := 6.0
 const DRAG_THRESHOLD := 6.0
 const DOUBLE_CLICK_MS := 350
-const MAX_TICKS_PER_FRAME := 8
+## Catch-up ticks per frame. Kept low so a slow machine slows the game a little
+## instead of freezing the screen while it simulates several ticks in a row.
+const MAX_TICKS_PER_FRAME := 3
 ## Screen-space pick radius for units, in pixels at the default zoom.
 const UNIT_PICK_PX := 26.0
 ## Game seconds between autosaves.
@@ -196,22 +199,43 @@ func _build_environment() -> void:
 	sun.light_color = Color(1.0, 0.96, 0.88)
 	sun.shadow_enabled = true
 	sun.directional_shadow_max_distance = 70.0
+	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	add_child(sun)
+	Graphics.apply(env, sun, get_viewport())
+
+
+## Per-section milliseconds of the last frames (filled only when frame_profiling).
+var frame_profiling := false
+var frame_prof := {}
+var _fp_t := 0
+
+
+func _fp(section: String) -> void:
+	if not frame_profiling:
+		return
+	var now := Time.get_ticks_usec()
+	frame_prof[section] = frame_prof.get(section, 0) + now - _fp_t
+	_fp_t = now
 
 
 func _process(delta: float) -> void:
+	if frame_profiling:
+		_fp_t = Time.get_ticks_usec()
 	if not paused:
 		_accum += delta * SPEEDS[speed_index]
 		var steps := 0
 		while _accum >= World.DT and steps < MAX_TICKS_PER_FRAME:
 			world.tick()
+			_fp("sim")
 			_consume_events()
+			_fp("events")
 			_autosave()
 			_accum -= World.DT
 			steps += 1
 		if steps == MAX_TICKS_PER_FRAME:
 			_accum = 0.0
 	var alpha := clampf(_accum / World.DT, 0.0, 1.0)
+	_fp("sim")
 	_scroll_camera(delta)
 	camera.update_transform()
 	var changed: Array[Vector2i] = world.map.dirty_tiles.duplicate()
@@ -222,7 +246,9 @@ func _process(delta: float) -> void:
 	terrain.sync()
 	fog_pass.visible = not reveal_all
 	fog_pass.sync()
+	_fp("terrain_fog")
 	entity_views.sync(alpha, delta)
+	_fp("entity_views")
 	_update_ghost()
 	_update_rally_flag()
 	_update_marker()
@@ -230,7 +256,9 @@ func _process(delta: float) -> void:
 		var p = world.players[me]
 		for k in p.res:
 			p.res[k] = maxf(p.res[k], 99999.0)
+	_fp("misc")
 	hud.refresh(delta)
+	_fp("hud")
 	audio.listener = camera.focus
 	audio.hearing = camera.distance * 1.6
 	audio.music("battle" if (world.tick_count - _last_combat) * World.DT < 15.0 else "peace")

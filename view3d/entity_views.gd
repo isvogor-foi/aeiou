@@ -2,6 +2,7 @@ extends Node3D
 ## One 3D view per sim entity: positions (interpolated between ticks), facing,
 ## animations, construction, team and selection rings, deaths and rubble.
 
+const Prof = preload("res://sim/prof.gd")
 const DB = preload("res://sim/db.gd")
 const Entity = preload("res://sim/entity.gd")
 const GameMap = preload("res://sim/game_map.gd")
@@ -68,9 +69,16 @@ func _create(e) -> Dictionary:
 		Entity.UNIT:
 			var v: Dictionary = DB.visuals.units.get(e.type_id, {})
 			var body := Models.make_unit(e.type_id, e.owner)
+			# Units use their blob shadow; real shadows for hundreds of soldiers cost
+			# several extra draws each in the sun's shadow maps.
+			_no_shadows(body)
 			node.add_child(body)
 			r.body = body
 			r.ap = Models.anim_player(body)
+			if r.ap:
+				# Advanced by hand in sync(): only on screen, and less often in big battles.
+				r.ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+			r.anim_acc = 0.0
 			r.anims = v.get("anims", {})
 			r.fly = float(v.get("fly_height", 0.0))
 			r.naval = v.get("naval", false)
@@ -119,6 +127,13 @@ func _create(e) -> Dictionary:
 
 ## Lowest ground height under a footprint, so buildings never float (or the
 ## highest, for piers that should stand clear of the slope down to the water).
+func _no_shadows(n: Node) -> void:
+	if n is GeometryInstance3D:
+		n.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	for c in n.get_children():
+		_no_shadows(c)
+
+
 func _footprint_base(e, highest := false) -> float:
 	var out := -INF if highest else INF
 	for y in e.size.y + 1:
@@ -128,9 +143,18 @@ func _footprint_base(e, highest := false) -> float:
 	return out
 
 
+## Skeletal animation is the view's biggest cost with hundreds of soldiers: units
+## off screen don't animate at all, and with many on screen they update at 20 Hz.
+const ANIM_STEP_CROWD := 1.0 / 20.0
+const CROWD := 120
+
+
 func sync(alpha: float, delta: float) -> void:
 	var now := Time.get_ticks_msec() / 1000.0
 	var seen := {}
+	var cam: Camera3D = gv.camera
+	var anim_step := ANIM_STEP_CROWD if _unit_views >= CROWD else 0.0
+	var units := 0
 	for e in gv.world.entities.values():
 		if not e.alive:
 			continue
@@ -148,8 +172,14 @@ func sync(alpha: float, delta: float) -> void:
 		r.sel.visible = gv.is_selected(e.id)
 		match e.kind:
 			Entity.UNIT:
+				units += 1
 				r.deployed = e.deployed
+				var pt := Prof.start()
 				_sync_unit(e, r, alpha, delta, now)
+				Prof.stop("v_sync_unit", pt)
+				pt = Prof.start()
+				_advance_anim(r, delta, anim_step, cam)
+				Prof.stop("v_anim", pt)
 				r.shield.visible = not e.effects.is_empty() and e.effects.any(func(fx): return fx.type == "shield")
 				if e.expires_tick > 0:
 					# Summons flicker as their time runs out.
@@ -161,10 +191,25 @@ func sync(alpha: float, delta: float) -> void:
 				if r.body.get_child_count() > 0 and r.body.get_child(0).has_meta("spin"):
 					r.body.rotation.y += delta * 0.6
 		_animate_parts(r, delta, now)
+	_unit_views = units
 	for id in views.keys():
 		if not seen.has(id):
 			_on_removed(id)
 	_update_dying(delta)
+
+
+var _unit_views := 0
+
+
+func _advance_anim(r: Dictionary, delta: float, step: float, cam: Camera3D) -> void:
+	var ap: AnimationPlayer = r.ap
+	if ap == null:
+		return
+	r.anim_acc = minf(r.anim_acc + delta, 0.5)
+	if r.anim_acc < step or not cam.is_position_in_frustum(r.node.global_position):
+		return
+	ap.advance(r.anim_acc)
+	r.anim_acc = 0.0
 
 
 func _sync_unit(e, r: Dictionary, alpha: float, delta: float, now: float) -> void:
@@ -339,6 +384,7 @@ func _on_removed(id: int) -> void:
 	match r.kind:
 		Entity.UNIT:
 			if r.ap and r.anims.has("death"):
+				r.ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_IDLE
 				_play(r, "death", true)
 				_dying.append({"node": r.node, "t": 0.0, "ttl": DEATH_TIME, "sink": true})
 			else:
