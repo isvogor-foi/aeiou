@@ -9,6 +9,7 @@ const Models = preload("res://view3d/models.gd")
 const ICON_SIZE := Vector2i(112, 80)
 
 var _cache := {}
+var _framing_type := ""
 var _queued := {}
 var _queue: Array = []
 var _busy := false
@@ -77,6 +78,7 @@ func _render(job: Array) -> void:
 		# A natural pose instead of the rest (T) pose.
 		ap.play(idle)
 		ap.seek(0.4, true)
+	_framing_type = job[2]
 	_frame(model, job[1] == "unit" and ap != null, float(v.get("height", 1.0)))
 	# Two drawn frames make sure the new model is in the image.
 	await RenderingServer.frame_post_draw
@@ -88,6 +90,11 @@ func _render(job: Array) -> void:
 
 ## Characters: head and shoulders. Everything else: the whole model in 3/4 view.
 func _frame(model: Node3D, character: bool, height: float) -> void:
+	if character and DB.visuals.units.get(_framing_type, {}).has("figure"):
+		var chest := Vector3(0, height * 0.74, 0)
+		_camera.position = chest + Vector3(0, height * 0.08, height * 1.05)
+		_camera.look_at(chest, Vector3.UP)
+		return
 	if character:
 		var head := Vector3(0, height * 0.82, 0)
 		_camera.position = head + Vector3(0, height * 0.06, height * 1.45)

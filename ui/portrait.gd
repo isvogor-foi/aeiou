@@ -88,6 +88,12 @@ func show_entity(e) -> void:
 			if v.has("procedural") or not ap:
 				_spin = true
 				_frame_whole()
+			elif v.has("figure"):
+				# Realistic proportions: a small head at the top of a tall figure.
+				var h := float(v.get("height", 1.0))
+				var head := Vector3(0, h * 0.87, 0)
+				_camera.position = head + Vector3(0, h * 0.02, h * 0.62)
+				_camera.look_at(head, Vector3.UP)
 			else:
 				_frame_head(float(v.get("height", 1.0)))
 		_:

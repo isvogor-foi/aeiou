@@ -2,6 +2,7 @@ extends RefCounted
 ## Builds 3D models for entity types from data/visuals.json: loads and caches
 ## scenes, scales them to tiles, hides unused equipment, attaches weapons, tints.
 
+const Figure = preload("res://view3d/figure.gd")
 const DB = preload("res://sim/db.gd")
 const Procedural = preload("res://view3d/procedural.gd")
 
@@ -90,10 +91,17 @@ static func make_unit(type_id: String, owner: int) -> Node3D:
 		built.scale = Vector3.ONE * float(v.get("scale", 1.0))
 		root.add_child(built)
 		return root
-	var path := resolve(v.model, owner)
-	var model := scene(path).instantiate() as Node3D
-	var box := aabb_of(path)
-	var s := float(v.height) / maxf(box.size.y, 0.01)
+	var model: Node3D
+	var s: float
+	if v.has("figure"):
+		# A realistic figure dressed in code (view3d/figure.gd).
+		model = Figure.build(v.figure, team_color(owner))
+		s = float(v.height) / Figure.HEIGHT
+	else:
+		var path := resolve(v.model, owner)
+		model = scene(path).instantiate() as Node3D
+		var box := aabb_of(path)
+		s = float(v.height) / maxf(box.size.y, 0.01)
 	model.scale = Vector3.ONE * s
 	root.add_child(model)
 	if v.has("mount"):

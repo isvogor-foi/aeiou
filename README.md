@@ -243,6 +243,22 @@ Rules of thumb:
   - A 150-unit battle on an Intel Iris Xe laptop at Medium graphics runs at about 46 fps.
   - Distant objects switch to simpler LOD meshes sooner on Medium and Low graphics.
 
+**Roster rework, steam machines, realistic soldiers:**
+- **Signature powers:**
+  - Hold the Line (Grenadier), Volley (Musketeer), Camouflage (Jäger), Frenzy (Reaver) and Wither (Soul Caller), plus Aether Bomb (Kress Gyrocopter) and Plague Drop (Plague Balloon).
+  - The Škoda Siege Crawler and Corpse Crawler set up in 1 second.
+  - The Steam Walker splashes fire.
+- **New machines:**
+  - The **Landpanzer** steam tank (Monarchy) and the **Bone Juggernaut** (Covenant): steel armour (musket fire does 45%) and Full Steam / Soul Furnace (+60% speed and +40% damage for 6 seconds).
+  - The detailed procedural models are in `view3d/machines.gd`.
+- **Realistic people:**
+  - Every soldier, worker and hero uses the Quaternius realistic figure (CC0, 46 animations: aiming, sword, casting, fixing, riding).
+  - Uniforms are painted onto the body by bone region, plus hats, coat tails, robes, crossbelts, cuirasses, kit and weapons, merged into one skinned mesh per outfit (`view3d/figure.gd`).
+  - Kürassiere now ride.
+  - Monsters and giants keep their stylized models.
+- **Flags:** the imperial banner is a vector-drawn double-headed eagle (`view3d/imperial_svg.gd`): crowned heads, sword and orb, and the red-white-red breast shield. The Empire bicolour carries the eagle arms.
+- **Performance:** a 150-unit battle runs at about 38 fps on an Intel Iris Xe laptop at Medium. The skeletons now dominate the frame.
+
 **Phase 8 (balance and performance)** is partly done.
 
 Performance is finished:

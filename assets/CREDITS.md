@@ -30,3 +30,9 @@ fetched from the Godot-adjusted repository `walterpalladino/godot-quaternius-ult
 
 `kaykit/*/*_hd.glb` are smooth-subdivided copies of the KayKit characters (CC0), made by
 `devtools/subdivide.py`. Roof atlases in `recolor/roofs_*.png` come from `devtools/roofs.py`.
+
+## Realistic figures (CC0, Quaternius)
+
+`quaternius/ual/AnimationLibrary_Godot_Standard.gltf` (+ .bin): Quaternius's **Universal Animation
+Library** (standard, free version, CC0), from `J-Ponzo/gltf-universal-animation-library`.
+Uniforms, hats and weapons are built in code on top of it (`view3d/figure.gd`).
