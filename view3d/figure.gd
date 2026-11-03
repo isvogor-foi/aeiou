@@ -90,6 +90,14 @@ const OUTFITS := {
 	"prince_eugene": {"coat": Color(0.45, 0.24, 0.16), "trousers": WHITE, "boots": BLACK, "cuffs": GOLD, "style": "tails", "hat": "bicorne", "cuirass": true, "weapon": "sabre"},
 	"maria_theresa": {"coat": Color(0.6, 0.72, 0.86), "trousers": Color(0.6, 0.72, 0.86), "boots": WHITE, "cuffs": GOLD, "style": "dress", "hat": "crown", "weapon": "aether_staff", "hair": Color(0.85, 0.75, 0.6)},
 	"archduke": {"coat": WHITE, "trousers": RED, "boots": BLACK, "cuffs": RED, "style": "tails", "hat": "plumed", "belts": false, "weapon": "sabre", "moustache": true, "sash": true},
+	"iron_emperor": {"coat": WHITE, "trousers": RED, "boots": BLACK, "cuffs": GOLD, "style": "tails", "hat": "helmet_gold", "cuirass": true, "weapon": "flamethrower", "kit": "aether_pack", "beard": true, "gloves": STEEL},
+	"tesla": {"coat": Color(0.16, 0.16, 0.2), "trousers": Color(0.16, 0.16, 0.2), "boots": BLACK, "cuffs": WHITE, "style": "long", "weapon": "gauntlet", "moustache": true, "hair": BLACK},
+	"houdini": {"coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": WHITE, "style": "short", "weapon": "pistol", "hair": Color(0.2, 0.15, 0.1), "belts": false},
+	"radetzky": {"coat": WHITE, "trousers": RED, "boots": BLACK, "cuffs": GOLD, "style": "tails", "hat": "plumed", "weapon": "sabre", "moustache": true, "sash": true, "skin": Color(0.88, 0.76, 0.66)},
+	"jelacic": {"coat": RED, "trousers": Color(0.2, 0.28, 0.5), "boots": BLACK, "cuffs": GOLD, "style": "short", "hat": "kalpak", "braid": true, "weapon": "sabre", "moustache": true},
+	"rudolf_sovereign": {"skin": Color(0.78, 0.76, 0.74), "coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": Color(0.45, 1.0, 0.45), "style": "long", "hat": "crown_dark", "weapon": "bone_staff", "moustache": true, "hair": Color(0.25, 0.18, 0.12), "sash": true},
+	"dead_queen": {"skin": Color(0.84, 0.86, 0.9), "coat": Color(0.92, 0.94, 0.96), "trousers": Color(0.92, 0.94, 0.96), "boots": WHITE, "cuffs": Color(0.45, 1.0, 0.45), "style": "dress", "hat": "stars", "weapon": "", "hair": Color(0.32, 0.2, 0.12)},
+	"lich_general": {"skin": BONE, "coat": Color(0.18, 0.14, 0.24), "trousers": NIGHT, "boots": NIGHT, "cuffs": GOLD, "style": "robe", "hat": "crown_dark", "cuirass": true, "weapon": "bone_staff"},
 	"rebel_militia": {"coat": BROWN, "trousers": RAG, "boots": BLACK, "cuffs": RAG, "style": "short", "hat": "cap", "weapon": "musket", "moustache": true},
 	# Umbral Covenant: bone-pale bodies in rags, robes and iron.
 	"thrall": {"skin": BONE, "coat": RAG, "trousers": RAG, "boots": RAG, "cuffs": RAG, "style": "short", "hat": "hood", "weapon": "axe", "kit": "grave_pack"},
@@ -367,6 +375,20 @@ static func _hat(acc: Acc, o: Dictionary) -> void:
 			blob(acc, top + Vector3(0, -0.04, 0), Vector3(0.25, 0.2, 0.27), mat(STEEL, 0.8, 0.3), "DEF-head")
 			cube(acc, top + Vector3(0, 0.06, -0.02), Vector3(0.03, 0.08, 0.26), gold, "DEF-head")
 			blob(acc, top + Vector3(0, 0.08, -0.08), Vector3(0.05, 0.14, 0.14), mat(BLACK), "DEF-head")
+		"helmet_gold":
+			blob(acc, top + Vector3(0, -0.04, 0), Vector3(0.25, 0.2, 0.27), gold, "DEF-head")
+			cube(acc, top + Vector3(0, 0.07, -0.02), Vector3(0.03, 0.1, 0.26), mat(STEEL, 0.8, 0.3), "DEF-head")
+			blob(acc, top + Vector3(0, 0.1, -0.1), Vector3(0.06, 0.16, 0.16), mat(WHITE), "DEF-head")
+		"kalpak":
+			limb(acc, top + Vector3(0, -0.05, 0), top + Vector3(0, 0.1, 0), 0.115, mat(Color(0.12, 0.1, 0.08), 0.0, 0.95), "DEF-head", 0.105)
+			blob(acc, top + Vector3(0.0, 0.16, 0.06), Vector3(0.05, 0.16, 0.05), mat(WHITE), "DEF-head", Vector3(-0.3, 0, 0))
+			blob(acc, top + Vector3(0, 0.08, 0.1), Vector3(0.05, 0.05, 0.02), gold, "DEF-head")
+		"stars":
+			# Empress Elisabeth's diamond stars in her hair, glowing with the dead light.
+			blob(acc, top + Vector3(0, -0.05, -0.1), Vector3(0.24, 0.16, 0.2), mat(o.get("hair", BROWN)), "DEF-head")
+			for i in 7:
+				var a := -1.2 + i * 0.4
+				blob(acc, top + Vector3(sin(a) * 0.12, -0.02 + absf(sin(a)) * 0.02, cos(a) * 0.1 - 0.04), Vector3(0.035, 0.035, 0.01), mat(Color(0.8, 1.0, 0.85), 0.0, 0.2, 3.0), "DEF-head")
 		"crown":
 			limb(acc, top + Vector3(0, -0.02, 0), top + Vector3(0, 0.06, 0), 0.1, gold, "DEF-head", 0.11)
 			blob(acc, top + Vector3(0, 0.08, 0), Vector3(0.05, 0.05, 0.05), mat(RED), "DEF-head")
@@ -444,6 +466,20 @@ static func _weapon(acc: Acc, o: Dictionary) -> void:
 			limb(acc, grip, grip + along * 0.12, 0.008, iron, "DEF-hand.R")
 			limb(acc, grip + along * 0.12, grip + along * 0.26, 0.05, iron, "DEF-hand.R", 0.04)
 			blob(acc, grip + along * 0.19, Vector3(0.07, 0.09, 0.07), mat(Color(0.45, 1.0, 0.45), 0.0, 0.4, 2.5), "DEF-hand.R")
+		"flamethrower":
+			limb(acc, grip - along * 0.15, grip + along * 0.55, 0.035, steel, "DEF-hand.R", 0.03)
+			limb(acc, grip + along * 0.5, grip + along * 0.6, 0.045, brass, "DEF-hand.R")
+			blob(acc, grip + along * 0.64, Vector3(0.05, 0.05, 0.05), mat(Color(1.0, 0.55, 0.15), 0.0, 0.4, 3.0), "DEF-hand.R")
+			for t in [0.1, 0.3]:
+				limb(acc, grip + along * t, grip + along * (t + 0.04), 0.042, brass, "DEF-hand.R")
+		"gauntlet":
+			blob(acc, grip - along * 0.02, Vector3(0.11, 0.13, 0.11), mat(GOLD, 0.7, 0.35), "DEF-hand.R")
+			for t in [0.0, 0.05, 0.1]:
+				limb(acc, grip - along * (0.12 + t), grip - along * (0.14 + t), 0.055, mat(Color(0.78, 0.42, 0.25), 0.7, 0.4), "DEF-hand.R")
+			blob(acc, grip + along * 0.06, Vector3(0.06, 0.06, 0.06), mat(Color(0.5, 0.85, 1.0), 0.0, 0.3, 3.0), "DEF-hand.R")
+		"pistol":
+			limb(acc, grip - along * 0.02, grip + along * 0.22, 0.014, iron, "DEF-hand.R")
+			cube(acc, grip, Vector3(0.03, 0.08, 0.05), wood, "DEF-hand.R")
 		"crossbow":
 			limb(acc, grip - along * 0.2, grip + along * 0.35, 0.02, wood, "DEF-hand.R")
 			var across := along.cross(up).normalized()

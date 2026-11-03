@@ -172,6 +172,176 @@ func soldiers(w, pid: int) -> int:
 	return n
 
 
+# --- Legendary-mission toolkit ------------------------------------------------------
+# All state lives in w.scenario so it saves with the match; the view reads
+# "boss", "sentries", "markers", "rail" from it to draw bars, cones, flags and rails.
+
+## Spawns a boss and shows its health bar at the top of the screen.
+func spawn_boss(w, type_id: String, at: Vector2) -> int:
+	var b: Entity = w.spawn_unit(type_id, FOE, _walkable(w, at))
+	w.scenario.boss = b.id
+	w.scenario.flags.boss_phase = 0
+	return b.id
+
+
+func boss(w):
+	var b = w.get_entity(int(w.scenario.get("boss", -1)))
+	return b if b and b.alive else null
+
+
+## The next phase number (1, 2, ...) the first time the boss falls below each of
+## `thresholds` (fractions of max HP, descending), else 0.
+func boss_phase(w, thresholds: Array) -> int:
+	var b = boss(w)
+	if b == null:
+		return 0
+	var done: int = int(w.scenario.flags.get("boss_phase", 0))
+	if done < thresholds.size() and b.hp <= b.max_hp * float(thresholds[done]):
+		w.scenario.flags.boss_phase = done + 1
+		return done + 1
+	return 0
+
+
+## A sentry with a vision cone: `facing` (radians, 0 = +x), sweeping `sweep` either side.
+func add_sentry(w, unit_id: int, facing: float, range_tiles := 5.0, half_angle := 0.6, sweep := 0.7) -> void:
+	if not w.scenario.has("sentries"):
+		w.scenario.sentries = []
+	w.scenario.sentries.append({"id": unit_id, "facing": facing, "range": range_tiles * TILE, "half": half_angle, "sweep": sweep})
+
+
+## Current facing of a sentry (they sweep slowly back and forth).
+static func sentry_dir(w, s: Dictionary) -> float:
+	return float(s.facing) + sin(w.tick_count * w.DT * 0.6 + float(s.id)) * float(s.sweep)
+
+
+## The first living sentry that sees one of `ids` (stealth-hidden units are unseen).
+func sentry_spots(w, ids: Array):
+	for s in w.scenario.get("sentries", []):
+		var g = w.get_entity(int(s.id))
+		if g == null or not g.alive:
+			continue
+		var dir := Vector2.from_angle(sentry_dir(w, s))
+		for i in ids:
+			var u = w.get_entity(int(i))
+			if u == null or not u.alive or w.is_hidden_by_stealth(FOE, u):
+				continue
+			var d: Vector2 = u.pos - g.pos
+			if d.length() <= float(s.range) and absf(dir.angle_to(d)) <= float(s.half):
+				return g
+	return null
+
+
+## Capture points: hold one with soldiers (no enemies near) to win it over.
+func add_point(w, key: String, at: Vector2, label: String) -> void:
+	if not w.scenario.has("points"):
+		w.scenario.points = []
+	w.scenario.points.append({"key": key, "pos": _walkable(w, at), "label": label, "progress": 0.0, "owner": -1})
+	_sync_markers(w)
+
+
+## Advances capture points by one second; returns the keys captured this second.
+func update_points(w, seconds_to_take := 6.0) -> Array:
+	var taken: Array = []
+	for pt in w.scenario.get("points", []):
+		if pt.owner == ME:
+			continue
+		var mine := 0
+		var theirs := 0
+		for e in w.entities.values():
+			if e.alive and e.kind == Entity.UNIT and e.can_attack() and not e.is_worker() and e.pos.distance_to(pt.pos) <= 3.0 * TILE:
+				if e.owner == ME:
+					mine += 1
+				elif e.owner == FOE:
+					theirs += 1
+		if mine > 0 and theirs == 0:
+			pt.progress += 1.0 / seconds_to_take
+			if pt.progress >= 1.0:
+				pt.owner = ME
+				taken.append(pt.key)
+		elif theirs > 0:
+			pt.progress = maxf(0.0, pt.progress - 0.2)
+	if not taken.is_empty():
+		_sync_markers(w)
+	return taken
+
+
+func points_held(w) -> int:
+	return w.scenario.get("points", []).filter(func(pt): return pt.owner == ME).size()
+
+
+## Flags on every open capture point (plus any explicit "marker").
+func _sync_markers(w) -> void:
+	w.scenario.markers = w.scenario.get("points", []).filter(func(pt): return pt.owner != ME).map(func(pt): return pt.pos)
+
+
+## Lays a rail line between `stops` (pixels) along walkable ground; returns it.
+func lay_rail(w, stops: Array) -> Array:
+	var line: Array = []
+	for i in stops.size() - 1:
+		var seg: PackedVector2Array = w.map.find_path(stops[i], GameMap.to_tile(stops[i + 1]), "ground")
+		if line.is_empty():
+			line.append(stops[i])
+		for p in seg:
+			line.append(p)
+	w.scenario.rail = line
+	w.scenario.flags.rail_i = 0
+	return line
+
+
+## Moves the train along the rail; it waits while enemy soldiers block the track ahead.
+## Returns true once it reaches the end.
+func drive_train(w, train_id: int) -> bool:
+	var t = w.get_entity(train_id)
+	var rail: Array = w.scenario.get("rail", [])
+	if t == null or not t.alive or rail.is_empty():
+		return false
+	var i: int = int(w.scenario.flags.get("rail_i", 0))
+	while i < rail.size() - 1 and t.pos.distance_to(rail[i]) < TILE * 0.8:
+		i += 1
+	w.scenario.flags.rail_i = i
+	if i >= rail.size() - 1 and t.pos.distance_to(rail[-1]) < TILE:
+		return true
+	var ahead: Vector2 = rail[mini(i + 1, rail.size() - 1)]
+	for e in w.entities.values():
+		if e.alive and e.owner == FOE and e.kind == Entity.UNIT and e.pos.distance_to(ahead) < 1.6 * TILE:
+			t.orders.clear()
+			w.scenario.flags.train_blocked = true
+			return false
+	w.scenario.flags.train_blocked = false
+	t.orders = [{"type": "move", "pos": rail[mini(i + 2, rail.size() - 1)]}]
+	return false
+
+
+## A snow avalanche: heavy damage to every enemy in the radius and a white cloud.
+func avalanche(w, at: Vector2, radius_tiles: float, damage: float) -> int:
+	var hit := 0
+	for e in w.entities.values():
+		if e.alive and e.kind == Entity.UNIT and e.owner == FOE and e.pos.distance_to(at) <= radius_tiles * TILE:
+			w.apply_damage(null, e, damage, "physical")
+			hit += 1
+	w.events.append({"type": "cloud", "pos": at, "radius": radius_tiles * TILE, "duration": 4.0, "color": [0.95, 0.97, 1.0, 0.55]})
+	return hit
+
+
+## A wave of `groups` ([[type, count], ...]) from `from`, attack-moving to `to`.
+func wave(w, groups: Array, from: Vector2, to: Vector2) -> Array:
+	var ids: Array = []
+	for g in groups:
+		ids.append_array(spawn_group(w, g[0], FOE, from, int(g[1])))
+	attack_move(w, FOE, ids, to)
+	return ids
+
+
+## Spawns a campaign hero (or any unit) for the player with an optional title.
+func hero(w, type_id: String, at: Vector2) -> int:
+	return w.spawn_unit(type_id, ME, _walkable(w, at)).id
+
+
+func alive(w, uid) -> bool:
+	var e = w.get_entity(int(uid))
+	return e != null and e.alive
+
+
 # --- Campaign progress (user://campaign.cfg) -------------------------------------
 
 const PROGRESS := "user://campaign.cfg"

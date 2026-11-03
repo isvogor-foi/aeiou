@@ -502,6 +502,120 @@
 		"bone_juggernaut": {
 			"procedural": "juggernaut",
 			"scale": 0.95
+		},
+		"iron_emperor": {
+			"figure": "iron_emperor",
+			"height": 1.6,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Spell_Simple_Shoot",
+				"cast": "Spell_Simple_Shoot",
+				"death": "Death01"
+			}
+		},
+		"tesla": {
+			"figure": "tesla",
+			"height": 1.3,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Spell_Simple_Shoot",
+				"cast": "Spell_Simple_Shoot",
+				"death": "Death01"
+			}
+		},
+		"houdini": {
+			"figure": "houdini",
+			"height": 1.25,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Pistol_Shoot",
+				"death": "Death01"
+			}
+		},
+		"radetzky": {
+			"figure": "radetzky",
+			"height": 1.3,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01"
+			}
+		},
+		"rudolf_sovereign": {
+			"figure": "rudolf_sovereign",
+			"height": 1.9,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Spell_Simple_Shoot",
+				"cast": "Spell_Simple_Shoot",
+				"death": "Death01"
+			}
+		},
+		"dead_queen": {
+			"figure": "dead_queen",
+			"height": 2.0,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Spell_Simple_Shoot",
+				"cast": "Spell_Simple_Shoot",
+				"death": "Death01"
+			}
+		},
+		"lich_general": {
+			"figure": "lich_general",
+			"height": 2.4,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Spell_Simple_Shoot",
+				"cast": "Spell_Simple_Shoot",
+				"death": "Death01"
+			}
+		},
+		"jelacic": {
+			"figure": "jelacic",
+			"height": 1.1,
+			"anims": {
+				"idle": "Driving",
+				"walk": "Driving",
+				"attack": "Driving",
+				"death": "Death01"
+			},
+			"mount": "horse",
+			"saddle": 0.62
+		},
+		"aether_train": {
+			"procedural": "aether_train",
+			"scale": 1.3
+		},
+		"grave_engine": {
+			"procedural": "juggernaut",
+			"scale": 2.1
+		},
+		"prague_golem": {
+			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
+			"height": 2.2,
+			"tint": [
+				0.62,
+				0.45,
+				0.32
+			],
+			"attach": {
+				"handslot.l": "res://assets/kaykit/skeletons/weapons/Skeleton_Shield_Small_A.gltf",
+				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf"
+			},
+			"anims": {
+				"idle": "Idle_Combat",
+				"walk": "Walking_D_Skeletons",
+				"attack": "2H_Melee_Attack_Chop",
+				"death": "Death_C_Skeletons"
+			}
 		}
 	},
 	"buildings": {

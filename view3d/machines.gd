@@ -37,6 +37,8 @@ static func _raw(kind: String, team: Color) -> Node3D:
 			return siege_crawler(team)
 		"corpse_crawler":
 			return corpse_crawler(team)
+		"aether_train":
+			return aether_train(team)
 	return Node3D.new()
 
 
@@ -265,4 +267,50 @@ static func plague_balloon(team: Color) -> Node3D:
 	prop.set_meta("spin", 12.0)
 	root.add_child(prop)
 	Gear.part(prop, Gear.box(Vector3(0.3, 0.01, 0.05)), bone)
+	return root
+
+
+
+## Tesla's armoured Aether locomotive with its tender: boiler, cab, cowcatcher,
+## coupled driving wheels, a glowing Aether lamp and a smoking stack.
+static func aether_train(team: Color) -> Node3D:
+	var root := Node3D.new()
+	var iron := m(Color(0.16, 0.17, 0.19), 0.6, 0.45)
+	var green := m(Color(0.16, 0.3, 0.22), 0.4, 0.5)
+	# Frame and wheels.
+	Gear.part(root, Gear.box(Vector3(0.5, 0.08, 1.9)), iron, Vector3(0, 0.22, -0.1))
+	for side in [-1.0, 1.0]:
+		for i in 4:
+			var z := 0.55 - i * 0.28
+			Gear.part(root, Gear.cyl(0.13, 0.05), m(Color(0.6, 0.12, 0.1), 0.4, 0.5), Vector3(side * 0.27, 0.15, z), Vector3(0, 0, PI / 2))
+			Gear.part(root, Gear.cyl(0.04, 0.06), Gear.brass(), Vector3(side * 0.28, 0.15, z), Vector3(0, 0, PI / 2))
+		Gear.part(root, Gear.box(Vector3(0.02, 0.03, 0.9)), m(Color(0.7, 0.72, 0.75), 0.8, 0.3), Vector3(side * 0.31, 0.15, 0.13))
+		for i in 2:
+			Gear.part(root, Gear.cyl(0.09, 0.05), iron, Vector3(side * 0.27, 0.1, -0.62 - i * 0.28), Vector3(0, 0, PI / 2))
+	# Boiler with brass bands, smokestack, steam dome, Aether lamp.
+	Gear.part(root, Gear.cyl(0.2, 0.9), green, Vector3(0, 0.46, 0.35), Vector3(PI / 2, 0, 0))
+	for z in [0.05, 0.35, 0.65]:
+		Gear.part(root, Gear.torus(0.2, 0.22), Gear.brass(), Vector3(0, 0.46, z), Vector3(PI / 2, 0, 0))
+	Gear.part(root, Gear.cyl(0.2, 0.04), iron, Vector3(0, 0.46, 0.81), Vector3(PI / 2, 0, 0))
+	stack(root, Vector3(0, 0.62, 0.62), 0.32)
+	Gear.part(root, Gear.sphere(0.09, true), Gear.brass(), Vector3(0, 0.65, 0.3))
+	Gear.part(root, Gear.sphere(0.07), Gear.aether(), Vector3(0, 0.56, 0.84))
+	# Cowcatcher.
+	var wedge := CylinderMesh.new()
+	wedge.top_radius = 0.0
+	wedge.bottom_radius = 0.24
+	wedge.height = 0.24
+	wedge.radial_segments = 3
+	Gear.part(root, wedge, iron, Vector3(0, 0.18, 0.9), Vector3(PI / 2, 0, 0), Vector3(1.0, 1.0, 0.6))
+	# Cab with a team-colour band and armoured roof.
+	Gear.part(root, Gear.box(Vector3(0.52, 0.42, 0.38)), green, Vector3(0, 0.5, -0.24))
+	Gear.part(root, Gear.box(Vector3(0.58, 0.05, 0.46)), iron, Vector3(0, 0.73, -0.24))
+	Gear.part(root, Gear.box(Vector3(0.53, 0.06, 0.39)), Gear.mat(team), Vector3(0, 0.4, -0.24))
+	for x in [-0.27, 0.27]:
+		Gear.part(root, Gear.box(Vector3(0.01, 0.12, 0.14)), Gear.aether(), Vector3(x, 0.56, -0.2))
+	# Tender with coal and an Aether turret.
+	Gear.part(root, Gear.box(Vector3(0.5, 0.3, 0.5)), iron, Vector3(0, 0.38, -0.72))
+	Gear.part(root, Gear.box(Vector3(0.44, 0.06, 0.44)), m(Color(0.08, 0.08, 0.08)), Vector3(0, 0.55, -0.72))
+	Gear.part(root, Gear.cyl(0.12, 0.1), iron, Vector3(0, 0.62, -0.72))
+	Gear.part(root, Gear.cyl(0.025, 0.35), Gear.brass(), Vector3(0, 0.66, -0.55), Vector3(PI / 2, 0, 0))
 	return root

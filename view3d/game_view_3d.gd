@@ -919,17 +919,67 @@ func _update_ghost() -> void:
 	terrain.show_placement(top_left, size, ok)
 
 
+var _marker_flags: Array = []
+var _rail_built := false
+
+
+## Scenario flags: the single "marker" plus any "markers" (open capture points).
 func _update_marker() -> void:
+	var spots: Array = world.scenario.get("markers", []).duplicate()
 	var at = world.scenario.get("marker", null)
-	if at == null:
-		if _marker_flag:
-			_marker_flag.visible = false
-		return
-	if _marker_flag == null:
-		_marker_flag = Flags.make("habsburg", 2.0, 1.0)
-		add_child(_marker_flag)
-	_marker_flag.visible = true
-	_marker_flag.position = terrain.to3(at)
+	if at != null:
+		spots.push_front(at)
+	while _marker_flags.size() < spots.size():
+		var f := Flags.make("habsburg", 2.0, 1.0)
+		add_child(f)
+		_marker_flags.append(f)
+	for i in _marker_flags.size():
+		_marker_flags[i].visible = i < spots.size()
+		if i < spots.size():
+			_marker_flags[i].position = terrain.to3(spots[i])
+	if not _rail_built and world.scenario.has("rail"):
+		_rail_built = true
+		_build_rail(world.scenario.rail)
+
+
+## Sleepers and two iron rails along the scenario's rail line.
+func _build_rail(line: Array) -> void:
+	var wood := StandardMaterial3D.new()
+	wood.albedo_color = Color(0.32, 0.22, 0.14)
+	var iron := StandardMaterial3D.new()
+	iron.albedo_color = Color(0.45, 0.45, 0.48)
+	iron.metallic = 0.7
+	var sleeper := BoxMesh.new()
+	sleeper.size = Vector3(0.7, 0.05, 0.12)
+	sleeper.material = wood
+	var xfs: Array = []
+	var rails := ImmediateMesh.new()
+	for i in line.size() - 1:
+		var a: Vector3 = terrain.to3(line[i]) + Vector3(0, 0.03, 0)
+		var b: Vector3 = terrain.to3(line[i + 1]) + Vector3(0, 0.03, 0)
+		var dir := (b - a).normalized()
+		var side := dir.cross(Vector3.UP).normalized() * 0.22
+		var n := maxi(1, int(a.distance_to(b) / 0.35))
+		for k in n:
+			var p := a.lerp(b, k / float(n))
+			xfs.append(Transform3D(Basis.looking_at(dir, Vector3.UP), p))
+		for off in [side, -side]:
+			rails.surface_begin(Mesh.PRIMITIVE_LINES, iron)
+			rails.surface_add_vertex(a + off + Vector3(0, 0.05, 0))
+			rails.surface_add_vertex(b + off + Vector3(0, 0.05, 0))
+			rails.surface_end()
+	var mm := MultiMesh.new()
+	mm.transform_format = MultiMesh.TRANSFORM_3D
+	mm.mesh = sleeper
+	mm.instance_count = xfs.size()
+	for i in xfs.size():
+		mm.set_instance_transform(i, xfs[i])
+	var mmi := MultiMeshInstance3D.new()
+	mmi.multimesh = mm
+	add_child(mmi)
+	var rmi := MeshInstance3D.new()
+	rmi.mesh = rails
+	add_child(rmi)
 
 
 func _update_rally_flag() -> void:

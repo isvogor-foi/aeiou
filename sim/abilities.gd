@@ -86,9 +86,39 @@ static func cast(w, caster, id: String, target, pos: Vector2) -> bool:
 					target.path_index = 0
 			w.apply_damage(caster, target, float(a.amount), a.get("dtype", "physical"))
 		"boost":
-			# Full Steam / Soul Furnace: a timed burst of speed and damage.
-			add_effect(w, caster, "haste", float(a.speed_bonus), float(a.duration))
-			add_effect(w, caster, "boost", float(a.damage_bonus), float(a.duration))
+			# Full Steam / Soul Furnace: a timed burst of speed and damage (with a
+			# radius it lifts every ally around the caster: Radetzky's charge order).
+			for t in _targets(w, caster, a, null, caster.pos, radius, false):
+				add_effect(w, t, "haste", float(a.speed_bonus), float(a.duration))
+				add_effect(w, t, "boost", float(a.damage_bonus), float(a.duration))
+		"chain":
+			# Lightning: hits the target, then jumps to the nearest unhit enemies.
+			var hit: Array = [target]
+			var cur = target
+			for i in int(a.get("jumps", 3)) + 1:
+				if cur == null:
+					break
+				w.apply_damage(caster, cur, float(a.amount) * pow(0.8, i), a.get("dtype", "arcane"))
+				var next = null
+				var best := float(a.get("jump_range", 3.0)) * TILE
+				for o in w.entities.values():
+					if o.alive and o.kind == Entity.UNIT and w.is_enemy(caster, o) and not o in hit and o.pos.distance_to(cur.pos) < best:
+						best = o.pos.distance_to(cur.pos)
+						next = o
+				if next:
+					hit.append(next)
+					w.events.append({"type": "cast", "ability": id, "vfx": a.get("vfx", ""), "source": caster.id,
+							"owner": caster.owner, "from": cur.pos, "to": next.pos, "radius": 0.0})
+				cur = next
+		"blink":
+			# Houdini's escape: vanish and reappear at the target spot.
+			var tile: Vector2i = w.map.nearest_walkable(GameMap.to_tile(at), 3)
+			if tile.x >= 0:
+				caster.pos = GameMap.tile_center(tile)
+				caster.prev_pos = caster.pos
+				caster.orders.clear()
+				caster.path = PackedVector2Array()
+				caster.path_index = 0
 		"cloud":
 			# A lingering poison cloud on the ground (Plague Drop).
 			w.areas.append({"pos": at, "radius": radius, "dps": float(a.dps), "dtype": a.get("dtype", "curse"),

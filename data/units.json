@@ -1533,21 +1533,28 @@
 	"archduke": {
 		"name": "Archduke Franz Ferdinand",
 		"faction": "monarchy",
-		"role": "vip",
+		"role": "hero",
 		"domain": "ground",
-		"description": "Heir to the throne. In this history the shot in Sarajevo misses. Keep him alive.",
-		"hp": 700,
+		"description": "Heir to the throne, who survived Sarajevo. Allies near him hit 10% harder; Rally (F) heals the troops around him.",
+		"hp": 900,
 		"armor": "heavy",
-		"damage": 7,
+		"damage": 14,
 		"dtype": "physical",
-		"range": 3,
-		"cooldown": 1.5,
-		"speed": 1.9,
+		"range": 5,
+		"cooldown": 1.2,
+		"speed": 2.2,
 		"sight": 9,
 		"pop": 0,
 		"cost": {},
 		"train_time": 1,
-		"glyph": "F"
+		"glyph": "F",
+		"abilities": [
+			"rally"
+		],
+		"aura": {
+			"radius": 7,
+			"damage": 0.1
+		}
 	},
 	"landpanzer": {
 		"name": "Landpanzer",
@@ -1616,5 +1623,297 @@
 				"share": 0.5
 			}
 		}
+	},
+	"iron_emperor": {
+		"name": "Franz Joseph, the Iron Emperor",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "The old Emperor in steam-powered armour with a flamethrower arm. Allies near him take 15% less damage. Imperial Flame (D), Full Steam (F).",
+		"hp": 2400,
+		"armor": "steel",
+		"damage": 30,
+		"dtype": "fire",
+		"range": 2.5,
+		"cooldown": 1.6,
+		"speed": 1.9,
+		"abilities": [
+			"steam_flame",
+			"full_steam_f"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.2,
+				"share": 0.6
+			}
+		},
+		"aura": {
+			"radius": 7,
+			"damage_taken": -0.15
+		},
+		"glyph": "K",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"tesla": {
+		"name": "Nikola Tesla",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "Inventor of the Aether war. His gauntlet throws Chain Lightning (D); the Death Ray (F) burns through a single foe.",
+		"hp": 650,
+		"armor": "light",
+		"damage": 22,
+		"dtype": "arcane",
+		"range": 6,
+		"cooldown": 1.5,
+		"speed": 2.5,
+		"abilities": [
+			"chain_lightning",
+			"death_ray"
+		],
+		"glyph": "T",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"houdini": {
+		"name": "Harry Houdini",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "Escape artist turned imperial spy. Hidden while still (spotted within 2 tiles); Great Escape (D) vanishes and reappears up to 7 tiles away.",
+		"hp": 480,
+		"armor": "light",
+		"damage": 18,
+		"dtype": "physical",
+		"range": 4,
+		"cooldown": 1.2,
+		"speed": 3.0,
+		"abilities": [
+			"escape"
+		],
+		"passives": {
+			"stealth": {
+				"still": 1.0,
+				"detect": 2.0
+			}
+		},
+		"glyph": "Q",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"radetzky": {
+		"name": "Field Marshal Radetzky",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "Kept alive by Golden Lane elixirs for 150 years. Allies near him hit 15% harder; the Radetzky March (F) speeds and strengthens the whole army.",
+		"hp": 1200,
+		"armor": "heavy",
+		"damage": 26,
+		"dtype": "physical",
+		"range": 0.7,
+		"cooldown": 1.2,
+		"speed": 2.6,
+		"abilities": [
+			"rally",
+			"march_order"
+		],
+		"aura": {
+			"radius": 8,
+			"damage": 0.15
+		},
+		"glyph": "R",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"jelacic": {
+		"name": "Ban Josip Jelačić",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "The Ban of Croatia, Aether-preserved since 1848. Charges on horseback; Call the Frontier (D) summons 4 Grenzer.",
+		"hp": 1100,
+		"armor": "heavy",
+		"damage": 24,
+		"dtype": "physical",
+		"range": 0.7,
+		"cooldown": 1.2,
+		"speed": 2.8,
+		"abilities": [
+			"call_frontier"
+		],
+		"passives": {
+			"charge": {
+				"distance": 3.0,
+				"speed_mult": 1.7,
+				"bonus": 1.0
+			}
+		},
+		"aura": {
+			"radius": 7,
+			"damage": 0.1
+		},
+		"glyph": "J",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"prague_golem": {
+		"name": "The Golem of Prague",
+		"faction": "monarchy",
+		"role": "melee",
+		"domain": "ground",
+		"description": "Rudolf II's clay giant, woken from the Golden Lane vaults.",
+		"hp": 2000,
+		"armor": "heavy",
+		"damage": 40,
+		"range": 0.8,
+		"cooldown": 1.8,
+		"speed": 1.6,
+		"passives": {
+			"cleave": {
+				"radius": 1.0,
+				"share": 0.5
+			}
+		},
+		"glyph": "G",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10,
+		"dtype": "physical"
+	},
+	"aether_train": {
+		"name": "Tesla's Aether Train",
+		"faction": "monarchy",
+		"role": "support",
+		"domain": "ground",
+		"description": "An armoured Aether locomotive. It follows its rails; keep the track clear.",
+		"hp": 3500,
+		"armor": "steel",
+		"damage": 16,
+		"dtype": "arcane",
+		"range": 6,
+		"cooldown": 1.0,
+		"speed": 1.3,
+		"glyph": "t",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"grave_engine": {
+		"name": "The Grave Engine of Mayerling",
+		"faction": "covenant",
+		"role": "boss",
+		"domain": "ground",
+		"description": "A walking siege-crypt of iron and bone. Grave Tide raises the dead around it.",
+		"hp": 7000,
+		"armor": "steel",
+		"damage": 60,
+		"range": 1.2,
+		"cooldown": 2.0,
+		"speed": 1.2,
+		"abilities": [
+			"grave_tide"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.6,
+				"share": 0.6
+			}
+		},
+		"glyph": "B",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10,
+		"dtype": "physical"
+	},
+	"lich_general": {
+		"name": "The Lich-General",
+		"faction": "covenant",
+		"role": "boss",
+		"domain": "ground",
+		"description": "Rudolf's general of the dead, master of Prague's crypts.",
+		"hp": 6000,
+		"armor": "warded",
+		"damage": 34,
+		"dtype": "curse",
+		"range": 6,
+		"cooldown": 1.6,
+		"speed": 1.8,
+		"abilities": [
+			"frost_nova",
+			"mass_raise"
+		],
+		"glyph": "B",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"rudolf_sovereign": {
+		"name": "Crown Prince Rudolf, the Umbral Sovereign",
+		"faction": "covenant",
+		"role": "boss",
+		"domain": "ground",
+		"description": "The heir who did not die at Mayerling. He went into the dark to bring his mother back.",
+		"hp": 6500,
+		"armor": "warded",
+		"damage": 38,
+		"dtype": "curse",
+		"range": 6,
+		"cooldown": 1.4,
+		"speed": 2.2,
+		"abilities": [
+			"death_coil",
+			"summon_horde"
+		],
+		"aura": {
+			"radius": 7,
+			"lifesteal": 0.15
+		},
+		"glyph": "R",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
+	},
+	"dead_queen": {
+		"name": "The Dead Queen",
+		"faction": "covenant",
+		"role": "boss",
+		"domain": "ground",
+		"description": "Empress Elisabeth, raised by her son's necromancy: a radiant, terrible revenant.",
+		"hp": 6000,
+		"armor": "warded",
+		"damage": 40,
+		"dtype": "curse",
+		"range": 4,
+		"cooldown": 1.4,
+		"speed": 2.4,
+		"abilities": [
+			"crimson_lance",
+			"dead_queens_call"
+		],
+		"passives": {
+			"lifesteal": 0.3
+		},
+		"glyph": "Q",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
 	}
 }

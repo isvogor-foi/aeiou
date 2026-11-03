@@ -102,7 +102,7 @@ static func build(kind: String, team: Color) -> Node3D:
 			return _fish_shoal()
 		"pier":
 			return _pier()
-		"landpanzer", "juggernaut", "gyrocopter", "plague_balloon", "siege_crawler", "corpse_crawler":
+		"landpanzer", "juggernaut", "gyrocopter", "plague_balloon", "siege_crawler", "corpse_crawler", "aether_train":
 			return Machines.build(kind, team)
 		"goggles", "top_hat", "aether_pack", "pauldron", "aether_staff", "soul_lantern", "grave_pack", "tool_pack", "necro_circlet", "chimney", "soul_chimney", "wall_cog", "aether_lamp", "soul_lamp", "pipes":
 			return Gear.build(kind)

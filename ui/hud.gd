@@ -39,6 +39,9 @@ var _age_label: Label
 var _state_label: Label
 var _state_icon: TextureRect
 var _victory_label: Label
+var _boss_panel: PanelContainer
+var _boss_name: Label
+var _boss_bar: ProgressBar
 var _objectives: Label
 var _story: PanelContainer
 var _story_text: RichTextLabel
@@ -95,6 +98,7 @@ func _ready() -> void:
 	_victory_label.add_theme_color_override("font_color", Color(1.0, 0.85, 0.4))
 	add_child(_victory_label)
 	_build_scenario_panels()
+	_build_boss_bar()
 
 
 ## A label that floats over the map: outlined so it reads on any terrain.
@@ -129,6 +133,48 @@ func _build_scenario_panels() -> void:
 	_story_text.add_theme_font_size_override("normal_font_size", 15)
 	_story_text.add_theme_font_size_override("bold_font_size", 15)
 	_story.add_child(_story_text)
+
+
+## A boss's name and health across the top of the screen.
+func _build_boss_bar() -> void:
+	_boss_panel = PanelContainer.new()
+	_boss_panel.add_theme_stylebox_override("panel", _glass(0.65, 10, Vector2(14, 6)))
+	_boss_panel.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	_boss_panel.offset_left = -260
+	_boss_panel.offset_right = 260
+	_boss_panel.offset_top = 48
+	_boss_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_boss_panel.visible = false
+	add_child(_boss_panel)
+	var col := VBoxContainer.new()
+	col.add_theme_constant_override("separation", 3)
+	_boss_panel.add_child(col)
+	_boss_name = Label.new()
+	_boss_name.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	_boss_name.add_theme_font_size_override("font_size", 15)
+	_boss_name.add_theme_color_override("font_color", Color(1.0, 0.82, 0.5))
+	col.add_child(_boss_name)
+	_boss_bar = ProgressBar.new()
+	_boss_bar.custom_minimum_size = Vector2(480, 12)
+	_boss_bar.show_percentage = false
+	var bg := StyleBoxFlat.new()
+	bg.bg_color = Color(0, 0, 0, 0.6)
+	bg.set_corner_radius_all(4)
+	var fill := StyleBoxFlat.new()
+	fill.bg_color = Color(0.75, 0.12, 0.12)
+	fill.set_corner_radius_all(4)
+	_boss_bar.add_theme_stylebox_override("background", bg)
+	_boss_bar.add_theme_stylebox_override("fill", fill)
+	col.add_child(_boss_bar)
+
+
+func _refresh_boss() -> void:
+	var b = gv.world.get_entity(int(gv.world.scenario.get("boss", -1)))
+	_boss_panel.visible = b != null and b.alive
+	if _boss_panel.visible:
+		_boss_name.text = _name_of(b)
+		_boss_bar.max_value = b.max_hp
+		_boss_bar.value = b.hp
 
 
 func story(speaker: String, text: String) -> void:
@@ -488,6 +534,7 @@ func refresh(delta: float) -> void:
 	_state_icon.texture = HudIcons.get_icon("pause" if gv.paused else "play")
 	_victory_label.text = _victory_text()
 	_refresh_scenario(delta)
+	_refresh_boss()
 	if _flash_time > 0.0:
 		_flash_time -= delta
 		_flash.modulate.a = clampf(_flash_time / 0.5, 0.0, 1.0)

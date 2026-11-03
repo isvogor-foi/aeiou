@@ -101,7 +101,7 @@ func add_cloud(ev: Dictionary) -> void:
 	m.height = r * 0.7
 	var mat := StandardMaterial3D.new()
 	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	mat.albedo_color = Color(0.45, 0.85, 0.25, 0.3)
+	mat.albedo_color = DB.color_of(ev.color) if ev.has("color") else Color(0.45, 0.85, 0.25, 0.3)
 	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	var mi := MeshInstance3D.new()

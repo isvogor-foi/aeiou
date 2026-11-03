@@ -4,6 +4,7 @@ extends Control
 
 const DB = preload("res://sim/db.gd")
 const Entity = preload("res://sim/entity.gd")
+const Scenario = preload("res://scenarios/scenario.gd")
 
 var gv
 
@@ -21,6 +22,31 @@ func _bar(center: Vector2, width: float, frac: float, color: Color) -> void:
 	var r := Rect2(center - Vector2(width * 0.5, 0), Vector2(width, 5))
 	draw_rect(r.grow(1), Color(0, 0, 0, 0.75))
 	draw_rect(Rect2(r.position, Vector2(width * clampf(frac, 0.0, 1.0), 5)), color)
+
+
+## Stealth missions: each sentry's sweeping vision cone, drawn on the ground.
+func _draw_sentries(cam: Camera3D) -> void:
+	for s in gv.world.scenario.get("sentries", []):
+		var g = gv.world.get_entity(int(s.id))
+		if g == null or not g.alive or not gv.is_shown(g):
+			continue
+		var dir: float = Scenario.sentry_dir(gv.world, s)
+		var pts := PackedVector2Array()
+		var origin: Vector3 = gv.terrain.to3(g.pos) + Vector3(0, 0.05, 0)
+		if cam.is_position_behind(origin):
+			continue
+		pts.append(cam.unproject_position(origin))
+		for k in 9:
+			var a: float = dir - float(s.half) + float(s.half) * 2.0 * k / 8.0
+			var p: Vector2 = g.pos + Vector2.from_angle(a) * float(s.range)
+			var p3: Vector3 = gv.terrain.to3(p) + Vector3(0, 0.05, 0)
+			if cam.is_position_behind(p3):
+				pts = PackedVector2Array()
+				break
+			pts.append(cam.unproject_position(p3))
+		if pts.size() >= 3:
+			draw_colored_polygon(pts, Color(1.0, 0.25, 0.15, 0.18))
+			draw_polyline(pts + PackedVector2Array([pts[0]]), Color(1.0, 0.35, 0.2, 0.6), 1.5)
 
 
 func _hp_color(frac: float) -> Color:
@@ -60,6 +86,7 @@ func _draw() -> void:
 			_bar(s + Vector2(0, -8), w, e.loyalty / 100.0, lcol)
 		if e.kind == Entity.UNIT and e.carry_amount > 0.0 and e.owner == gv.me:
 			draw_rect(Rect2(s + Vector2(w * 0.5 + 3, -1), Vector2(7, 7)), DB.color_of(gv.world.rules.resource_colors[e.carry_type]))
+	_draw_sentries(cam)
 	var box: Rect2 = gv.drag_rect_screen
 	if box.has_area():
 		draw_rect(box, Color(0.35, 1.0, 0.35, 0.12))
