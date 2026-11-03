@@ -7,6 +7,7 @@ const World = preload("res://sim/world.gd")
 const Entity = preload("res://sim/entity.gd")
 const GameMap = preload("res://sim/game_map.gd")
 const Research = preload("res://sim/research.gd")
+const Abilities = preload("res://sim/abilities.gd")
 const Generator = preload("res://mapgen/generator.gd")
 
 var _failures: Array[String] = []
@@ -64,6 +65,8 @@ func _initialize() -> void:
 		"test_skirmish_options",
 		"test_buildings_expand_borders",
 		"test_relic_to_city",
+		"test_roster_passives",
+		"test_machines_and_boost",
 		"test_military_upgrades_are_scoped",
 		"test_save_load_round_trip",
 		"test_scenarios_run",
@@ -448,7 +451,7 @@ func test_spells_heal_ward_drain() -> void:
 	_rich(w, 1)
 	var c := _city(w, 0).pos + Vector2(0, 6 * GameMap.TILE)
 	var mender := w.spawn_unit("field_alchemist", 0, c)
-	var hurt := w.spawn_unit("grenadier", 0, c + Vector2(32, 0))
+	var hurt := w.spawn_unit("kuerassier", 0, c + Vector2(32, 0))
 	hurt.hp = 40.0
 	var mana: float = w.players[0].res.mana
 	check(w.issue({"type": "cast", "player": 0, "ids": [mender.id], "ability": "heal", "target": hurt.id}) == "", "cast heal")
@@ -513,7 +516,7 @@ func test_auras_cleave_and_charge() -> void:
 	check(b.hp < b.max_hp, "cleave splashed the neighbour")
 	# Charge: after a run-up the knight's blow is doubled.
 	var knight := w.spawn_unit("kuerassier", 0, c + Vector2(-8 * GameMap.TILE, 0))
-	var dummy := w.spawn_unit("grenadier", 1, c + Vector2(-2 * GameMap.TILE, 0))
+	var dummy := w.spawn_unit("musketeer", 1, c + Vector2(-2 * GameMap.TILE, 0))
 	dummy.def = dummy.def.duplicate()
 	dummy.def.damage = 0
 	w.update_fog()
@@ -853,8 +856,8 @@ func test_siege_setup_and_clouds() -> void:
 	near.prev_pos = near.pos
 	w.update_fog()
 	w.issue({"type": "attack", "player": 1, "ids": [cat.id], "target": near.id})
-	_run(w, 2)
-	check(near.hp == near.max_hp, "still setting up after 2s")
+	_run(w, 0.5)
+	check(near.hp == near.max_hp, "still setting up after half a second")
 	_run(w, 3)
 	check(near.hp < near.max_hp, "fires once set up")
 	check(not w.areas.is_empty(), "left a poison cloud")
@@ -1354,3 +1357,67 @@ func test_military_upgrades_are_scoped() -> void:
 	check(is_equal_approx(jaeger.max_hp, j0), "jaeger unchanged")
 	check(not "transfiguration" in DB.buildings.library.research, "library no longer upgrades soldiers")
 	check("drill" in DB.buildings.kaserne.research, "kaserne offers drill")
+
+
+## Hold the Line, Volley, Frenzy and Wither do what their descriptions say.
+func test_roster_passives() -> void:
+	var w := _world()
+	var c := Vector2(30, 30) * GameMap.TILE
+	var reaver := w.spawn_unit("reaver", 1, c + Vector2(400, 0))
+	var gren := w.spawn_unit("grenadier", 0, c)
+	_run(w, 2)
+	var hp0 := gren.hp
+	w.apply_damage(reaver, gren, 20.0, "physical")
+	var braced := hp0 - gren.hp
+	gren.stand = 0.0
+	hp0 = gren.hp
+	w.apply_damage(reaver, gren, 20.0, "physical")
+	check(braced < hp0 - gren.hp, "a standing Grenadier takes less (%.1f vs %.1f)" % [braced, hp0 - gren.hp])
+	# Volley: a lone musketeer vs one of five.
+	var target := w.spawn_unit("grave_brute", 1, c + Vector2(0, 300))
+	target.max_hp = 99999.0
+	target.hp = 99999.0
+	var lone := w.spawn_unit("musketeer", 0, c + Vector2(-600, 300))
+	_run(w, 0.05)
+	var before := target.hp
+	w.deal_damage(lone, target)
+	var single := before - target.hp
+	for i in 4:
+		w.spawn_unit("musketeer", 0, lone.pos + Vector2(20 * (i + 1), 0))
+	_run(w, 0.05)
+	before = target.hp
+	w.deal_damage(lone, target)
+	check(before - target.hp > single * 1.2, "Volley bonus (%.1f vs %.1f)" % [before - target.hp, single])
+	# Frenzy: a wounded Reaver hits harder.
+	before = target.hp
+	w.deal_damage(reaver, target)
+	var healthy := before - target.hp
+	reaver.hp = reaver.max_hp * 0.3
+	before = target.hp
+	w.deal_damage(reaver, target)
+	check(before - target.hp > healthy * 1.2, "Frenzy bonus")
+	# Wither slows.
+	var caller := w.spawn_unit("hexcaster", 1, c + Vector2(200, 200))
+	w.deal_damage(caller, gren)
+	check(Abilities.effect_amount(gren, "slow") > 0.0, "Wither slows")
+
+
+## Steel armour, the steam tank's Full Steam, and the Plague Balloon's cloud.
+func test_machines_and_boost() -> void:
+	var w := _world()
+	_rich(w)
+	_rich(w, 1)
+	var c := Vector2(30, 30) * GameMap.TILE
+	var tank := w.spawn_unit("landpanzer", 0, c)
+	var musk := w.spawn_unit("musketeer", 1, c + Vector2(150, 0))
+	var hp0 := tank.hp
+	w.apply_damage(musk, tank, 20.0, "physical")
+	check(hp0 - tank.hp < 10.0, "steel shrugs off musket fire (%.1f)" % (hp0 - tank.hp))
+	check(w.issue({"type": "cast", "player": 0, "ids": [tank.id], "ability": "full_steam", "pos": tank.pos}) == "", "Full Steam ordered")
+	_run(w, 1)
+	check(Abilities.effect_amount(tank, "boost") > 0.0 and Abilities.effect_amount(tank, "haste") > 0.0, "boosted")
+	var balloon := w.spawn_unit("bat_swarm", 1, c + Vector2(0, 200))
+	var n := w.areas.size()
+	check(w.issue({"type": "cast", "player": 1, "ids": [balloon.id], "ability": "plague_drop", "pos": c}) == "", "Plague Drop ordered")
+	_run(w, 2)
+	check(w.areas.size() > n, "a plague cloud lingers")

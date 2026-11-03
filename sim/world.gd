@@ -294,6 +294,11 @@ func deal_damage(attacker: Entity, target: Entity, base_override := -1.0, dtype_
 		base *= 1.0 + float(passives.home_guard.damage)
 	if passives.has("high_ground") and has_high_ground(attacker, target):
 		base *= 1.0 + float(passives.high_ground.damage)
+	if passives.has("frenzy") and attacker.hp < attacker.max_hp * float(passives.frenzy.below):
+		base *= 1.0 + float(passives.frenzy.damage)
+	if passives.has("volley") and _comrades_near(attacker, float(passives.volley.radius) * TILE) >= int(passives.volley.min):
+		base *= 1.0 + float(passives.volley.damage)
+	base *= 1.0 + Abilities.effect_amount(attacker, "boost")
 	base *= 1.0 + viribus_unitis(attacker)
 	if attacker.kind == Entity.UNIT and attacker.owner >= 0:
 		base *= 1.0 + aura_value(attacker.owner, attacker.pos, "damage") + enemy_aura_value(attacker.owner, attacker.pos, "enemy_damage")
@@ -308,6 +313,8 @@ func deal_damage(attacker: Entity, target: Entity, base_override := -1.0, dtype_
 		"owners": [attacker.owner, target.owner], "siege": passives.has("cleave") and float(attacker.def.range) > 1.0,
 	})
 	var dealt := apply_damage(attacker, target, base, dtype)
+	if passives.has("wither") and target.alive and target.kind == Entity.UNIT:
+		Abilities.add_effect(self, target, "slow", float(passives.wither.slow), float(passives.wither.duration))
 	if steal > 0.0 and attacker.alive:
 		attacker.hp = minf(attacker.max_hp, attacker.hp + dealt * steal)
 	if passives.has("cloud"):
@@ -334,6 +341,8 @@ func apply_damage(attacker, target: Entity, amount: float, dtype: String) -> flo
 			dmg *= 1.0 + float(tp.home_guard.damage_taken)
 		if target.deployed:
 			dmg *= 1.0 + float(target.def.deployed.damage_taken)
+		if tp.has("brace") and target.stand >= float(tp.brace.after):
+			dmg *= 1.0 + float(tp.brace.damage_taken)
 	for fx in target.effects:
 		if fx.type == "shield" and fx.amount > 0.0:
 			var absorbed := minf(fx.amount, dmg)
@@ -350,6 +359,19 @@ func apply_damage(attacker, target: Entity, amount: float, dtype: String) -> flo
 		else:
 			kill(target)
 	return dmg
+
+
+## Living units of `e`'s own type and side within `radius` (Volley), itself excluded.
+func _comrades_near(e: Entity, radius: float) -> int:
+	var n := 0
+	var lo := _cell(e.pos - Vector2(radius, radius))
+	var hi := _cell(e.pos + Vector2(radius, radius))
+	for cy in range(lo.y, hi.y + 1):
+		for cx in range(lo.x, hi.x + 1):
+			for o in _unit_grid.get(Vector2i(cx, cy), []):
+				if o != e and o.alive and o.owner == e.owner and o.type_id == e.type_id and o.pos.distance_to(e.pos) <= radius:
+					n += 1
+	return n
 
 
 ## Whether `a` shoots down on `t` from noticeably higher ground (Standschütze).
@@ -566,6 +588,7 @@ func tick() -> void:
 	for e in all:
 		if e.kind == Entity.UNIT:
 			e.still = e.still + DT if e.pos == e.prev_pos else 0.0
+			e.stand = e.stand + DT if e.pos == e.prev_pos else 0.0
 		e.prev_pos = e.pos
 		if not e.alive or e.inside >= 0:
 			continue

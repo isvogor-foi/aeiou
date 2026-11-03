@@ -279,6 +279,8 @@ static func _speed(e) -> float:
 	for fx in e.effects:
 		if fx.type == "slow":
 			s *= 1.0 - fx.amount
+		elif fx.type == "haste":
+			s *= 1.0 + fx.amount
 	# Anything that moves loses its siege set-up.
 	e.setup = 0.0
 	return s

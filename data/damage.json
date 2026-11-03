@@ -1,7 +1,7 @@
 {
 	"_comment": "Damage multiplier by damage type (rows) against armor class (columns).",
 	"types": ["physical", "arcane", "curse", "fire"],
-	"armors": ["light", "heavy", "warded", "beast", "structure", "air", "ship"],
+	"armors": ["light", "heavy", "warded", "beast", "structure", "air", "ship", "steel"],
 	"colors": {
 		"physical": [0.92, 0.92, 0.88],
 		"arcane": [0.5, 0.8, 1.0],
@@ -9,9 +9,9 @@
 		"fire": [1.0, 0.55, 0.15]
 	},
 	"matrix": {
-		"physical": { "light": 1.0, "heavy": 0.6, "warded": 1.0, "beast": 1.0, "structure": 0.4, "air": 0.8, "ship": 0.6 },
-		"arcane":   { "light": 1.0, "heavy": 1.25, "warded": 0.5, "beast": 0.9, "structure": 0.6, "air": 1.0, "ship": 0.8 },
-		"curse":    { "light": 1.2, "heavy": 1.0, "warded": 0.6, "beast": 1.3, "structure": 0.3, "air": 1.0, "ship": 0.5 },
-		"fire":     { "light": 1.1, "heavy": 0.9, "warded": 0.8, "beast": 1.2, "structure": 1.5, "air": 1.0, "ship": 1.4 }
+		"physical": { "light": 1.0, "heavy": 0.6, "warded": 1.0, "beast": 1.0, "structure": 0.4, "air": 0.8, "ship": 0.6, "steel": 0.45 },
+		"arcane":   { "light": 1.0, "heavy": 1.25, "warded": 0.5, "beast": 0.9, "structure": 0.6, "air": 1.0, "ship": 0.8, "steel": 1.1 },
+		"curse":    { "light": 1.2, "heavy": 1.0, "warded": 0.6, "beast": 1.3, "structure": 0.3, "air": 1.0, "ship": 0.5, "steel": 0.7 },
+		"fire":     { "light": 1.1, "heavy": 0.9, "warded": 0.8, "beast": 1.2, "structure": 1.5, "air": 1.0, "ship": 1.4, "steel": 1.0 }
 	}
 }

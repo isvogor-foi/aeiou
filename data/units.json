@@ -26,7 +26,7 @@
 		"faction": "monarchy",
 		"role": "melee",
 		"domain": "ground",
-		"description": "Bayonet infantry in white coats. Holds the line against raiders.",
+		"description": "Bayonet line infantry in white coats. Hold the Line: takes 25% less damage after standing its ground for a second.",
 		"hp": 120,
 		"armor": "heavy",
 		"damage": 11,
@@ -42,14 +42,20 @@
 		},
 		"train_time": 18,
 		"hotkey": "W",
-		"glyph": "W"
+		"glyph": "W",
+		"passives": {
+			"brace": {
+				"after": 1.0,
+				"damage_taken": -0.25
+			}
+		}
 	},
 	"musketeer": {
 		"name": "Aether Musketeer",
 		"faction": "monarchy",
 		"role": "ranged",
 		"domain": "ground",
-		"description": "Fires Aether-charged musket balls. Strong against heavy armour.",
+		"description": "Line rifles with Aether-charged muskets. Volley: +30% damage with 4 or more Musketeers close by.",
 		"hp": 60,
 		"armor": "light",
 		"damage": 9,
@@ -66,7 +72,14 @@
 		},
 		"train_time": 20,
 		"hotkey": "E",
-		"glyph": "B"
+		"glyph": "B",
+		"passives": {
+			"volley": {
+				"radius": 3.0,
+				"min": 4,
+				"damage": 0.3
+			}
+		}
 	},
 	"thrall": {
 		"name": "Thrall",
@@ -95,7 +108,7 @@
 		"faction": "covenant",
 		"role": "melee",
 		"domain": "ground",
-		"description": "Fast, cheap raider with a hooked blade.",
+		"description": "Fast, cheap raider with a hooked blade. Frenzy: +30% damage below half health.",
 		"hp": 95,
 		"armor": "light",
 		"damage": 13,
@@ -111,14 +124,20 @@
 		},
 		"train_time": 15,
 		"hotkey": "W",
-		"glyph": "R"
+		"glyph": "R",
+		"passives": {
+			"frenzy": {
+				"below": 0.5,
+				"damage": 0.3
+			}
+		}
 	},
 	"hexcaster": {
 		"name": "Soul Caller",
 		"faction": "covenant",
 		"role": "ranged",
 		"domain": "ground",
-		"description": "Swings a lantern of bottled souls and hurls withering curses. Deadly to light troops and beasts.",
+		"description": "Swings a lantern of bottled souls. Wither: its curses slow the target by 20% for 2s. Deadly to light troops and beasts.",
 		"hp": 60,
 		"armor": "light",
 		"damage": 12,
@@ -135,7 +154,13 @@
 		},
 		"train_time": 20,
 		"hotkey": "E",
-		"glyph": "H"
+		"glyph": "H",
+		"passives": {
+			"wither": {
+				"slow": 0.2,
+				"duration": 2.0
+			}
+		}
 	},
 	"tross_wagon": {
 		"name": "Tross Wagon",
@@ -192,7 +217,7 @@
 		"faction": "monarchy",
 		"role": "ranged",
 		"domain": "ground",
-		"description": "Rifleman in pike-grey. Picks off light troops and flyers (+50% vs air).",
+		"description": "Sharpshooter in hunter's green. Camouflage: hidden while it keeps still (and until it fires); enemies spot it within 3 tiles.",
 		"hp": 65,
 		"armor": "light",
 		"damage": 11,
@@ -213,6 +238,12 @@
 		"glyph": "R",
 		"bonus_vs": {
 			"air": 0.5
+		},
+		"passives": {
+			"stealth": {
+				"still": 2.0,
+				"detect": 3.0
+			}
 		}
 	},
 	"field_alchemist": {
@@ -458,11 +489,11 @@
 		"glyph": "r"
 	},
 	"kress_flyer": {
-		"name": "Kress Flyer",
+		"name": "Kress Gyrocopter",
 		"faction": "monarchy",
 		"role": "ranged",
 		"domain": "air",
-		"description": "Kite-winged Aether glider (after Wilhelm Kress of Vienna). Fast scout; only ranged units, towers and flyers can hit it.",
+		"description": "Steam rotorcraft (after Wilhelm Kress of Vienna). Fast scout; Aether Bomb (D) hits an area. Only ranged units, towers and flyers can hit it.",
 		"hp": 70,
 		"armor": "air",
 		"damage": 8,
@@ -480,7 +511,10 @@
 		},
 		"train_time": 22,
 		"hotkey": "Q",
-		"glyph": "b"
+		"glyph": "b",
+		"abilities": [
+			"aether_bomb"
+		]
 	},
 	"double_eagle": {
 		"name": "Double Eagle",
@@ -511,11 +545,11 @@
 		"glyph": "G"
 	},
 	"bat_swarm": {
-		"name": "Bat Swarm",
+		"name": "Plague Balloon",
 		"faction": "covenant",
 		"role": "ranged",
 		"domain": "air",
-		"description": "Fast flying swarm that nips at targets. Only ranged units, towers and flyers can hit it.",
+		"description": "A gas-bag of plague over a bone gondola. Plague Drop (D) leaves a lingering poison cloud. Only ranged units, towers and flyers can hit it.",
 		"hp": 60,
 		"armor": "air",
 		"damage": 8,
@@ -533,7 +567,10 @@
 		},
 		"train_time": 20,
 		"hotkey": "Q",
-		"glyph": "v"
+		"glyph": "v",
+		"abilities": [
+			"plague_drop"
+		]
 	},
 	"bone_drake": {
 		"name": "Bone Drake",
@@ -762,11 +799,11 @@
 		"faction": "monarchy",
 		"role": "ranged",
 		"domain": "ground",
-		"description": "Two-legged Aether-steam engine with a rotary gun. Shreds infantry (+50% vs light).",
+		"description": "Walking boiler with an Aether flamethrower: short-range fire that splashes onto everyone around the target.",
 		"hp": 420,
 		"armor": "heavy",
 		"damage": 5,
-		"dtype": "physical",
+		"dtype": "fire",
 		"range": 4,
 		"cooldown": 0.35,
 		"speed": 2.2,
@@ -783,14 +820,20 @@
 		},
 		"train_time": 35,
 		"hotkey": "Q",
-		"glyph": "S"
+		"glyph": "S",
+		"passives": {
+			"cleave": {
+				"radius": 1.0,
+				"share": 0.6
+			}
+		}
 	},
 	"skoda_mortar": {
-		"name": "Škoda Mortar",
+		"name": "Škoda Siege Crawler",
 		"faction": "monarchy",
 		"role": "siege",
 		"domain": "ground",
-		"description": "Plzeň siege mortar. Takes 3s to set up after moving; can't fire closer than 3 tiles. Shells splash and wreck buildings (+100% vs structures).",
+		"description": "Tracked steam mortar from the Škoda works. Long-range splash; sets up in 1s; minimum range.",
 		"hp": 200,
 		"armor": "heavy",
 		"damage": 45,
@@ -803,7 +846,7 @@
 		"age": 4,
 		"passives": {
 			"setup": {
-				"time": 3.0
+				"time": 1.0
 			},
 			"min_range": 3,
 			"cleave": {
@@ -1056,11 +1099,11 @@
 		"glyph": "R"
 	},
 	"plague_catapult": {
-		"name": "Plague Catapult",
+		"name": "Corpse Crawler",
 		"faction": "covenant",
 		"role": "siege",
 		"domain": "ground",
-		"description": "Hurls diseased corpses: splash damage plus a poison cloud that lingers for 8s. Sets up for 3s; minimum range 3.",
+		"description": "Tracked bone engine that hurls diseased corpses: splash plus a lingering poison cloud. Sets up in 1s; minimum range.",
 		"hp": 200,
 		"armor": "heavy",
 		"damage": 35,
@@ -1073,7 +1116,7 @@
 		"age": 4,
 		"passives": {
 			"setup": {
-				"time": 3.0
+				"time": 1.0
 			},
 			"min_range": 3,
 			"cleave": {
@@ -1505,5 +1548,73 @@
 		"cost": {},
 		"train_time": 1,
 		"glyph": "F"
+	},
+	"landpanzer": {
+		"name": "Landpanzer",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"hp": 900,
+		"armor": "steel",
+		"damage": 28,
+		"dtype": "fire",
+		"range": 5,
+		"cooldown": 2.5,
+		"speed": 1.6,
+		"sight": 7,
+		"pop": 3,
+		"age": 4,
+		"cost": {
+			"gold": 300,
+			"timber": 150,
+			"coal": 120
+		},
+		"train_time": 45,
+		"hotkey": "R",
+		"glyph": "T",
+		"description": "Riveted steam tank with a turret cannon. Steel armour shrugs off musket fire; its shells splash. Full Steam (D): +60% speed and +40% damage for 6s.",
+		"abilities": [
+			"full_steam"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.0,
+				"share": 0.5
+			}
+		}
+	},
+	"bone_juggernaut": {
+		"name": "Bone Juggernaut",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"hp": 900,
+		"armor": "steel",
+		"damage": 34,
+		"dtype": "physical",
+		"range": 0.8,
+		"cooldown": 2.0,
+		"speed": 1.6,
+		"sight": 7,
+		"pop": 3,
+		"age": 4,
+		"cost": {
+			"gold": 280,
+			"timber": 120,
+			"coal": 120
+		},
+		"train_time": 45,
+		"hotkey": "R",
+		"glyph": "J",
+		"description": "Bone-and-iron siege engine driven by a soul furnace; crushes what it rams. Steel armour; its blows splash. Soul Furnace (D): +60% speed and +40% damage for 6s.",
+		"abilities": [
+			"soul_furnace"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.0,
+				"share": 0.5
+			}
+		}
 	}
 }

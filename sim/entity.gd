@@ -31,6 +31,8 @@ var path_index := 0
 var path_goal := Vector2i(-1, -1)
 ## The entity the current path approaches (lets _approach reuse its goal tile).
 var approach_id := -1
+## Seconds since this unit last moved (attacking doesn't reset it; Hold the Line).
+var stand := 0.0
 ## Tile and sight of this entity's last fog reveal (skips repeats when fog is sticky).
 var fog_key := Vector3i(-1, -1, -1)
 var repath := 0

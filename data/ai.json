@@ -96,7 +96,8 @@
 				"shadow_wyrm": 0.04,
 				"lich": 0.04,
 				"ghost_ship": 0.02,
-				"bone_colossus": 0.03
+				"bone_colossus": 0.03,
+				"bone_juggernaut": 0.05
 			},
 			"first_wave": 300,
 			"wave_interval": 150,
@@ -237,7 +238,8 @@
 				"kaiserjaeger": 0.06,
 				"aethership": 0.03,
 				"ironclad": 0.02,
-				"aether_colossus": 0.03
+				"aether_colossus": 0.03,
+				"landpanzer": 0.05
 			},
 			"first_wave": 480,
 			"wave_interval": 200,

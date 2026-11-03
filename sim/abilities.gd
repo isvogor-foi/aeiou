@@ -85,6 +85,15 @@ static func cast(w, caster, id: String, target, pos: Vector2) -> bool:
 					target.path = PackedVector2Array()
 					target.path_index = 0
 			w.apply_damage(caster, target, float(a.amount), a.get("dtype", "physical"))
+		"boost":
+			# Full Steam / Soul Furnace: a timed burst of speed and damage.
+			add_effect(w, caster, "haste", float(a.speed_bonus), float(a.duration))
+			add_effect(w, caster, "boost", float(a.damage_bonus), float(a.duration))
+		"cloud":
+			# A lingering poison cloud on the ground (Plague Drop).
+			w.areas.append({"pos": at, "radius": radius, "dps": float(a.dps), "dtype": a.get("dtype", "curse"),
+					"owner": caster.owner, "until": w.tick_count + roundi(float(a.duration) * w.TICK_RATE)})
+			w.events.append({"type": "cloud", "pos": at, "radius": radius, "duration": float(a.duration)})
 		"grant":
 			var p = w.players[caster.owner]
 			for k in a.grant:
