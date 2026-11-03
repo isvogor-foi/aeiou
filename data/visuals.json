@@ -546,45 +546,9 @@
 			}
 		},
 		"kress_flyer": {
-			"model": "res://assets/kaykit/adventures/Mage_hd.glb",
-			"height": 1.1,
-			"hide": [
-				"2H_Staff",
-				"Spellbook",
-				"Spellbook_open",
-				"Mage_Hat",
-				"1H_Wand"
-			],
-			"fly_height": 1.8,
-			"props": [
-				"glider"
-			],
-			"anims": {
-				"idle": "Sit_Chair_Idle",
-				"walk": "Sit_Chair_Idle",
-				"attack": "Spellcast_Shoot",
-				"death": "Death_A"
-			},
-			"attach": {
-				"head": {
-					"proc": "goggles",
-					"offset": [
-						0,
-						0.78,
-						0.5
-					],
-					"scale": 1.0
-				},
-				"chest": {
-					"proc": "aether_pack",
-					"offset": [
-						0,
-						0.0,
-						-0.42
-					],
-					"scale": 0.65
-				}
-			}
+			"procedural": "gyrocopter",
+			"scale": 1.4,
+			"fly_height": 1.8
 		},
 		"double_eagle": {
 			"procedural": "double_eagle",
@@ -592,9 +556,9 @@
 			"fly_height": 2.4
 		},
 		"bat_swarm": {
-			"procedural": "bats",
-			"scale": 1.3,
-			"fly_height": 2.0
+			"procedural": "plague_balloon",
+			"scale": 1.4,
+			"fly_height": 1.9
 		},
 		"bone_drake": {
 			"procedural": "drake",
@@ -809,12 +773,12 @@
 			"scale": 1.0
 		},
 		"skoda_mortar": {
-			"procedural": "mortar",
-			"scale": 1.0
+			"procedural": "siege_crawler",
+			"scale": 1.35
 		},
 		"plague_catapult": {
-			"procedural": "catapult",
-			"scale": 1.0
+			"procedural": "corpse_crawler",
+			"scale": 1.35
 		},
 		"hussar": {
 			"model": "res://assets/kaykit/adventures/Rogue_hd.glb",
@@ -1171,6 +1135,14 @@
 				"cast": "Cheer",
 				"death": "Death_B"
 			}
+		},
+		"landpanzer": {
+			"procedural": "landpanzer",
+			"scale": 1.45
+		},
+		"bone_juggernaut": {
+			"procedural": "juggernaut",
+			"scale": 1.45
 		}
 	},
 	"buildings": {
