@@ -8,6 +8,8 @@ extends RefCounted
 const W := 96
 const H := 64
 
+const ImperialSvg = preload("res://view3d/imperial_svg.gd")
+
 const GOLD := Color(0.96, 0.78, 0.16)
 const BLACK := Color(0.07, 0.07, 0.08)
 const RED := Color(0.78, 0.1, 0.14)
@@ -18,14 +20,25 @@ static var _material_cache := {}
 
 
 ## `scale` paints a larger copy (e.g. for the title-screen emblem).
+## Flags drawn as SVG at high resolution (crisp on the pole and on the title screen).
+const VECTOR := ["habsburg", "empire"]
+
+
 static func texture(kind: String, scale := 1) -> ImageTexture:
 	var key := "%s@%d" % [kind, scale]
 	if not _textures.has(key):
-		_textures[key] = ImageTexture.create_from_image(paint(kind, scale))
+		var img := paint(kind, scale)
+		if kind in VECTOR:
+			img.generate_mipmaps()
+		_textures[key] = ImageTexture.create_from_image(img)
 	return _textures[key]
 
 
 static func paint(kind: String, scale := 1) -> Image:
+	if kind in VECTOR:
+		var svg_img := Image.new()
+		svg_img.load_svg_from_string(ImperialSvg.banner() if kind == "habsburg" else ImperialSvg.bicolour(), 2.56)
+		return svg_img
 	var w := W * scale
 	var h := H * scale
 	var img := Image.create(w, h, false, Image.FORMAT_RGBA8)
@@ -196,8 +209,8 @@ static func make(kind: String, height := 1.6, width := 0.75) -> Node3D:
 	# The cloth: a subdivided plane hanging off the pole, rippled by the shader.
 	var cloth := PlaneMesh.new()
 	cloth.size = Vector2(width, width * H / W)
-	cloth.subdivide_width = 10
-	cloth.subdivide_depth = 2
+	cloth.subdivide_width = 24
+	cloth.subdivide_depth = 10
 	cloth.orientation = PlaneMesh.FACE_Z
 	var cmi := MeshInstance3D.new()
 	cmi.mesh = cloth
