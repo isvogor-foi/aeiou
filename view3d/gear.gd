@@ -92,7 +92,7 @@ static func _collect(n: Node, xf: Transform3D, by_mat: Dictionary, live: Array) 
 		if not c is Node3D:
 			continue
 		var here: Transform3D = xf * c.transform
-		if c.has_meta("spin_z") or c.has_meta("spin") or c is GPUParticles3D:
+		if c.has_meta("spin_z") or c.has_meta("spin") or c.has_meta("nod") or c is GPUParticles3D or c is Light3D:
 			var keep: Node3D = c.duplicate()
 			keep.transform = here
 			live.append(keep)

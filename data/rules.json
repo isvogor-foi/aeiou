@@ -158,5 +158,25 @@
 		"city_growth_per_building": 0.25,
 		"city_growth_max": 3.0,
 		"city_growth_reach": 3.0
+	},
+	"hungary": {
+		"_comment": "Hungary is a third side, hostile to all: cities that revolt join it, and at rise_at seconds it rises with its own city near the map centre, a garrison and an AI. It can't win or lose; take its cities to end it. Scenarios switch it off.",
+		"enabled": true,
+		"rise_at": 720,
+		"workers": 5,
+		"garrison": [
+			[
+				"kaszas",
+				5
+			],
+			[
+				"honved",
+				5
+			],
+			[
+				"hussar",
+				3
+			]
+		]
 	}
 }

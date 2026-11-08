@@ -88,18 +88,18 @@ func _create(e) -> Dictionary:
 				body.position.y = r.fly
 				node.add_child(_shadow())
 			var team: Color = gv.world.players[e.owner].color
-			node.add_child(_ring(0.32, Color(team, 0.75)))
+			node.add_child(_ring(0.45, Color(team, 0.75)))
 			if e.is_hero():
-				node.add_child(_ring(0.55, Color(1.0, 0.82, 0.3, 0.9)))
+				node.add_child(_ring(0.75, Color(1.0, 0.82, 0.3, 0.9)))
 			r.shield = _shield_bubble(r.bar_height)
 			node.add_child(r.shield)
-			r.sel = _ring(0.42, Color(0.35, 1.0, 0.35, 0.95))
+			r.sel = _ring(0.58, Color(0.35, 1.0, 0.35, 0.95))
 			node.add_child(r.sel)
 			r.yaw = atan2(e.facing.x, e.facing.y)
 			_play(r, "idle")
 		Entity.BUILDING, Entity.RESOURCE:
 			var table: Dictionary = DB.visuals.buildings if e.kind == Entity.BUILDING else DB.visuals.resources
-			var body := Models.make_footprint_model(table.get(e.type_id, {"procedural": "crystal"}), e.owner, e.size.x)
+			var body := Models.make_footprint_model(table.get(e.type_id, {"procedural": "crystal"}), e.owner, e.size.x, e.crown_land if e.kind == Entity.BUILDING else "")
 			node.add_child(body)
 			r.body = body
 			var box := Models._bounds(body, Transform3D.IDENTITY)
@@ -119,7 +119,8 @@ func _create(e) -> Dictionary:
 					flag.position = Vector3(-e.size.x * 0.42, 0, e.size.y * 0.42)
 					node.add_child(flag)
 			if e.kind == Entity.BUILDING and e.constructing:
-				var scaffold := Models.make_footprint_model({"model": DB.visuals.scaffolding, "fit": 1.0}, e.owner, e.size.x)
+				var scaffold := Models.make_footprint_model({"building": "scaffold"}, e.owner, e.size.x)
+				scaffold.scale = Vector3(e.size.x * 0.95, 1.0, e.size.y * 0.95)
 				node.add_child(scaffold)
 				r.scaffold = scaffold
 	return r
@@ -243,13 +244,17 @@ func _sync_land_flag(e, r: Dictionary) -> void:
 	if r.get("land_flag"):
 		r.land_flag.queue_free()
 		r.land_flag = null
-	# The city's roofs take the nation's colour (devtools/roofs.py paints the atlases).
-	var roofs := "res://assets/recolor/roofs_%s.png" % e.crown_land
-	if e.crown_land != "" and ResourceLoader.exists(roofs):
-		Models.retexture(r.body, roofs)
-	elif r.get("roofs_changed", false):
-		Models.retexture(r.body, "res://assets/kaykit/medieval/buildings/yellow/hexagons_medieval.png")
-	r.roofs_changed = e.crown_land != ""
+	# A city is rebuilt in the design of the land it proclaims (view3d/buildings.gd).
+	var v: Dictionary = DB.visuals.buildings.get(e.type_id, {})
+	if v.get("styled", false) and r.has("styled_land") and r.styled_land != e.crown_land:
+		var body := Models.make_footprint_model(v, e.owner, e.size.x, e.crown_land)
+		var holder: Node = r.body.get_parent()
+		holder.add_child(body)
+		holder.move_child(body, r.body.get_index())
+		r.body.queue_free()
+		r.body = body
+		r.animated = _animated_parts(r.node)
+	r.styled_land = e.crown_land
 	if e.crown_land == "":
 		return
 	var flag := Flags.make(DB.crown_lands[e.crown_land].get("flag", e.crown_land), r.bar_height * 0.85 + 0.6, 0.85)
@@ -287,7 +292,7 @@ func _play(r: Dictionary, key: String, restart := false) -> void:
 func _animated_parts(root: Node) -> Array:
 	var out: Array = []
 	for n in root.find_children("*", "Node3D", true, false):
-		if n.has_meta("flap") or n.has_meta("spin") or n.has_meta("deploy") or n.has_meta("gallop") or n.has_meta("spin_z"):
+		if n.has_meta("flap") or n.has_meta("spin") or n.has_meta("deploy") or n.has_meta("gallop") or n.has_meta("spin_z") or n.has_meta("nod"):
 			out.append(n)
 	return out
 
@@ -302,6 +307,9 @@ func _animate_parts(r: Dictionary, delta: float, now: float) -> void:
 			n.rotation.x = lerpf(n.rotation.x, swing, minf(1.0, delta * 12.0))
 		elif n.has_meta("spin_z"):
 			n.rotation.z += delta * float(n.get_meta("spin_z"))
+		elif n.has_meta("nod"):
+			# Pumpjacks and beam engines rock back and forth.
+			n.rotation.x = sin(now * 1.6) * float(n.get_meta("nod"))
 		elif n.has_meta("deploy"):
 			# Wagon pavises swing down and out when dug in.
 			var target := float(n.get_meta("deploy")) * (-1.3 if r.get("deployed", false) else 0.0)

@@ -95,6 +95,8 @@ static func reset_path(e) -> void:
 	e.path_goal = Vector2i(-1, -1)
 	e.repath = 0
 	e.stuck = 0
+	e.wp_best = INF
+	e.wp_stall = 0
 
 
 static func update_tower(w, b) -> void:
@@ -419,7 +421,7 @@ static func _hit(w, attacker, target) -> void:
 
 ## Moves toward entity `t` until within `range_px` of its outline.
 static func _approach(w, e, t, range_px: float) -> int:
-	if w.edge_dist(e, t) <= range_px:
+	if _in_reach(e, t.id, w.edge_dist(e, t), range_px):
 		reset_path(e)
 		return IN_RANGE
 	var goal: Vector2i
@@ -443,10 +445,25 @@ static func _approach(w, e, t, range_px: float) -> int:
 
 static func _approach_rect(w, e, top_left: Vector2i, size: Vector2i, range_px: float) -> int:
 	var r := Rect2(Vector2(top_left) * TILE, Vector2(size) * TILE)
-	if w.rect_dist(r, e.pos) - UNIT_RADIUS <= range_px:
+	if _in_reach(e, -2 - (top_left.y * 4096 + top_left.x), w.rect_dist(r, e.pos) - UNIT_RADIUS, range_px):
 		reset_path(e)
 		return IN_RANGE
 	return _travel(w, e, w.map.approach_tile(top_left, size, e.pos, domain(e)))
+
+
+## Once a unit has reached a target it keeps a little extra reach (hysteresis),
+## so a neighbour heading for the same spot can jostle it without sending it back
+## to walk in, which made pairs of units push each other round in circles.
+const ENGAGED_SLACK := TILE * 0.6
+
+
+static func _in_reach(e, key: int, dist: float, range_px: float) -> bool:
+	if dist <= range_px or (e.engaged == key and dist <= range_px + ENGAGED_SLACK):
+		e.engaged = key
+		return true
+	if e.engaged == key:
+		e.engaged = -1
+	return false
 
 
 static func _travel(w, e, goal: Vector2i) -> int:
@@ -464,6 +481,10 @@ static func _travel(w, e, goal: Vector2i) -> int:
 			# Pushed off the goal tile's centre (e.g. by a neighbour): step back onto it.
 			var center := GameMap.tile_center(goal)
 			if GameMap.to_tile(e.pos) == goal and e.pos.distance_to(center) > 2.0:
+				# Bounded: if a neighbour keeps shoving us off, give up rather than circle.
+				e.stuck += 1
+				if e.stuck > 30:
+					return UNREACHABLE
 				_step_toward(e, center)
 				return MOVING
 			# Already as close as we can get, but still not in range.
@@ -478,6 +499,8 @@ static func _path_to(w, e, goal: Vector2i, exact: Variant = null) -> void:
 	e.path = w.map.find_path(e.pos, goal, domain(e))
 	Prof.stop("find_path", pt)
 	e.path_index = 0
+	e.wp_best = INF
+	e.wp_stall = 0
 	e.path_goal = goal
 	if exact != null and w.map.is_passable(GameMap.to_tile(exact), domain(e)):
 		var n: int = e.path.size()
@@ -497,6 +520,13 @@ static func _step_toward(e, p: Vector2) -> void:
 	e.moved += step
 
 
+## Intermediate waypoints (tile centres) count as reached within this distance:
+## units bunched on one route can't all stand on the exact centre.
+const WAYPOINT_SLACK := 8.0
+## Ticks without getting any closer to a waypoint before giving up on it.
+const WAYPOINT_STALL := 15
+
+
 ## Advances along the current path. Returns true once the end is reached.
 static func _follow(e) -> bool:
 	var step := _speed(e)
@@ -504,13 +534,32 @@ static func _follow(e) -> bool:
 	while step > 0.0 and e.path_index < e.path.size():
 		var wp: Vector2 = e.path[e.path_index]
 		var d: float = e.pos.distance_to(wp)
+		var last: bool = e.path_index == e.path.size() - 1
 		if d <= step:
 			e.pos = wp
 			step -= d
-			e.path_index += 1
+			_next_waypoint(e)
+		elif not last and d <= WAYPOINT_SLACK:
+			_next_waypoint(e)
 		else:
+			# Two units pressing for the same point push each other sideways and
+			# can orbit it forever: if we stop gaining on it, take it as reached.
+			if d < e.wp_best - 0.5:
+				e.wp_best = d
+				e.wp_stall = 0
+			else:
+				e.wp_stall += 1
+				if e.wp_stall > WAYPOINT_STALL and d < TILE * 0.75:
+					_next_waypoint(e)
+					continue
 			e.facing = (wp - e.pos) / d
 			e.pos += e.facing * step
 			step = 0.0
 	e.moved += start.distance_to(e.pos)
 	return e.path_index >= e.path.size()
+
+
+static func _next_waypoint(e) -> void:
+	e.path_index += 1
+	e.wp_best = INF
+	e.wp_stall = 0

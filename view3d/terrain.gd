@@ -79,16 +79,17 @@ func _tile_color(t: Vector2i) -> Color:
 	var v := float(absi((t.x * 73856093) ^ (t.y * 19349663)) % 100) / 100.0
 	match ter:
 		GameMap.WATER:
-			return Color(0.42, 0.4, 0.3)
+			return Color(0.26, 0.25, 0.22)
 		GameMap.FOREST:
-			return Color(0.2, 0.36, 0.13).lerp(Color(0.24, 0.4, 0.15), v)
+			return Color(0.15, 0.2, 0.12).lerp(Color(0.18, 0.23, 0.13), v)
 		GameMap.ROCK:
-			return Color(0.44, 0.43, 0.4).lerp(Color(0.5, 0.48, 0.45), v)
+			return Color(0.33, 0.32, 0.31).lerp(Color(0.38, 0.36, 0.34), v)
 		GameMap.DIRT:
-			return Color(0.5, 0.4, 0.26).lerp(Color(0.55, 0.45, 0.3), v)
+			return Color(0.3, 0.25, 0.19).lerp(Color(0.34, 0.28, 0.21), v)
 	if _next_to_water(t):
-		return Color(0.72, 0.66, 0.46)
-	return Color(0.36, 0.56, 0.22).lerp(Color(0.42, 0.6, 0.25), v)
+		return Color(0.42, 0.38, 0.3)
+	# Moss and sooty heath rather than a bright meadow.
+	return Color(0.25, 0.31, 0.16).lerp(Color(0.3, 0.33, 0.18), v)
 
 
 func _next_to_water(t: Vector2i) -> bool:
@@ -107,7 +108,9 @@ func _build_color_texture() -> void:
 
 
 func _build_territory_textures() -> void:
-	_territory_img = Image.create(map.width, map.height, false, Image.FORMAT_R8)
+	# One channel per nation (owner 0-3): 255 where it holds the tile. The shader
+	# blurs these masks so borders come out as smooth curves, not tile steps.
+	_territory_img = Image.create(map.width, map.height, false, Image.FORMAT_RGBA8)
 	_territory_tex = ImageTexture.create_from_image(_territory_img)
 	_tint_img = Image.create(map.width, map.height, false, Image.FORMAT_RGBA8)
 	territory_tint_tex = ImageTexture.create_from_image(_tint_img)
@@ -154,7 +157,8 @@ func _build_mesh() -> void:
 
 func _build_water() -> void:
 	var plane := PlaneMesh.new()
-	plane.size = Vector2(map.width, map.height) + Vector2(40, 40)
+	# Open sea all the way to the horizon around the map.
+	plane.size = Vector2(map.width, map.height) + Vector2(800, 800)
 	var mi := MeshInstance3D.new()
 	mi.mesh = plane
 	mi.position = Vector3(map.width * 0.5, WATER_LEVEL, map.height * 0.5)
@@ -297,7 +301,10 @@ func sync() -> void:
 	for y in map.height:
 		for x in map.width:
 			var o: int = terr.owner_at(Vector2i(x, y))
-			_territory_img.set_pixel(x, y, Color8(o + 1, 0, 0))
+			var mask := Color(0, 0, 0, 0)
+			if o >= 0 and o < 4:
+				mask[o] = 1.0
+			_territory_img.set_pixel(x, y, mask)
 			_tint_img.set_pixel(x, y, Color(world.players[o].color, 0.35) if o >= 0 else Color(0, 0, 0, 0))
 	_territory_tex.update(_territory_img)
 	territory_tint_tex.update(_tint_img)

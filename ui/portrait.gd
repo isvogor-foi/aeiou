@@ -63,7 +63,7 @@ func show_entity(e) -> void:
 		_key = ""
 		return
 	visible = true
-	var key := "%s/%d" % [e.type_id, e.owner]
+	var key := "%s/%d/%s" % [e.type_id, e.owner, e.crown_land]
 	if key == _key:
 		return
 	_key = key
@@ -98,7 +98,7 @@ func show_entity(e) -> void:
 				_frame_head(float(v.get("height", 1.0)))
 		_:
 			var table: Dictionary = DB.visuals.buildings if e.kind == Entity.BUILDING else DB.visuals.resources
-			_model = Models.make_footprint_model(table.get(e.type_id, {"procedural": "crystal"}), e.owner, e.size.x)
+			_model = Models.make_footprint_model(table.get(e.type_id, {"procedural": "crystal"}), e.owner, e.size.x, e.crown_land if e.kind == Entity.BUILDING else "")
 			_stage.add_child(_model)
 			_spin = true
 			_frame_whole()

@@ -68,6 +68,14 @@ static func paint(kind: String, scale := 1) -> Image:
 			img.fill(WHITE)
 			eagle(img, Vector2(w * 0.5, h * 0.52), h * 0.4, RED, false)
 			_border(img, RED, 2 * scale)
+		"carniola":
+			# White-blue-red with the blue Carniolan eagle.
+			_bands(img, [WHITE, Color(0.16, 0.3, 0.62), RED])
+			eagle(img, Vector2(w * 0.5, h * 0.5), h * 0.3, GOLD, false)
+		"galicia":
+			_bands(img, [Color(0.18, 0.35, 0.7), RED])
+		"transylvania":
+			_bands(img, [Color(0.18, 0.3, 0.62), RED, Color(0.92, 0.75, 0.15)])
 		"rebel":
 			img.fill(WHITE)
 			_tri(img, Vector2(0, h), Vector2(w, 0), Vector2(w, h * 0.3), Color(0.5, 0.5, 0.5))

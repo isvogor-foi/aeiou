@@ -250,7 +250,7 @@ static func _ship(length: float, beam: float, masts: int, team: Color, cargo := 
 
 static func _fish_shoal() -> Node3D:
 	var root := Node3D.new()
-	var ripple := mat(Color(0.75, 0.9, 1.0), 0.4, 0.45)
+	var ripple := mat(Color(0.3, 0.42, 0.45), 0.4, 0.45)
 	var torus := TorusMesh.new()
 	torus.inner_radius = 0.42
 	torus.outer_radius = 0.48

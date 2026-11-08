@@ -17,6 +17,7 @@ const Models = preload("res://view3d/models.gd")
 const Flags = preload("res://view3d/flags.gd")
 const Hud = preload("res://ui/hud.gd")
 const GameMenu = preload("res://ui/game_menu.gd")
+const MissionScreen = preload("res://ui/mission_screen.gd")
 const SaveGame = preload("res://sim/save_game.gd")
 const AudioManager = preload("res://audio/audio_manager.gd")
 const Scenario = preload("res://scenarios/scenario.gd")
@@ -33,7 +34,7 @@ const DOUBLE_CLICK_MS := 350
 ## instead of freezing the screen while it simulates several ticks in a row.
 const MAX_TICKS_PER_FRAME := 3
 ## Screen-space pick radius for units, in pixels at the default zoom.
-const UNIT_PICK_PX := 26.0
+const UNIT_PICK_PX := 36.0
 ## Game seconds between autosaves.
 const AUTOSAVE_EVERY := 300
 
@@ -66,6 +67,7 @@ var fog_pass: MeshInstance3D
 var effects: Node3D
 var hud: CanvasLayer
 var game_menu: CanvasLayer
+var mission_screen: CanvasLayer
 var audio: Node
 ## Last tick our troops were in a fight (drives the battle music).
 var _last_combat := -100000
@@ -75,6 +77,7 @@ var territory_tint_tex: ImageTexture
 var _accum := 0.0
 var _drag_start = null
 var _rotating := false
+var _rotate_drag := 0.0
 var _last_click_ms := 0
 var _last_click_type := ""
 var _last_group_key := -1
@@ -132,6 +135,9 @@ func _ready() -> void:
 	add_child(camera)
 	camera.setup(terrain, Vector2(world.map.width, world.map.height))
 	camera.make_current()
+	var ambience := preload("res://view3d/ambience.gd").new()
+	ambience.camera = camera
+	add_child(ambience)
 
 	var overlay_layer := CanvasLayer.new()
 	overlay_layer.layer = 0
@@ -145,6 +151,9 @@ func _ready() -> void:
 	game_menu = GameMenu.new()
 	game_menu.gv = self
 	add_child(game_menu)
+	mission_screen = MissionScreen.new()
+	mission_screen.gv = self
+	add_child(mission_screen)
 	audio = AudioManager.new()
 	add_child(audio)
 	audio.music("peace")
@@ -158,49 +167,79 @@ func _ready() -> void:
 		center_on(city.pos)
 	# Start the camera pointing "up" the map toward the enemy for the bottom-right player.
 	if city and city.pos.x > world.map.width * TILE * 0.5:
-		camera.yaw = PI
+		camera.set_heading(PI)
 	camera.update_transform()
 	if not loaded.is_empty():
 		_restore_view(loaded)
 		hud.flash("Game loaded", 3.0)
 	elif scripted:
-		hud.flash(Scenario.MISSIONS[scripted.id][0], 4.0)
+		# Let the scenario post its opening objectives, then brief the player.
+		world.scenario_logic.update(world, world.scenario)
+		_consume_events()
+		world.events.clear()
+		mission_screen.show_briefing(scripted.id, world.scenario.get("objectives", []))
 	else:
 		hud.flash("Seed %d - you lead the %s against a %s opponent" % [seed_value, DB.factions[GameConfig.player_faction].name,
 				DB.ai.difficulties[GameConfig.difficulty].name], 4.0)
 
 
 func _build_environment() -> void:
+	# Mood: a smoggy industrial dusk. A bronze haze on the horizon over a slate sky,
+	# low amber sun, cool violet ambient, and a thin mist pooling in the hollows.
 	var env := Environment.new()
 	var sky_mat := ProceduralSkyMaterial.new()
-	sky_mat.sky_top_color = Color(0.32, 0.5, 0.78)
-	sky_mat.sky_horizon_color = Color(0.7, 0.78, 0.86)
-	sky_mat.ground_horizon_color = Color(0.7, 0.78, 0.86)
-	sky_mat.ground_bottom_color = Color(0.1, 0.1, 0.12)
+	sky_mat.sky_top_color = Color(0.12, 0.13, 0.2)
+	sky_mat.sky_horizon_color = Color(0.62, 0.42, 0.26)
+	sky_mat.sky_curve = 0.12
+	sky_mat.ground_horizon_color = Color(0.4, 0.3, 0.24)
+	sky_mat.ground_bottom_color = Color(0.06, 0.06, 0.08)
+	sky_mat.sun_angle_max = 20.0
 	var sky := Sky.new()
 	sky.sky_material = sky_mat
 	env.background_mode = Environment.BG_SKY
 	env.sky = sky
-	env.ambient_light_source = Environment.AMBIENT_SOURCE_SKY
-	env.ambient_light_energy = 0.7
+	env.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
+	env.ambient_light_color = Color(0.36, 0.38, 0.52)
+	env.ambient_light_energy = 0.75
 	env.tonemap_mode = Environment.TONE_MAPPER_FILMIC
+	env.tonemap_exposure = 1.1
+	env.adjustment_enabled = true
+	env.adjustment_saturation = 0.88
+	env.adjustment_contrast = 1.08
+	env.fog_enabled = true
+	env.fog_mode = Environment.FOG_MODE_EXPONENTIAL
+	env.fog_light_color = Color(0.36, 0.33, 0.4)
+	env.fog_light_energy = 0.8
+	env.fog_sun_scatter = 0.25
+	env.fog_density = 0.0035
+	env.fog_sky_affect = 0.4
+	env.fog_height = 0.15
+	env.fog_height_density = 0.25
 	env.ssao_enabled = true
 	env.ssao_radius = 1.2
-	env.ssao_intensity = 1.5
+	env.ssao_intensity = 1.6
 	env.glow_enabled = true
 	env.glow_intensity = 0.6
-	env.glow_bloom = 0.05
+	env.glow_bloom = 0.04
+	env.glow_hdr_threshold = 1.1
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
 	var sun := DirectionalLight3D.new()
-	sun.rotation_degrees = Vector3(-52, -38, 0)
-	sun.light_energy = 1.25
-	sun.light_color = Color(1.0, 0.96, 0.88)
+	sun.rotation_degrees = Vector3(-40, -38, 0)
+	sun.light_energy = 1.05
+	sun.light_color = Color(1.0, 0.78, 0.55)
 	sun.shadow_enabled = true
+	sun.shadow_opacity = 0.85
 	sun.directional_shadow_max_distance = 70.0
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	add_child(sun)
+	# A cool rim from the opposite side keeps silhouettes readable in the gloom.
+	var rim := DirectionalLight3D.new()
+	rim.rotation_degrees = Vector3(-30, 150, 0)
+	rim.light_energy = 0.25
+	rim.light_color = Color(0.5, 0.6, 1.0)
+	add_child(rim)
 	Graphics.apply(env, sun, get_viewport())
 
 
@@ -237,6 +276,7 @@ func _process(delta: float) -> void:
 	var alpha := clampf(_accum / World.DT, 0.0, 1.0)
 	_fp("sim")
 	_scroll_camera(delta)
+	camera.turn(delta)
 	camera.update_transform()
 	var changed: Array[Vector2i] = world.map.dirty_tiles.duplicate()
 	world.map.dirty_tiles.clear()
@@ -276,7 +316,7 @@ func view_state() -> Dictionary:
 
 func _restore_view(v: Dictionary) -> void:
 	camera.focus = v.get("focus", camera.focus)
-	camera.yaw = float(v.get("yaw", 0.0))
+	camera.set_heading(float(v.get("yaw", 0.0)))
 	camera.distance = float(v.get("distance", 20.0))
 	camera.update_transform()
 	selection.assign(v.get("selection", []))
@@ -358,15 +398,18 @@ func _consume_events() -> void:
 					Scenario.record_win(GameConfig.scenario)
 				var how: String = {"conquest": "by conquest", "territory": "by holding the land", "wonders": "by the wonders of the realm",
 						"relics": "A.E.I.O.U. - the five relics are united"}.get(ev.get("reason", "conquest"), ev.get("text", ""))
-				hud.show_banner("Victory!" if ev.player == me else "Defeat", how + "\nPress F10 for the menu")
+				mission_screen.show_result(ev.player == me, how)
 			"cloud":
 				if _point_shown(ev.pos):
 					effects.add_cloud(ev)
 			"unrest":
 				if ev.owner == me:
 					hud.flash("Unrest! A city's %s is failing - garrison it or it will revolt." % ev.label.to_lower(), 5.0)
+			"hungary_rises":
+				hud.flash("Hungary rises in revolt! The insurrection fights every side - take its cities.", 6.0)
+				audio.play("fanfare")
 			"revolt":
-				hud.flash("A city has revolted and broken away!" if ev.owner == me else "An enemy city has revolted!", 5.0)
+				hud.flash("A city has revolted and gone over to Hungary!" if ev.owner == me else "An enemy city has revolted and joined Hungary!", 5.0)
 			"charter":
 				if ev.player == me:
 					hud.flash("Federal Charter granted" if ev.on else "Charter revoked", 3.0)
@@ -385,7 +428,7 @@ func _consume_events() -> void:
 				hud.flash(("We" if ev.player == me else "The enemy") + " will win in %d:%02d unless stopped!" % [int(ev.seconds) / 60, int(ev.seconds) % 60], 5.0)
 			"defeated":
 				if ev.player == me:
-					hud.show_banner("Defeat", "Press F10 for the menu")
+					mission_screen.show_result(false, "All our cities have fallen.")
 
 
 func _hit_sound(ev: Dictionary) -> String:
@@ -582,7 +625,7 @@ func command_move(px: Vector2) -> void:
 # --- Input -----------------------------------------------------------------------------
 
 func _unhandled_input(event: InputEvent) -> void:
-	if not input_enabled:
+	if not input_enabled or mission_screen.is_open():
 		return
 	if game_menu.visible:
 		if event is InputEventKey and event.pressed and not event.echo and event.keycode in [KEY_ESCAPE, KEY_F10]:
@@ -592,7 +635,11 @@ func _unhandled_input(event: InputEvent) -> void:
 		_on_mouse_button(event)
 	elif event is InputEventMouseMotion:
 		if _rotating:
-			camera.rotate_by(-event.relative.x * 0.006)
+			# Middle-drag: every 120 px sideways turns the view a quarter turn.
+			_rotate_drag += event.relative.x
+			if absf(_rotate_drag) >= 120.0:
+				camera.rotate_step(-1 if _rotate_drag > 0.0 else 1)
+				_rotate_drag = 0.0
 		if _drag_start != null and (event.position - _drag_start).length() > DRAG_THRESHOLD:
 			drag_rect_screen = Rect2(_drag_start, Vector2.ZERO).expand(event.position)
 	elif event is InputEventKey and event.pressed and not event.echo:
@@ -642,6 +689,7 @@ func _on_mouse_button(ev: InputEventMouseButton) -> void:
 					_smart_command(mouse_px(), entity_at_mouse(), ev.shift_pressed)
 		MOUSE_BUTTON_MIDDLE:
 			_rotating = ev.pressed
+			_rotate_drag = 0.0
 		MOUSE_BUTTON_WHEEL_UP, MOUSE_BUTTON_WHEEL_DOWN:
 			if ev.pressed:
 				camera.zoom_by(0.9 if ev.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 0.9)
@@ -764,7 +812,7 @@ func _on_key(ev: InputEventKey) -> void:
 		_control_group(key - KEY_0, ev.ctrl_pressed)
 		return
 	if ev.alt_pressed and (key == KEY_Q or key == KEY_E):
-		camera.rotate_by(PI / 8.0 * (1.0 if key == KEY_Q else -1.0))
+		camera.rotate_step(1 if key == KEY_Q else -1)
 		return
 	match key:
 		KEY_ESCAPE:
@@ -796,13 +844,13 @@ func _on_key(ev: InputEventKey) -> void:
 				center_on(sel[0].pos)
 			return
 		KEY_BRACKETLEFT:
-			camera.rotate_by(PI / 8.0)
+			camera.rotate_step(1)
 			return
 		KEY_BRACKETRIGHT:
-			camera.rotate_by(-PI / 8.0)
+			camera.rotate_step(-1)
 			return
 		KEY_BACKSPACE:
-			camera.yaw = 0.0
+			camera.target_yaw = 0.0
 			camera.distance = 20.0
 			return
 		KEY_P, KEY_PAUSE:

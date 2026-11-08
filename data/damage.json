@@ -1,17 +1,116 @@
 {
-	"_comment": "Damage multiplier by damage type (rows) against armor class (columns).",
-	"types": ["physical", "arcane", "curse", "fire"],
-	"armors": ["light", "heavy", "warded", "beast", "structure", "air", "ship", "steel"],
+	"_comment": "Weapon type (rows) against armour class (columns). Rifles shred infantry and cavalry; armour and machines shrug them off; explosives crack armour, machines and walls; Aether purges the Covenant's dead; Soul fire withers the living.",
+	"types": [
+		"ballistic",
+		"blade",
+		"explosive",
+		"aether",
+		"soul"
+	],
+	"names": {
+		"ballistic": "Ballistic",
+		"blade": "Blade",
+		"explosive": "Explosive",
+		"aether": "Aether",
+		"soul": "Soul"
+	},
+	"armors": [
+		"infantry",
+		"armoured",
+		"cavalry",
+		"undead",
+		"machine",
+		"air",
+		"ship",
+		"structure"
+	],
+	"armor_names": {
+		"infantry": "Infantry",
+		"armoured": "Armoured",
+		"cavalry": "Cavalry",
+		"undead": "Undead",
+		"machine": "Machine",
+		"air": "Air",
+		"ship": "Ship",
+		"structure": "Structure"
+	},
 	"colors": {
-		"physical": [0.92, 0.92, 0.88],
-		"arcane": [0.5, 0.8, 1.0],
-		"curse": [0.72, 0.35, 1.0],
-		"fire": [1.0, 0.55, 0.15]
+		"ballistic": [
+			1.0,
+			0.85,
+			0.55
+		],
+		"blade": [
+			0.9,
+			0.92,
+			0.95
+		],
+		"explosive": [
+			1.0,
+			0.5,
+			0.15
+		],
+		"aether": [
+			0.45,
+			0.85,
+			1.0
+		],
+		"soul": [
+			0.45,
+			1.0,
+			0.45
+		]
 	},
 	"matrix": {
-		"physical": { "light": 1.0, "heavy": 0.6, "warded": 1.0, "beast": 1.0, "structure": 0.4, "air": 0.8, "ship": 0.6, "steel": 0.45 },
-		"arcane":   { "light": 1.0, "heavy": 1.25, "warded": 0.5, "beast": 0.9, "structure": 0.6, "air": 1.0, "ship": 0.8, "steel": 1.1 },
-		"curse":    { "light": 1.2, "heavy": 1.0, "warded": 0.6, "beast": 1.3, "structure": 0.3, "air": 1.0, "ship": 0.5, "steel": 0.7 },
-		"fire":     { "light": 1.1, "heavy": 0.9, "warded": 0.8, "beast": 1.2, "structure": 1.5, "air": 1.0, "ship": 1.4, "steel": 1.0 }
+		"ballistic": {
+			"infantry": 1.2,
+			"armoured": 0.6,
+			"cavalry": 1.3,
+			"undead": 0.8,
+			"machine": 0.4,
+			"air": 1.0,
+			"ship": 0.5,
+			"structure": 0.3
+		},
+		"blade": {
+			"infantry": 1.1,
+			"armoured": 0.8,
+			"cavalry": 0.9,
+			"undead": 1.0,
+			"machine": 0.4,
+			"air": 0.6,
+			"ship": 0.5,
+			"structure": 0.3
+		},
+		"explosive": {
+			"infantry": 0.9,
+			"armoured": 1.3,
+			"cavalry": 0.8,
+			"undead": 0.9,
+			"machine": 1.5,
+			"air": 0.7,
+			"ship": 1.5,
+			"structure": 1.6
+		},
+		"aether": {
+			"infantry": 1.0,
+			"armoured": 1.1,
+			"cavalry": 1.0,
+			"undead": 1.5,
+			"machine": 1.3,
+			"air": 1.1,
+			"ship": 0.8,
+			"structure": 0.5
+		},
+		"soul": {
+			"infantry": 1.4,
+			"armoured": 1.0,
+			"cavalry": 1.3,
+			"undead": 0.5,
+			"machine": 0.5,
+			"air": 1.0,
+			"ship": 0.6,
+			"structure": 0.4
+		}
 	}
 }

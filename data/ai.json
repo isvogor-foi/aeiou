@@ -232,14 +232,16 @@
 				"double_eagle": 0.07,
 				"warship": 0.04,
 				"war_wagon": 0.02,
-				"hussar": 0.07,
 				"steam_walker": 0.07,
 				"skoda_mortar": 0.04,
 				"kaiserjaeger": 0.06,
 				"aethership": 0.03,
 				"ironclad": 0.02,
 				"aether_colossus": 0.03,
-				"landpanzer": 0.05
+				"landpanzer": 0.05,
+				"uhlan": 0.07,
+				"bombardier": 0.04,
+				"vampire_hunter": 0.04
 			},
 			"first_wave": 480,
 			"wave_interval": 200,
@@ -333,11 +335,83 @@
 			"crown_land_order": [
 				"croatia",
 				"bohemia",
-				"tyrol",
-				"hungary"
+				"galicia",
+				"transylvania",
+				"carniola"
 			],
 			"militia_share": 0.4,
 			"hero": "prince_eugene"
+		},
+		"hungary": {
+			"name": "Insurrection",
+			"workers": [
+				10,
+				14,
+				18,
+				20,
+				22,
+				24
+			],
+			"age_up_workers": [
+				12,
+				16,
+				22,
+				26,
+				28
+			],
+			"expand_workers": [
+				99,
+				99,
+				99,
+				99,
+				99,
+				99
+			],
+			"military_buildings": [
+				1,
+				1,
+				2,
+				2,
+				3,
+				3
+			],
+			"library_at_workers": 10,
+			"army_mix": {
+				"kaszas": 0.35,
+				"honved": 0.4,
+				"hussar": 0.25
+			},
+			"first_wave": 120,
+			"wave_interval": 150,
+			"wave_base": 8,
+			"wave_growth": 3,
+			"retreat_below": 0.35,
+			"research": [
+				[
+					"charms",
+					1
+				],
+				[
+					"military",
+					1
+				],
+				[
+					"defense",
+					1
+				],
+				[
+					"military",
+					2
+				]
+			],
+			"extra_buildings": [
+				[
+					"festungsturm",
+					2
+				]
+			],
+			"crown_land_order": [],
+			"militia_share": 0.0
 		}
 	},
 	"_comment_extra": "extra_buildings: [building, from age]; each is built once the age is reached.",

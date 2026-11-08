@@ -3,8 +3,13 @@
 	"austria": {
 		"name": "Archduchy of Austria",
 		"capital": true,
-		"description": "The heartland around Vienna.",
-		"mods": {},
+		"description": "The heartland around Vienna, with the Tyrolean Alps. Unlocks the Standschütze; +0.5/s Timber cap.",
+		"units": [
+			"standschuetze"
+		],
+		"mods": {
+			"cap_timber": 0.5
+		},
 		"flag": "empire",
 		"faction": "monarchy"
 	},
@@ -21,6 +26,19 @@
 		"flag": "croatia",
 		"faction": "monarchy"
 	},
+	"carniola": {
+		"name": "Duchy of Carniola",
+		"hotkey": "C",
+		"description": "The Idrija quicksilver mines. Unlocks the Quicksilver Bombardier; +0.5/s Aether cap.",
+		"units": [
+			"bombardier"
+		],
+		"mods": {
+			"cap_mana": 0.5
+		},
+		"flag": "carniola",
+		"faction": "monarchy"
+	},
 	"bohemia": {
 		"name": "Kingdom of Bohemia",
 		"hotkey": "X",
@@ -34,30 +52,30 @@
 		"flag": "bohemia",
 		"faction": "monarchy"
 	},
-	"tyrol": {
-		"name": "County of Tyrol",
-		"hotkey": "C",
-		"description": "Alpine marksmen and forests. Unlocks the Standschütze; +0.5/s Timber cap.",
-		"units": [
-			"standschuetze"
-		],
-		"mods": {
-			"cap_timber": 0.5
-		},
-		"flag": "tyrol",
-		"faction": "monarchy"
-	},
-	"hungary": {
-		"name": "Kingdom of Hungary",
+	"galicia": {
+		"name": "Kingdom of Galicia and Lodomeria",
 		"hotkey": "V",
-		"flag": "hungary",
-		"description": "The Pannonian plains: grain and horses. Unlocks the Hussar; +0.5/s Provisions cap.",
+		"description": "Wieliczka salt and the Polish lancers. Unlocks the Uhlan; +0.5/s Provisions cap.",
 		"units": [
-			"hussar"
+			"uhlan"
 		],
 		"mods": {
 			"cap_herbs": 0.5
 		},
+		"flag": "galicia",
+		"faction": "monarchy"
+	},
+	"transylvania": {
+		"name": "Grand Principality of Transylvania",
+		"hotkey": "B",
+		"description": "Saxon fortress-churches beneath the Carpathians. Unlocks the Vampire Hunter; +15% building HP.",
+		"units": [
+			"vampire_hunter"
+		],
+		"mods": {
+			"building_hp": 0.15
+		},
+		"flag": "transylvania",
 		"faction": "monarchy"
 	},
 	"throne": {

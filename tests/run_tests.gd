@@ -33,6 +33,8 @@ func _initialize() -> void:
 		"test_age_up_raises_city_limit",
 		"test_attrition_and_supply",
 		"test_attack_move_engages",
+		"test_crowd_settles_at_shared_target",
+		"test_hungary_rises",
 		"test_herb_garden_is_renewable",
 		"test_spells_heal_ward_drain",
 		"test_fireball_and_summons",
@@ -283,6 +285,52 @@ func test_attack_move_engages() -> void:
 	w.issue({"type": "attack_move", "player": 0, "ids": [guard.id], "pos": raider.pos + Vector2(6 * GameMap.TILE, 0)})
 	_run(w, 30)
 	check(not raider.alive or raider.hp < raider.max_hp, "attack-move engaged the raider")
+
+
+func test_hungary_rises() -> void:
+	var w := World.new()
+	w.new_game(77, ["monarchy", "covenant"], -1, "normal")
+	var hu: int = w.rebels
+	check(w.players[hu].faction == "hungary", "the rebel side is Hungary")
+	check(w.city_count(hu) == 0, "no Hungarian city before the rising")
+	w.tick_count = int(float(w.rules.hungary.rise_at) * World.TICK_RATE) - 1
+	_run(w, 2)
+	check(w.hungary_risen, "Hungary rose on schedule")
+	check(w.city_count(hu) == 1, "Hungary holds a city")
+	check(_units(w, hu).size() >= 10, "with workers and a garrison (%d)" % _units(w, hu).size())
+	check(w.ais.any(func(ai): return ai.pid == hu), "Hungary has an AI")
+	var city := _city(w, 0)
+	var foe: Entity = _units(w, hu)[0]
+	check(w.is_enemy(foe, city) and w.is_enemy(foe, _city(w, 1)), "Hungary is hostile to both sides")
+	_run(w, 120)
+	check(w.winner < 0 or w.winner != hu, "Hungary never wins the match")
+	var off := World.new()
+	off.new_game(77, ["monarchy", "covenant"], -1, "normal", "inland", {"hungary": false})
+	off.tick_count = int(float(off.rules.hungary.rise_at) * World.TICK_RATE) + 40
+	_run(off, 2)
+	check(not off.hungary_risen, "the rising can be switched off")
+
+
+## Regression: units crowding one target used to orbit a shared waypoint forever
+## (the sideways separation push kept both from ever reaching it).
+func test_crowd_settles_at_shared_target() -> void:
+	var w := _world(4242)
+	var city := _city(w, 0)
+	var target := w.spawn_building("kaserne", 1, city.tile + Vector2i(8, 0), true)
+	target.max_hp = 1e9
+	target.hp = 1e9
+	var ids: Array = []
+	for i in 8:
+		ids.append(w.spawn_unit("grenadier", 0, city.pos + Vector2(100 + i * 8, 150)).id)
+	w.issue({"type": "attack", "player": 0, "ids": ids, "target": target.id})
+	_run(w, 20)
+	for id in ids:
+		w.get_entity(id).moved = 0.0
+	_run(w, 10)
+	var moved := 0.0
+	for id in ids:
+		moved += w.get_entity(id).moved
+	check(moved < 100.0, "attackers settle around the target (moved %d px in 10 s)" % int(moved))
 
 
 func test_territory_and_placement() -> void:
@@ -702,7 +750,7 @@ func test_crown_lands() -> void:
 	check(w.issue({"type": "crown_land", "player": 0, "building": third.id, "land": "bohemia"}) != "", "each land only once")
 	check(w.issue({"type": "crown_land", "player": 0, "building": third.id, "land": "croatia"}) == "", "proclaim Croatia")
 	check(w.issue({"type": "train", "player": 0, "building": res.id, "unit": "grenzer"}) == "", "Grenzer unlocked")
-	check(w.issue({"type": "crown_land", "player": 1, "building": _city(w, 1).id, "land": "tyrol"}) != "", "Covenant can't take Monarchy lands")
+	check(w.issue({"type": "crown_land", "player": 1, "building": _city(w, 1).id, "land": "galicia"}) != "", "Covenant can't take Monarchy lands")
 	check(w.players[1].crown_lands == ["throne"], "Covenant capital is the Umbral Throne")
 	w.capture_city(third, 1)
 	check(not "croatia" in p.crown_lands, "losing the city loses the land")
@@ -794,7 +842,7 @@ func test_viribus_unitis() -> void:
 	w.tick()
 	check(w.viribus_unitis(a) == 0.0, "one land: no bonus")
 	w.spawn_unit("grenzer", 0, c + Vector2(30, 0))
-	w.spawn_unit("standschuetze", 0, c + Vector2(0, 30))
+	w.spawn_unit("uhlan", 0, c + Vector2(0, 30))
 	w.spawn_unit("war_wagon", 0, c + Vector2(-30, 0))
 	w.tick()
 	check(is_equal_approx(w.viribus_unitis(a), 0.1), "three fighting lands: +10%% (%.2f)" % w.viribus_unitis(a))

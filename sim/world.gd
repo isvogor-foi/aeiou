@@ -47,8 +47,12 @@ var areas: Array = []
 ## Victory timers: player -> {condition: tick it started}.
 var victory_since := {}
 var relics_spawned := false
-## Index of the neutral Rebels player that revolting cities join.
+## Index of Hungary, the internal enemy that revolting cities join.
 var rebels := -1
+## Hungary has risen with its own city and AI (see rules.hungary).
+var hungary_risen := false
+## Difficulty the computer players were set up with (Hungary's AI uses it too).
+var ai_difficulty := "normal"
 ## Scripted scenario state (saved) and the script driving it (re-attached on load).
 var scenario := {}
 var scenario_logic: RefCounted = null
@@ -68,6 +72,9 @@ func new_game(seed_value: int, faction_ids: Array, human_index := 0, difficulty 
 	var res_mult := float(sk.resources.get(options.get("resources", "standard"), 1.0))
 	for k in options.get("victories", {}):
 		rules.victory.enabled[k] = bool(options.victories[k])
+	if options.has("hungary"):
+		rules.hungary.enabled = bool(options.hungary)
+	ai_difficulty = difficulty
 	var layout := Generator.generate(map, seed_value, size, map_type)
 	territory.setup(map.width, map.height)
 	for i in faction_ids.size():
@@ -119,19 +126,76 @@ func new_game(seed_value: int, faction_ids: Array, human_index := 0, difficulty 
 		_spawn_relics()
 
 
-## The neutral side that cities join when they revolt. It never acts and can't win or lose.
+## Hungary, the internal enemy: cities that revolt join it, and mid-game it rises
+## with a city of its own and an AI (see _hungary_rises). It fights everyone but
+## can't win or lose the match (is_rebels).
 func _add_rebels() -> void:
 	var r := PlayerState.new()
 	r.index = players.size()
-	r.faction = "rebels"
+	r.faction = "hungary"
 	r.is_rebels = true
 	r.tracks_fog = false
-	r.color = DB.color_of(DB.factions.rebels.color)
+	r.color = DB.color_of(DB.factions.hungary.color)
 	r.base_caps = rules.gather_caps
 	r.base_pop_limit = int(rules.pop_limit)
 	r.vis.resize(map.width * map.height)
 	players.append(r)
 	rebels = r.index
+
+
+## The Hungarian rising: a city near the map centre (fair to both starts on the
+## point-symmetric map), workers, a garrison and an AI that attacks every side.
+func hungary_rises() -> void:
+	hungary_risen = true
+	var hu: Dictionary = rules.hungary
+	var site := _hungary_site()
+	if site.x < 0:
+		return
+	var city := spawn_building(DB.factions.hungary.city, rebels, site, true)
+	var p = players[rebels]
+	p.capital_id = city.id
+	p.age = maxi(1, players[0].age - 1)
+	for k in p.res:
+		p.res[k] = maxf(p.res[k], 300.0)
+	for i in int(hu.get("workers", 4)):
+		_spawn_from(city, DB.factions.hungary.worker)
+	for g in hu.get("garrison", []):
+		for i in int(g[1]):
+			_spawn_from(city, g[0])
+	var ai := AIPlayer.new()
+	ai.setup(self, rebels, ai_difficulty)
+	ais.append(ai)
+	territory.dirty = true
+	_update_pop()
+	events.append({"type": "hungary_rises", "pos": city.pos, "id": city.id})
+
+
+## Free 4x4 ground nearest the map centre, preferring land no one holds.
+func _hungary_site() -> Vector2i:
+	var size := int(DB.buildings[DB.factions.hungary.city].size)
+	var center := Vector2i(map.width / 2 - size / 2, map.height / 2 - size / 2)
+	var fallback := Vector2i(-1, -1)
+	for r in range(0, maxi(map.width, map.height) / 2):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var t := center + Vector2i(dx, dy)
+				if not map.area_free(t - Vector2i.ONE, Vector2i(size + 2, size + 2)):
+					continue
+				var too_close := false
+				for e in entities.values():
+					if e.alive and is_city(e) and e.pos.distance_to((Vector2(t) + Vector2.ONE * size * 0.5) * TILE) < float(rules.city_min_distance) * TILE:
+						too_close = true
+						break
+				if too_close:
+					continue
+				var owner := territory_owner(t + Vector2i.ONE * (size / 2))
+				if owner < 0:
+					return t
+				if fallback.x < 0:
+					fallback = t
+	return fallback
 
 
 # --- Spawning -----------------------------------------------------------------
@@ -654,6 +718,9 @@ func tick() -> void:
 	if tick_count % TICK_RATE == 0:
 		if scenario_logic and winner < 0:
 			scenario_logic.update(self, scenario)
+		var hu: Dictionary = rules.get("hungary", {})
+		if hu.get("enabled", false) and not hungary_risen and winner < 0 and tick_count * DT >= float(hu.rise_at):
+			hungary_rises()
 		_check_victory()
 	_lap("victory")
 
@@ -917,11 +984,17 @@ func _push_apart(e: Entity, o: Entity) -> void:
 	if dist < 0.01:
 		d = Vector2.RIGHT.rotated(e.id)
 		dist = 1.0
-	# Slightly sideways, so units meeting head-on slide past instead of locking up.
-	var push := (d / dist).rotated(0.4) * (_SEPARATION - dist) * 0.5
+	var e_moving := _is_moving(e)
+	var o_moving := _is_moving(o)
+	var push := (d / dist) * (_SEPARATION - dist) * 0.5
+	# Slightly sideways only when both are walking, so units meeting head-on slide
+	# past instead of locking up. Between standing units a sideways push would
+	# just set them orbiting each other.
+	if e_moving and o_moving:
+		push = push.rotated(0.4)
 	# Units on the move barely yield; standing units step aside for them.
-	var e_share := 0.2 if _is_moving(e) else 1.0
-	var o_share := 0.2 if _is_moving(o) else 1.0
+	var e_share := 0.2 if e_moving else 1.0
+	var o_share := 0.2 if o_moving else 1.0
 	var total := e_share + o_share
 	_nudge(o, push * (o_share / total))
 	_nudge(e, -push * (e_share / total))

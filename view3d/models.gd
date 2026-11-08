@@ -5,6 +5,7 @@ extends RefCounted
 const Figure = preload("res://view3d/figure.gd")
 const DB = preload("res://sim/db.gd")
 const Procedural = preload("res://view3d/procedural.gd")
+const Buildings = preload("res://view3d/buildings.gd")
 
 static var _scenes := {}
 static var _aabbs := {}
@@ -72,7 +73,7 @@ static func _bounds(n: Node, xf: Transform3D) -> AABB:
 ## A unit model scaled to its data height, with equipment and animations prepared.
 ## People and wagons are drawn at this fraction of their data height, so the
 ## buildings dominate the map. Ships and flyers keep their size.
-const GROUND_UNIT_SCALE := 0.75
+const GROUND_UNIT_SCALE := 1.125
 
 
 static func unit_scale(type_id: String) -> float:
@@ -190,8 +191,17 @@ static func anim_player(root: Node) -> AnimationPlayer:
 
 
 ## A building or resource model scaled to fit `tiles` x `tiles`, origin at the footprint centre.
-static func make_footprint_model(v: Dictionary, owner: int, tiles: int) -> Node3D:
+## `style` picks a city's design (its crown land or pact).
+static func make_footprint_model(v: Dictionary, owner: int, tiles: int, style := "") -> Node3D:
 	var root := Node3D.new()
+	if v.has("building"):
+		# Steampunk buildings built in code (view3d/buildings.gd), in the owner's style.
+		var faction: String = team_factions[owner] if owner >= 0 and owner < team_factions.size() else "monarchy"
+		var st: String = style
+		if st == "":
+			st = DB.factions.get(faction, {}).get("city_style", "") if v.get("styled", false) else ""
+		root.add_child(Buildings.build(v.building, faction, team_color(owner), st))
+		return root
 	if v.get("procedural", "") == "crystal":
 		root.add_child(_crystal(DB.color_of(v.get("color", [0.5, 0.8, 1.0]))))
 		return root

@@ -62,6 +62,7 @@ static func generate(map, seed_value: int, size := 96, map_type := "inland") -> 
 
 	if map_type != "islands":
 		_ensure_connected(map, s0, s1, map_type == "coastal")
+	_drain_puddles(map)
 	_add_fish(map, nodes, rng, map_type, s0)
 
 	for type in EXTRA_NODES:
@@ -171,6 +172,37 @@ static func _paint_terrain(map, seed_value: int) -> void:
 			elif wv < -0.29:
 				ter = GameMap.DIRT
 			map.terrain[map.idx(t)] = ter
+
+
+## Ponds smaller than this many tiles become mud: in 3D they were all shore foam
+## and read as stray white discs on the grass.
+const MIN_POND := 7
+
+
+## Turns tiny isolated water bodies into dirt. Mirrored ponds have the same size,
+## so the map stays point-symmetric.
+static func _drain_puddles(map) -> void:
+	var seen := PackedByteArray()
+	seen.resize(map.width * map.height)
+	for y in map.height:
+		for x in map.width:
+			var start := Vector2i(x, y)
+			if seen[map.idx(start)] != 0 or map.get_terrain(start) != GameMap.WATER:
+				continue
+			var body: Array[Vector2i] = [start]
+			seen[map.idx(start)] = 1
+			var i := 0
+			while i < body.size():
+				var t: Vector2i = body[i]
+				i += 1
+				for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]:
+					var n: Vector2i = t + d
+					if map.in_bounds(n) and seen[map.idx(n)] == 0 and map.get_terrain(n) == GameMap.WATER:
+						seen[map.idx(n)] = 1
+						body.append(n)
+			if body.size() < MIN_POND:
+				for t in body:
+					map.terrain[map.idx(t)] = GameMap.DIRT
 
 
 static func _mirror(map, t: Vector2i) -> Vector2i:

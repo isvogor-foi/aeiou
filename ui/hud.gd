@@ -199,7 +199,7 @@ func _refresh_scenario(delta: float) -> void:
 	for o in sc.get("objectives", []):
 		lines.append(("✔ " if o.done else "◆ ") + o.text)
 	_objectives.text = "\n".join(lines)
-	if _story.visible:
+	if _story.visible and not gv.paused:
 		_story_time -= delta
 		if _story_time <= 0.0:
 			_next_story()

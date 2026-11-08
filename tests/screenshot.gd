@@ -53,7 +53,7 @@ func _run() -> void:
 
 	# Research at a library, advance the age, found a second city.
 	var p = w.players[0]
-	p.res = {"gold": 5000.0, "timber": 5000.0, "herbs": 5000.0, "mana": 5000.0}
+	for k in p.res: p.res[k] = 5000.0
 	var lib = w.spawn_building("library", 0, city.tile + Vector2i(-6, 4), true)
 	print("research: ", w.issue({"type": "research", "player": 0, "building": lib.id, "branch": "defense"}))
 	print("age: ", w.issue({"type": "advance_age", "player": 0, "building": city.id}))

@@ -37,6 +37,13 @@ var stand := 0.0
 var fog_key := Vector3i(-1, -1, -1)
 var repath := 0
 var stuck := 0
+## What this unit last stood in reach of (entity id, or a negative tile key), for
+## reach hysteresis in unit_ai. Transient: not saved.
+var engaged := -1
+## Closest approach to the current waypoint and ticks without improving on it
+## (unit_ai skips a waypoint another unit keeps shoving us around). Transient.
+var wp_best := INF
+var wp_stall := 0
 var attack_cd := 0.0
 var carry_type := ""
 var carry_amount := 0.0

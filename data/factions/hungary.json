@@ -1,0 +1,35 @@
+{
+	"name": "Hungarian Insurrection",
+	"short": "Hungary",
+	"playable": false,
+	"description": "The Kingdom of Hungary in revolt against Vienna: an internal enemy that rises mid-war and fights every side. Cities that revolt join it.",
+	"city": "residenz",
+	"worker": "settler",
+	"start_workers": 0,
+	"buildable": [
+		"dwelling",
+		"garden",
+		"storehouse",
+		"kaserne",
+		"library",
+		"festungsturm"
+	],
+	"color": [
+		0.24,
+		0.58,
+		0.3
+	],
+	"color2": [
+		0.8,
+		0.16,
+		0.14
+	],
+	"team_model": "red",
+	"flag": "hungary",
+	"city_style": "hungary",
+	"loyalty": {
+		"label": "Loyalty",
+		"garrison": 3
+	},
+	"ui": {}
+}

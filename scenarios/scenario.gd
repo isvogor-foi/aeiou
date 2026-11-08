@@ -44,6 +44,8 @@ func update(_w, _s: Dictionary) -> void:
 # --- Helpers for subclasses -------------------------------------------------------
 
 func start(w, seed_value: int, map_type: String, options: Dictionary, keep_ai := true) -> void:
+	options = options.duplicate()
+	options["hungary"] = options.get("hungary", false)
 	w.new_game(seed_value, ["monarchy", "covenant"], ME, options.get("difficulty", "normal"), map_type, options)
 	if not keep_ai:
 		w.ais.clear()

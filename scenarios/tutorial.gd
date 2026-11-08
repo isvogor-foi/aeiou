@@ -33,6 +33,7 @@ func update(w, s: Dictionary) -> void:
 	var p = w.players[ME]
 	var step: int = s.step
 	if step >= STEPS.size():
+		win(w, "The citadel is ours. You are ready to lead the Monarchy.")
 		return
 	if once(w, "step%d" % step):
 		say(w, "Chancellor", TIPS[step])

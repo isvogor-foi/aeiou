@@ -85,7 +85,7 @@ const OUTFITS := {
 	"grenzer": {"coat": Color(0.62, 0.14, 0.12), "trousers": Color(0.2, 0.28, 0.5), "boots": BLACK, "cuffs": Color(0.2, 0.28, 0.5), "style": "short", "hat": "cap_red", "weapon": "musket", "moustache": true},
 	"field_alchemist": {"coat": Color(0.24, 0.22, 0.36), "trousers": BLACK, "boots": BROWN, "cuffs": GOLD, "style": "long", "hat": "top_hat", "weapon": "aether_staff", "kit": "aether_pack", "goggles": true},
 	"kuerassier": {"coat": WHITE, "trousers": WHITE, "boots": BLACK, "cuffs": RED, "style": "short", "hat": "helmet", "cuirass": true, "weapon": "sabre", "moustache": true},
-	"hussar": {"coat": Color(0.2, 0.3, 0.6), "trousers": RED, "boots": BLACK, "cuffs": GOLD, "style": "short", "hat": "shako", "braid": true, "weapon": "sabre", "moustache": true},
+	"hussar": {"coat": Color(0.24, 0.48, 0.28), "trousers": RED, "boots": BLACK, "cuffs": GOLD, "style": "short", "hat": "shako", "braid": true, "weapon": "sabre", "moustache": true},
 	"rudolf": {"coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": GOLD, "style": "long", "hat": "top_hat", "weapon": "aether_staff", "kit": "aether_pack", "beard": true},
 	"prince_eugene": {"coat": Color(0.45, 0.24, 0.16), "trousers": WHITE, "boots": BLACK, "cuffs": GOLD, "style": "tails", "hat": "bicorne", "cuirass": true, "weapon": "sabre"},
 	"maria_theresa": {"coat": Color(0.6, 0.72, 0.86), "trousers": Color(0.6, 0.72, 0.86), "boots": WHITE, "cuffs": GOLD, "style": "dress", "hat": "crown", "weapon": "aether_staff", "hair": Color(0.85, 0.75, 0.6)},
@@ -98,6 +98,13 @@ const OUTFITS := {
 	"rudolf_sovereign": {"skin": Color(0.78, 0.76, 0.74), "coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": Color(0.45, 1.0, 0.45), "style": "long", "hat": "crown_dark", "weapon": "bone_staff", "moustache": true, "hair": Color(0.25, 0.18, 0.12), "sash": true},
 	"dead_queen": {"skin": Color(0.84, 0.86, 0.9), "coat": Color(0.92, 0.94, 0.96), "trousers": Color(0.92, 0.94, 0.96), "boots": WHITE, "cuffs": Color(0.45, 1.0, 0.45), "style": "dress", "hat": "stars", "weapon": "", "hair": Color(0.32, 0.2, 0.12)},
 	"lich_general": {"skin": BONE, "coat": Color(0.18, 0.14, 0.24), "trousers": NIGHT, "boots": NIGHT, "cuffs": GOLD, "style": "robe", "hat": "crown_dark", "cuirass": true, "weapon": "bone_staff"},
+	# Crown-land troops.
+	"bombardier": {"coat": Color(0.3, 0.32, 0.36), "trousers": BLACK, "boots": BROWN, "cuffs": Color(0.75, 0.78, 0.82), "style": "long", "hat": "top_hat", "weapon": "flamethrower", "kit": "aether_pack", "goggles": true, "moustache": true},
+	"vampire_hunter": {"coat": Color(0.16, 0.12, 0.1), "trousers": Color(0.22, 0.2, 0.18), "boots": BLACK, "cuffs": Color(0.75, 0.75, 0.78), "style": "long", "hat": "top_hat", "weapon": "crossbow", "belts": true, "beard": true},
+	"uhlan": {"coat": Color(0.15, 0.2, 0.42), "trousers": Color(0.15, 0.2, 0.42), "boots": BLACK, "cuffs": Color(0.8, 0.15, 0.15), "style": "short", "hat": "shako", "weapon": "sabre", "moustache": true, "belts": true},
+	# Hungarian insurrection: brown attila coats, red-white-green.
+	"honved": {"coat": Color(0.4, 0.28, 0.18), "trousers": Color(0.2, 0.3, 0.5), "boots": BLACK, "cuffs": Color(0.75, 0.15, 0.13), "style": "short", "hat": "shako", "braid": true, "weapon": "musket", "moustache": true},
+	"kaszas": {"coat": Color(0.82, 0.8, 0.72), "trousers": Color(0.82, 0.8, 0.72), "boots": BLACK, "cuffs": Color(0.24, 0.5, 0.26), "style": "short", "hat": "kalpak", "weapon": "axe", "moustache": true},
 	"rebel_militia": {"coat": BROWN, "trousers": RAG, "boots": BLACK, "cuffs": RAG, "style": "short", "hat": "cap", "weapon": "musket", "moustache": true},
 	# Umbral Covenant: bone-pale bodies in rags, robes and iron.
 	"thrall": {"skin": BONE, "coat": RAG, "trousers": RAG, "boots": RAG, "cuffs": RAG, "style": "short", "hat": "hood", "weapon": "axe", "kit": "grave_pack"},

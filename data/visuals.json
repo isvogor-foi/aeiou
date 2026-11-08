@@ -616,466 +616,138 @@
 				"attack": "2H_Melee_Attack_Chop",
 				"death": "Death_C_Skeletons"
 			}
+		},
+		"bombardier": {
+			"figure": "bombardier",
+			"height": 1.2,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Pistol_Shoot",
+				"death": "Death01"
+			}
+		},
+		"vampire_hunter": {
+			"figure": "vampire_hunter",
+			"height": 1.2,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Pistol_Shoot",
+				"death": "Death01"
+			}
+		},
+		"uhlan": {
+			"figure": "uhlan",
+			"height": 1.05,
+			"anims": {
+				"idle": "Driving",
+				"walk": "Driving",
+				"attack": "Driving",
+				"death": "Death01"
+			},
+			"mount": "horse",
+			"saddle": 0.7
+		},
+		"honved": {
+			"figure": "honved",
+			"height": 1.2,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Pistol_Shoot",
+				"death": "Death01"
+			}
+		},
+		"kaszas": {
+			"figure": "kaszas",
+			"height": 1.2,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01"
+			}
 		}
 	},
 	"buildings": {
 		"residenz": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_castle_{team}.gltf",
-			"fit": 0.9,
-			"max_height": 5.5,
-			"tint": [
-				1.0,
-				0.9,
-				0.66
-			],
-			"props": [
-				{
-					"proc": "aether_lamp",
-					"offset": [
-						1.9,
-						0,
-						1.9
-					]
-				},
-				{
-					"proc": "aether_lamp",
-					"offset": [
-						-1.9,
-						0,
-						1.9
-					]
-				},
-				{
-					"proc": "wall_cog",
-					"offset": [
-						1.2,
-						0.9,
-						1.75
-					]
-				}
-			]
+			"building": "residenz",
+			"styled": true
 		},
 		"citadel": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_castle_{team}.gltf",
-			"fit": 0.9,
-			"max_height": 5.5,
-			"tint": [
-				0.55,
-				0.5,
-				0.6
-			],
-			"props": [
-				{
-					"proc": "soul_lamp",
-					"offset": [
-						1.9,
-						0,
-						1.9
-					]
-				},
-				{
-					"proc": "soul_lamp",
-					"offset": [
-						-1.9,
-						0,
-						1.9
-					]
-				},
-				{
-					"proc": "soul_chimney",
-					"offset": [
-						-1.7,
-						0,
-						-1.7
-					]
-				}
-			]
+			"building": "citadel",
+			"styled": true
 		},
 		"dwelling": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_home_A_{team}.gltf",
-			"fit": 0.95,
-			"faction_tint": {
-				"monarchy": [
-					1.0,
-					0.9,
-					0.66
-				]
-			},
-			"props": [
-				{
-					"proc": "chimney",
-					"offset": [
-						0.75,
-						0,
-						-0.75
-					]
-				}
-			]
+			"building": "dwelling"
 		},
 		"storehouse": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_market_{team}.gltf",
-			"fit": 1.0,
-			"faction_tint": {
-				"monarchy": [
-					1.0,
-					0.9,
-					0.66
-				]
-			},
-			"props": [
-				{
-					"proc": "wall_cog",
-					"offset": [
-						0.0,
-						0.5,
-						0.95
-					]
-				}
-			]
+			"building": "storehouse"
 		},
 		"kaserne": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_barracks_{team}.gltf",
-			"fit": 0.95,
-			"tint": [
-				1.0,
-				0.9,
-				0.66
-			],
-			"props": [
-				{
-					"proc": "chimney",
-					"offset": [
-						-1.25,
-						0,
-						-1.25
-					]
-				},
-				{
-					"proc": "aether_lamp",
-					"offset": [
-						1.4,
-						0,
-						1.4
-					]
-				}
-			]
+			"building": "kaserne"
 		},
 		"blood_pit": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_barracks_{team}.gltf",
-			"fit": 0.95,
-			"tint": [
-				0.55,
-				0.5,
-				0.6
-			],
-			"props": [
-				{
-					"proc": "soul_chimney",
-					"offset": [
-						-1.25,
-						0,
-						-1.25
-					]
-				},
-				{
-					"proc": "soul_lamp",
-					"offset": [
-						1.4,
-						0,
-						1.4
-					]
-				}
-			]
+			"building": "blood_pit"
 		},
 		"garden": {
-			"model": "res://assets/kaykit/medieval/buildings/neutral/building_grain.gltf",
-			"fit": 1.0,
-			"tint": [
-				0.75,
-				1.0,
-				0.65
-			]
+			"building": "garden"
 		},
 		"library": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_church_{team}.gltf",
-			"fit": 0.9,
-			"faction_tint": {
-				"monarchy": [
-					1.0,
-					0.9,
-					0.66
-				]
-			},
-			"props": [
-				{
-					"proc": "aether_lamp",
-					"offset": [
-						1.4,
-						0,
-						1.4
-					]
-				},
-				{
-					"proc": "aether_lamp",
-					"offset": [
-						-1.4,
-						0,
-						1.4
-					]
-				}
-			]
+			"building": "library"
 		},
 		"schiessstand": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_archeryrange_{team}.gltf",
-			"fit": 0.95,
-			"tint": [
-				1.0,
-				0.9,
-				0.66
-			],
-			"props": [
-				{
-					"proc": "aether_lamp",
-					"offset": [
-						1.4,
-						0,
-						1.4
-					]
-				}
-			]
+			"building": "schiessstand"
 		},
 		"bone_range": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_archeryrange_{team}.gltf",
-			"fit": 0.95,
-			"tint": [
-				0.55,
-				0.5,
-				0.6
-			]
+			"building": "bone_range"
 		},
 		"laboratorium": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_tower_B_{team}.gltf",
-			"fit": 0.9,
-			"tint": [
-				1.0,
-				0.9,
-				0.66
-			],
-			"props": [
-				{
-					"proc": "chimney",
-					"offset": [
-						1.2,
-						0,
-						-1.2
-					]
-				},
-				{
-					"proc": "pipes",
-					"offset": [
-						-0.8,
-						0,
-						1.35
-					]
-				}
-			]
+			"building": "laboratorium"
 		},
 		"ossuary": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_tower_B_{team}.gltf",
-			"fit": 0.9,
-			"tint": [
-				0.5,
-				0.45,
-				0.6
-			],
-			"props": [
-				{
-					"proc": "soul_chimney",
-					"offset": [
-						1.2,
-						0,
-						-1.2
-					]
-				},
-				{
-					"proc": "soul_lamp",
-					"offset": [
-						-1.4,
-						0,
-						1.4
-					]
-				}
-			]
+			"building": "ossuary"
 		},
 		"festungsturm": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_tower_A_{team}.gltf",
-			"fit": 0.95,
-			"max_height": 3.2
+			"building": "festungsturm"
 		},
 		"bone_spire": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_tower_A_{team}.gltf",
-			"fit": 0.95,
-			"max_height": 3.2,
-			"tint": [
-				0.5,
-				0.45,
-				0.6
-			]
+			"building": "bone_spire"
 		},
 		"adlerhorst": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_windmill_{team}.gltf",
-			"fit": 0.9,
-			"max_height": 3.6,
-			"tint": [
-				1.0,
-				0.9,
-				0.66
-			],
-			"props": [
-				{
-					"proc": "pipes",
-					"offset": [
-						0.6,
-						0,
-						1.35
-					]
-				}
-			]
+			"building": "adlerhorst"
 		},
 		"roost": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_windmill_{team}.gltf",
-			"fit": 0.9,
-			"max_height": 3.6,
-			"tint": [
-				0.5,
-				0.45,
-				0.6
-			]
+			"building": "roost"
 		},
 		"docks": {
 			"procedural": "pier",
 			"base": "max"
 		},
 		"orloj": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_tower_B_{team}.gltf",
-			"fit": 0.7,
-			"max_height": 6.0,
-			"props": [
-				{
-					"proc": "clock_face",
-					"offset": [
-						0,
-						2.6,
-						1.25
-					]
-				}
-			]
+			"building": "orloj"
 		},
 		"pummerin": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_church_{team}.gltf",
-			"fit": 1.0,
-			"max_height": 6.5,
-			"tint": [
-				1.0,
-				0.95,
-				0.85
-			]
+			"building": "pummerin"
 		},
 		"semmering": {
 			"procedural": "viaduct"
 		},
 		"hofburg_treasury": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_castle_{team}.gltf",
-			"fit": 1.0,
-			"max_height": 4.5,
-			"tint": [
-				1.0,
-				0.9,
-				0.66
-			]
+			"building": "hofburg_treasury"
 		},
 		"obsidian_spire": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_tower_A_{team}.gltf",
-			"fit": 0.75,
-			"max_height": 7.0,
-			"tint": [
-				0.25,
-				0.2,
-				0.3
-			]
+			"building": "obsidian_spire"
 		},
 		"great_ossuary": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_church_{team}.gltf",
-			"fit": 1.0,
-			"max_height": 5.0,
-			"tint": [
-				0.9,
-				0.86,
-				0.75
-			]
+			"building": "great_ossuary"
 		},
 		"fabrik": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_market_{team}.gltf",
-			"fit": 1.0,
-			"max_height": 3.0,
-			"tint": [
-				0.8,
-				0.72,
-				0.62
-			],
-			"props": [
-				{
-					"proc": "smokestack",
-					"offset": [
-						0.9,
-						0,
-						-0.9
-					]
-				},
-				{
-					"proc": "pipes",
-					"offset": [
-						-0.6,
-						0,
-						1.35
-					]
-				},
-				{
-					"proc": "wall_cog",
-					"offset": [
-						0.5,
-						0.7,
-						1.35
-					]
-				}
-			]
+			"building": "fabrik"
 		},
 		"charnel_works": {
-			"model": "res://assets/kaykit/medieval/buildings/{team}/building_barracks_{team}.gltf",
-			"fit": 1.0,
-			"tint": [
-				0.45,
-				0.5,
-				0.4
-			],
-			"props": [
-				{
-					"proc": "soul_chimney",
-					"offset": [
-						1.2,
-						0,
-						-1.2
-					]
-				},
-				{
-					"proc": "soul_chimney",
-					"offset": [
-						-1.2,
-						0,
-						-1.2
-					]
-				}
-			]
+			"building": "charnel_works"
 		}
 	},
 	"resources": {
@@ -1087,9 +759,9 @@
 			"model": "res://assets/kaykit/medieval/buildings/neutral/building_grain.gltf",
 			"fit": 1.0,
 			"tint": [
+				0.62,
 				0.6,
-				1.0,
-				0.7
+				0.34
 			]
 		},
 		"ley_node": {
@@ -1136,7 +808,7 @@
 	"trees": [
 		{
 			"model": "res://assets/quaternius/nature/PineTree_1.fbx",
-			"height": 2.1,
+			"height": 4.2,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1145,15 +817,15 @@
 					0.16
 				],
 				"Leaves": [
-					0.16,
-					0.36,
-					0.22
+					0.11,
+					0.22,
+					0.17
 				]
 			}
 		},
 		{
 			"model": "res://assets/quaternius/nature/PineTree_2.fbx",
-			"height": 2.3,
+			"height": 4.6,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1162,15 +834,15 @@
 					0.16
 				],
 				"Leaves": [
-					0.16,
-					0.36,
-					0.22
+					0.11,
+					0.22,
+					0.17
 				]
 			}
 		},
 		{
 			"model": "res://assets/quaternius/nature/PineTree_3.fbx",
-			"height": 1.9,
+			"height": 3.8,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1179,15 +851,15 @@
 					0.16
 				],
 				"Leaves": [
-					0.16,
-					0.36,
-					0.22
+					0.11,
+					0.22,
+					0.17
 				]
 			}
 		},
 		{
 			"model": "res://assets/quaternius/nature/PineTree_4.fbx",
-			"height": 2.0,
+			"height": 4.0,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1196,15 +868,15 @@
 					0.16
 				],
 				"Leaves": [
-					0.16,
-					0.36,
-					0.22
+					0.11,
+					0.22,
+					0.17
 				]
 			}
 		},
 		{
 			"model": "res://assets/quaternius/nature/PineTree_5.fbx",
-			"height": 1.8,
+			"height": 3.6,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1213,15 +885,15 @@
 					0.16
 				],
 				"Leaves": [
-					0.16,
-					0.36,
-					0.22
+					0.11,
+					0.22,
+					0.17
 				]
 			}
 		},
 		{
 			"model": "res://assets/quaternius/nature/NormalTree_5.fbx",
-			"height": 1.8,
+			"height": 3.6,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1230,15 +902,15 @@
 					0.16
 				],
 				"Leaves": [
+					0.32,
 					0.3,
-					0.5,
-					0.2
+					0.14
 				]
 			}
 		},
 		{
 			"model": "res://assets/quaternius/nature/NormalTree_5.fbx",
-			"height": 1.6,
+			"height": 3.2,
 			"rotate_x": -90,
 			"colors": {
 				"Bark": [
@@ -1247,9 +919,9 @@
 					0.16
 				],
 				"Leaves": [
-					0.36,
-					0.52,
-					0.18
+					0.42,
+					0.26,
+					0.12
 				]
 			}
 		}
