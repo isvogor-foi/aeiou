@@ -73,6 +73,7 @@ func _initialize() -> void:
 		"test_save_load_round_trip",
 		"test_scenarios_run",
 		"test_sarajevo_playthrough",
+		"test_viribus_relics",
 		"test_scenario_survives_save",
 		"test_tutorial_walkthrough",
 		"test_ai_builds_up",
@@ -1242,6 +1243,22 @@ func test_scenarios_run() -> void:
 		check(not w.scenario.objectives.is_empty(), "%s: has objectives" % id)
 		if id != "m1_sarajevo":
 			check(w.winner < 0, "%s: still undecided after 2 minutes" % id)
+
+
+## Viribus Unitis: the Covenant can't win by hoarding relics, the player can.
+func test_viribus_relics() -> void:
+	for owner in [1, 0]:
+		var w := _scenario_world("m3_viribus")
+		w.ais.clear()
+		var city = w.get_entity(w.players[owner].capital_id)
+		for e in w.entities.values():
+			if e.alive and e.def.get("relic", false):
+				e.inside = city.id
+		_run(w, 200)
+		if owner == 1:
+			check(w.winner < 0, "viribus: foe hoarding all relics must not win")
+		else:
+			check(w.winner == 0, "viribus: holding all five relics wins (winner %d)" % w.winner)
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.

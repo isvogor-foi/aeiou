@@ -624,6 +624,10 @@ func _keep_loyal() -> void:
 				sent += 1
 
 
+## Relics this AI has spotted (id -> true); it only goes after those.
+var _seen_relics := {}
+
+
 ## AEIOU: send idle soldiers to fetch loose relics and bring them to our treasury.
 func _relics() -> void:
 	if not w.relics_spawned:
@@ -643,6 +647,12 @@ func _relics() -> void:
 	for e in w.entities.values():
 		if not e.alive or not e.def.get("relic", false) or e.inside >= 0 or e.carried_by >= 0 or claimed.has(e.id):
 			continue
+		# Only relics we have seen (remembered once spotted): without full vision the
+		# AI must scout for them like the player does.
+		if not _seen_relics.has(e.id):
+			if not w.is_visible_to(pid, e):
+				continue
+			_seen_relics[e.id] = true
 		var best = null
 		var best_d := INF
 		for u in _fighters(_army):
