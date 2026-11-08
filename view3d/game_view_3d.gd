@@ -695,7 +695,9 @@ func _on_mouse_button(ev: InputEventMouseButton) -> void:
 				camera.zoom_by(0.9 if ev.button_index == MOUSE_BUTTON_WHEEL_UP else 1.0 / 0.9)
 
 
-func _box_select(r: Rect2, add: bool) -> void:
+## Drag-selects own units (or, with none in the box, buildings). With soldiers in
+## the box, pure workers (Settlers, Thralls) are left out so the army moves alone.
+func _box_select(r: Rect2, add: bool, drop_workers := true) -> void:
 	var units: Array[int] = []
 	var buildings: Array[int] = []
 	for e in world.entities.values():
@@ -716,7 +718,20 @@ func _box_select(r: Rect2, add: bool) -> void:
 				selection.append(id)
 	else:
 		selection = picked
+	if drop_workers and not units.is_empty():
+		var army := selection.filter(func(id): return not _pure_worker(world.get_entity(id)))
+		# Only when there's an actual fighter: Settlers with a supply wagon stay selected.
+		if army.any(func(id): return _fighter(world.get_entity(id))):
+			selection.assign(army)
 	mode = Mode.NORMAL
+
+
+func _fighter(e) -> bool:
+	return e != null and e.kind == Entity.UNIT and e.can_attack()
+
+
+func _pure_worker(e) -> bool:
+	return e != null and e.kind == Entity.UNIT and e.def.get("role", "") == "worker"
 
 
 func _click_select(add: bool) -> void:
@@ -728,7 +743,7 @@ func _click_select(add: bool) -> void:
 		return
 	if e.owner == me and now - _last_click_ms < DOUBLE_CLICK_MS and _last_click_type == e.type_id:
 		# Double-click: everything of this type on screen.
-		_box_select(get_viewport().get_visible_rect(), add)
+		_box_select(get_viewport().get_visible_rect(), add, false)
 		selection.assign(selection.filter(func(id): return world.get_entity(id).type_id == e.type_id))
 	elif add and e.owner == me:
 		if selection.has(e.id):

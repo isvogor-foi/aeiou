@@ -25,6 +25,7 @@ func _initialize() -> void:
 		"test_workers_gather_timber",
 		"test_train_unit_and_pop",
 		"test_place_and_construct",
+		"test_fast_cheats",
 		"test_city_capture_and_conquest",
 		"test_city_holds_while_defended",
 		"test_territory_and_placement",
@@ -244,6 +245,26 @@ func test_place_and_construct() -> void:
 	w.issue({"type": "place", "player": 0, "ids": [workers[0].id, workers[1].id], "building": "dwelling", "tile": spot})
 	_run(w, 20)
 	check(w.players[0].pop_cap == 25, "dwelling adds pop when done (cap %d)" % w.players[0].pop_cap)
+
+
+## Cheats: fast building and training, fast research and ages.
+func test_fast_cheats() -> void:
+	var w := _world()
+	var city := _city(w, 0)
+	var p = w.players[0]
+	p.res.gold = 9999.0
+	p.res.herbs = 9999.0
+	p.res.timber = 9999.0
+	p.res.mana = 9999.0
+	p.cheat_build = true
+	w.issue({"type": "train", "player": 0, "building": city.id, "unit": "settler"})
+	var t: float = DB.units.settler.get("train_time", 10.0)
+	_run(w, float(t) / 5.0)
+	check(_units(w, 0, "settler").size() == 4, "fast training: settler done in a fifth of the time")
+	p.cheat_advance = true
+	w.issue({"type": "advance_age", "player": 0, "building": city.id})
+	_run(w, float(DB.ages[1].time) / 5.0)
+	check(p.age == 2, "fast advance: next age in a fifth of the time (age %d)" % p.age)
 
 
 func test_city_capture_and_conquest() -> void:

@@ -311,6 +311,8 @@ func _build_status_bar() -> void:
 	_cheat_menu = PopupMenu.new()
 	_cheat_menu.add_check_item("Infinite resources", 0)
 	_cheat_menu.add_check_item("Reveal map  (Ctrl+F9)", 1)
+	_cheat_menu.add_check_item("Fast building and training", 2)
+	_cheat_menu.add_check_item("Fast research and ages", 3)
 	_cheat_menu.id_pressed.connect(_on_cheat)
 	add_child(_cheat_menu)
 	bar.add_child(_chip_button(HudIcons.get_icon("menu"), "Menu: save, load, quit [F10]", func(): gv.game_menu.toggle()))
@@ -319,6 +321,8 @@ func _build_status_bar() -> void:
 func _open_cheats(anchor: Control) -> void:
 	_cheat_menu.set_item_checked(0, gv.cheat_resources)
 	_cheat_menu.set_item_checked(1, gv.reveal_all)
+	_cheat_menu.set_item_checked(2, gv.world.players[gv.me].cheat_build)
+	_cheat_menu.set_item_checked(3, gv.world.players[gv.me].cheat_advance)
 	var r := anchor.get_global_rect()
 	_cheat_menu.position = Vector2i(int(r.position.x), int(r.end.y + 4))
 	_cheat_menu.popup()
@@ -332,6 +336,14 @@ func _on_cheat(id: int) -> void:
 		1:
 			gv.reveal_all = not gv.reveal_all
 			flash("Map revealed" if gv.reveal_all else "Map hidden")
+		2:
+			var p = gv.world.players[gv.me]
+			p.cheat_build = not p.cheat_build
+			flash("Fast building and training " + ("on" if p.cheat_build else "off"))
+		3:
+			var p = gv.world.players[gv.me]
+			p.cheat_advance = not p.cheat_advance
+			flash("Fast research and ages " + ("on" if p.cheat_advance else "off"))
 
 
 func _chip_button(icon: Texture2D, tooltip: String, on_press: Callable) -> Button:

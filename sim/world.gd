@@ -56,6 +56,8 @@ var ai_difficulty := "normal"
 ## Scripted scenario state (saved) and the script driving it (re-attached on load).
 var scenario := {}
 var scenario_logic: RefCounted = null
+## How much faster the fast-build and fast-advance cheats make progress.
+const CHEAT_SPEED := 10.0
 var _land_tiles := 0
 
 
@@ -754,7 +756,9 @@ func _update_building(b: Entity) -> void:
 	if b.queue.is_empty():
 		return
 	var item: Dictionary = b.queue[0]
-	item.progress += DT / float(item.time)
+	var p = players[b.owner] if b.owner >= 0 else null
+	var fast: bool = p != null and (p.cheat_build if item.kind == "unit" else p.cheat_advance)
+	item.progress += DT / float(item.time) * (CHEAT_SPEED if fast else 1.0)
 	if item.progress < 1.0:
 		return
 	b.queue.pop_front()
@@ -805,6 +809,8 @@ func _apply_rally(b: Entity, u: Entity) -> void:
 
 func advance_construction(b: Entity, dt: float) -> void:
 	var t := float(b.def.build_time)
+	if b.owner >= 0 and players[b.owner].cheat_build:
+		dt *= CHEAT_SPEED
 	b.build_progress += dt / t
 	b.hp = minf(b.max_hp, b.hp + b.max_hp * 0.9 * dt / t)
 	if b.build_progress >= 1.0:

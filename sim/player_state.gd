@@ -44,6 +44,9 @@ var base_caps := {}
 var base_pop_limit := 0
 ## Gathering multiplier (the Hard AI's bonus); also scales the gather caps.
 var handicap := 1.0
+## Cheats (human only): construction and training, and research and ages, go 10x faster.
+var cheat_build := false
+var cheat_advance := false
 ## May build on tiles it hasn't explored (the AI knows the map layout).
 var knows_map := false
 
