@@ -88,7 +88,7 @@
 		"description": "Shields every ally within 5 tiles, absorbing 50 damage each for 12s."
 	},
 	"death_coil": {
-		"name": "Death Coil",
+		"name": "Soul Siphon",
 		"hotkey": "D",
 		"mana": 25,
 		"cooldown": 8.0,
@@ -159,7 +159,7 @@
 		"description": "Drags an enemy within 6 tiles into melee and hurts it."
 	},
 	"frost_nova": {
-		"name": "Frost Nova",
+		"name": "Grave Chill",
 		"hotkey": "D",
 		"mana": 35,
 		"cooldown": 16.0,
@@ -370,7 +370,7 @@
 		"description": "Releases a plague cloud: 8 damage per second to enemies inside for 8s."
 	},
 	"chain_lightning": {
-		"name": "Chain Lightning",
+		"name": "Tesla Arc",
 		"hotkey": "D",
 		"mana": 30,
 		"cooldown": 10.0,

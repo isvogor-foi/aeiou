@@ -1,21 +1,21 @@
 {
 	"_comment": "gather_rate is units per second per worker. amount -1 means inexhaustible. 'forest' describes forest tiles, not an entity.",
 	"gold_mine": {
-		"name": "Gold Mine",
+		"name": "Silver Mine",
 		"resource": "gold",
 		"amount": 4000,
 		"size": 2,
 		"gather_rate": 0.8
 	},
 	"herb_patch": {
-		"name": "Herb Patch",
+		"name": "Smallholding",
 		"resource": "herbs",
 		"amount": 1500,
 		"size": 2,
 		"gather_rate": 0.9
 	},
 	"ley_node": {
-		"name": "Ley Node",
+		"name": "Aether Well",
 		"resource": "mana",
 		"amount": -1,
 		"size": 2,

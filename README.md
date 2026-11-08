@@ -106,7 +106,7 @@ Rules of thumb:
 - **New buildings:** Schießstand / Bone Range, Laboratorium / Ossuary, and Festungsturm / Bone Spire defense towers.
 - **Heroes:** one per player from Age 3, trained at a city. A fallen hero can be revived (60s).
   - **Rudolf II:** Alchemic Fire, Imperial Aegis, and an aura that cuts damage taken by 20%.
-  - **Shadow Sovereign:** Death Coil, Summon Horde, and a 15% life-steal aura.
+  - **Shadow Sovereign:** Soul Siphon, Summon Horde, and a 15% life-steal aura.
 - **Abilities (Aether arts and necromancy):**
   - Each one costs Aether and has a cooldown. Ability data lives in `data/abilities.json`.
   - Field Dressing and Life Drain cast themselves by default.
@@ -135,7 +135,7 @@ Rules of thumb:
   - **Renamed resources:** Thaler, Timber, Provisions and Aether.
   - **Habsburg ages:** the Margraves through the Aether Monarchy.
   - **Re-themed roster:** Settler, Grenadier, Aether Musketeer, Jäger, Field Alchemist, Kürassier, Kress Flyer, Double Eagle, and the hero Rudolf II.
-  - **Uniforms:** white coats, bearskins and shakos.
+  - **Uniforms:** dieselpunk field kit: steel helmets, gas masks with glowing lenses, trench greatcoats, armour plates and Aether tanks.
 - **Crown lands:** the capital is Austria (with the Tyrol). Proclaim each new city Croatia, Carniola, Bohemia, Galicia or Transylvania (the buttons are on the city card). Each land unlocks a regional unit:
   - **Standschütze** (Austria): long-range marksman with +2 range and +30% damage from high ground.
   - **Grenzer** (Croatia): a farmer-soldier that gathers and shoots, and fights harder at home.
@@ -147,7 +147,7 @@ Rules of thumb:
 - **Heraldry:**
   - Waving flags on every building: the imperial black double-headed eagle on gold for the Monarchy, and a skull banner for the Covenant.
   - Cities also fly their crown land's flag: Austria red-white-red, the Croatian chequerboard, Bohemia's white over red with the lion, or the red Tyrolean eagle.
-  - Black-and-gold dashed borders, Schönbrunn-yellow façades, and a faction-coloured HUD with the flag in the top bar.
+  - Solid team-colour borders over cobbled city ground, Schönbrunn-yellow façades, and a faction-coloured HUD with the flag in the top bar.
   - A title-screen emblem with the A·E·I·O·U motto.
   - Flags are painted in code (`view3d/flags.gd`).
 - **Elevation now matters in gameplay:** hills are part of the simulation, mirrored for fairness.
@@ -166,7 +166,7 @@ Rules of thumb:
   - Plague Catapult, which leaves poison clouds.
   - Shadow Wyrm.
   - Ghost Ship, invisible while it keeps still.
-  - Lich (Frost Nova, Mass Raise).
+  - Lich (Grave Chill, Mass Raise).
   - Bone Colossus, whose fear aura lowers enemy damage.
 - **Dark Pacts:** the Covenant's answer to crown lands. Blood unlocks the Vampire (life-steal), Bone the Bone Golem, Shadow the Wraith (stealth).
 - **Heroes:** choose 1 of 3. Your first hero stays your hero for the match.
