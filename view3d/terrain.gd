@@ -7,8 +7,10 @@ extends Node3D
 const DB = preload("res://sim/db.gd")
 const GameMap = preload("res://sim/game_map.gd")
 const Models = preload("res://view3d/models.gd")
+const Entity = preload("res://sim/entity.gd")
 
 const WATER_LEVEL := -0.2
+const _FOLIAGE := preload("res://view3d/shaders/foliage.gdshader")
 
 var world
 var map
@@ -23,6 +25,9 @@ var _territory_img: Image
 var _territory_tex: ImageTexture
 var _tint_img: Image
 var _territory_version := -1
+## Paving per tile (0..1): cobbles under and around buildings, kept in the
+## colour texture's alpha.
+var _pave := PackedFloat32Array()
 ## tile index -> [[MultiMesh, instance index], ...] for trees standing on that tile.
 var _tree_instances := {}
 
@@ -101,6 +106,8 @@ func _next_to_water(t: Vector2i) -> bool:
 
 func _build_color_texture() -> void:
 	_color_img = Image.create(map.width, map.height, false, Image.FORMAT_RGBA8)
+	_pave.resize(map.width * map.height)
+	_pave.fill(0.0)
 	for y in map.height:
 		for x in map.width:
 			_color_img.set_pixel(x, y, _tile_color(Vector2i(x, y)))
@@ -145,11 +152,8 @@ func _build_mesh() -> void:
 	var teams: Array[Color] = []
 	for c in DB.rules.player_colors:
 		teams.append(DB.color_of(c))
-	var teams2: Array[Color] = teams.duplicate()
 	for i in world.players.size():
 		teams[i] = world.players[i].color
-		teams2[i] = DB.color_of(DB.factions[world.players[i].faction].get("color2", [0, 0, 0]))
-	material.set_shader_parameter("team_colors2", teams2)
 	material.set_shader_parameter("team_colors", teams)
 	mi.material_override = material
 	add_child(mi)
@@ -236,7 +240,7 @@ func _multimesh(spec, spots: Array, track: bool) -> void:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(path)
 	for part in Models.mesh_parts(path):
-		var mesh: Mesh = _recolored(part.mesh, d.colors) if tinted else part.mesh
+		var mesh: Mesh = _recolored(part.mesh, d.colors, float(d.get("height", 4.0))) if tinted else part.mesh
 		for key in chunks:
 			var ids: Array = chunks[key]
 			var mm := MultiMesh.new()
@@ -261,20 +265,20 @@ func _multimesh(spec, spots: Array, track: bool) -> void:
 			add_child(mmi)
 
 
-## A copy of `mesh` whose surfaces get flat stylized materials by name ("Bark",
+## A copy of `mesh` whose surfaces get the foliage shader by name ("Bark",
 ## "Leaves"), tinted per instance through the MultiMesh colour.
-func _recolored(mesh: Mesh, colors: Dictionary) -> Mesh:
+func _recolored(mesh: Mesh, colors: Dictionary, height: float) -> Mesh:
 	var out: Mesh = mesh.duplicate()
 	for i in out.get_surface_count():
 		var old := out.surface_get_material(i)
 		var name: String = old.resource_name if old else ""
-		var m := StandardMaterial3D.new()
-		m.vertex_color_use_as_albedo = true
-		m.roughness = 0.9
-		m.albedo_color = Color(0.5, 0.5, 0.5)
+		var m := ShaderMaterial.new()
+		m.shader = _FOLIAGE
+		m.set_shader_parameter("tree_height", height)
+		m.set_shader_parameter("leafy", 0.0 if name.contains("Bark") or name.contains("Wood") else 1.0)
 		for frag in colors:
 			if name.contains(frag):
-				m.albedo_color = DB.color_of(colors[frag])
+				m.set_shader_parameter("base_color", DB.color_of(colors[frag]))
 		out.surface_set_material(i, m)
 	return out
 
@@ -284,7 +288,9 @@ func _recolored(mesh: Mesh, colors: Dictionary) -> Mesh:
 ## Applies terrain changes (felled forests) from the sim.
 func apply_changed_tiles(tiles: Array[Vector2i]) -> void:
 	for t in tiles:
-		_color_img.set_pixelv(t, _tile_color(t))
+		var col := _tile_color(t)
+		col.a = _pave[int(map.idx(t))]
+		_color_img.set_pixelv(t, col)
 		if map.get_terrain(t) != GameMap.FOREST:
 			for inst in _tree_instances.get(map.idx(t), []):
 				inst[0].set_instance_transform(inst[1], Transform3D(Basis().scaled(Vector3.ZERO), Vector3.ZERO))
@@ -308,6 +314,36 @@ func sync() -> void:
 			_tint_img.set_pixel(x, y, Color(world.players[o].color, 0.35) if o >= 0 else Color(0, 0, 0, 0))
 	_territory_tex.update(_territory_img)
 	territory_tint_tex.update(_tint_img)
+	_update_paving()
+
+
+## Cobbles under every building, fading out over a couple of tiles around it.
+## Territory is rebuilt whenever buildings appear or fall, so this follows it.
+func _update_paving() -> void:
+	_pave.fill(0.0)
+	for e in world.entities.values():
+		if e.kind != Entity.BUILDING or not e.alive or e.def.get("water", false):
+			continue
+		var r: Rect2 = Rect2(Vector2(e.tile), Vector2(e.size))
+		var reach := 1.6 + minf(e.size.x, 4) * 0.35
+		var c := r.get_center()
+		for y in range(floori(r.position.y - reach), ceili(r.end.y + reach)):
+			for x in range(floori(r.position.x - reach), ceili(r.end.x + reach)):
+				var t := Vector2i(x, y)
+				if not map.in_bounds(t) or map.get_terrain(t) == GameMap.WATER:
+					continue
+				# Distance from the tile centre to the building's footprint.
+				var p := Vector2(x + 0.5, y + 0.5)
+				var d := Vector2(maxf(absf(p.x - c.x) - r.size.x * 0.5, 0.0), maxf(absf(p.y - c.y) - r.size.y * 0.5, 0.0)).length()
+				var v := clampf(1.0 - d / reach, 0.0, 1.0)
+				var i: int = map.idx(t)
+				_pave[i] = maxf(_pave[i], v)
+	for y in map.height:
+		for x in map.width:
+			var col := _color_img.get_pixel(x, y)
+			col.a = _pave[y * map.width + x]
+			_color_img.set_pixel(x, y, col)
+	_color_tex.update(_color_img)
 
 
 ## Shows the building footprint under the cursor (tiles), or hides it when `size` is 0.
