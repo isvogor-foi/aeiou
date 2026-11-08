@@ -82,13 +82,12 @@ void fragment() {
 	vec3 c = tile.rgb;
 	float rough = 0.95;
 
-	// Moss and heath: broad damp/dry patches, then fine tufts stretched along a
-	// slowly turning direction so the ground reads as grass, not a flat colour.
+	// Moss and heath: broad damp/dry patches, then fine tufts so the ground reads
+	// as grass, not a flat colour.
 	float broad = fbm(wp * 0.35);
 	c *= 0.78 + 0.4 * broad;
-	vec2 dir = vec2(cos(noise(wp * 0.15) * 6.28), sin(noise(wp * 0.15) * 6.28));
-	vec2 tp = vec2(dot(wp, dir), dot(wp, vec2(-dir.y, dir.x)));
-	float tufts = noise(tp * vec2(14.0, 3.5)) * 0.6 + noise(wp * 22.0) * 0.4;
+	// Isotropic only: a direction field here drew swirls and contour-like lines.
+	float tufts = noise(wp * 7.0 + 3.0) * 0.45 + noise(wp * 17.0) * 0.35 + noise(wp * 41.0) * 0.2;
 	c *= 0.84 + 0.3 * tufts;
 	// Dry, yellowed heath and dark peaty hollows.
 	float dry = smoothstep(0.55, 0.75, fbm(wp * 0.12 + 9.0));
