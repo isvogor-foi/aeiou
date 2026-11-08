@@ -241,6 +241,8 @@ func _multimesh(spec, spots: Array, track: bool) -> void:
 	rng.seed = hash(path)
 	for part in Models.mesh_parts(path):
 		var mesh: Mesh = _recolored(part.mesh, d.colors, float(d.get("height", 4.0))) if tinted else part.mesh
+		if d.has("tint"):
+			mesh = _darkened(mesh, DB.color_of(d.tint))
 		for key in chunks:
 			var ids: Array = chunks[key]
 			var mm := MultiMesh.new()
@@ -279,6 +281,18 @@ func _recolored(mesh: Mesh, colors: Dictionary, height: float) -> Mesh:
 		for frag in colors:
 			if name.contains(frag):
 				m.set_shader_parameter("base_color", DB.color_of(colors[frag]))
+		out.surface_set_material(i, m)
+	return out
+
+
+## A copy of `mesh` with every surface's albedo multiplied by `tint`.
+func _darkened(mesh: Mesh, tint: Color) -> Mesh:
+	var out: Mesh = mesh.duplicate()
+	for i in out.get_surface_count():
+		var old := out.surface_get_material(i) as BaseMaterial3D
+		var m: BaseMaterial3D = old.duplicate() if old else StandardMaterial3D.new()
+		m.albedo_color = m.albedo_color * tint
+		m.roughness = 0.95
 		out.surface_set_material(i, m)
 	return out
 

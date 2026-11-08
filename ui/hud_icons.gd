@@ -22,6 +22,10 @@ static func _shapes(name: String) -> Array:
 	var wood_end := Color(0.80, 0.62, 0.38)
 	var steel := Color(0.82, 0.84, 0.88)
 	var white := Color(0.93, 0.91, 0.86)
+	var brass := Color(0.86, 0.66, 0.28)
+	var iron := Color(0.36, 0.37, 0.4)
+	var aether := Color(0.40, 0.85, 1.0)
+	var clear := Color(0, 0, 0, 0)
 	match name:
 		"gold":
 			return [["circle", 0.5, 0.5, 0.40, dark_gold], ["circle", 0.5, 0.5, 0.31, gold],
@@ -36,8 +40,10 @@ static func _shapes(name: String) -> Array:
 					["capsule", 0.64, 0.34, 0.56, 0.46, 0.08, wheat], ["capsule", 0.36, 0.54, 0.44, 0.64, 0.08, wheat],
 					["capsule", 0.64, 0.54, 0.56, 0.64, 0.08, wheat]]
 		"mana":
-			return [["poly", [Vector2(0.5, 0.08), Vector2(0.86, 0.45), Vector2(0.5, 0.94), Vector2(0.14, 0.45)], Color(0.30, 0.75, 0.95)],
-					["poly", [Vector2(0.5, 0.08), Vector2(0.86, 0.45), Vector2(0.5, 0.45)], Color(0.62, 0.92, 1.0)]]
+			# Aether: a glass canister with brass caps, glowing.
+			return [["box", 0.5, 0.52, 0.22, 0.32, Color(0.18, 0.4, 0.5)], ["box", 0.5, 0.54, 0.15, 0.26, aether],
+					["box", 0.44, 0.50, 0.04, 0.20, Color(0.8, 0.97, 1.0)],
+					["box", 0.5, 0.17, 0.26, 0.06, brass], ["box", 0.5, 0.87, 0.26, 0.06, brass], ["box", 0.5, 0.08, 0.08, 0.04, brass]]
 		"coal":
 			return [["poly", [Vector2(0.18, 0.62), Vector2(0.32, 0.28), Vector2(0.62, 0.18), Vector2(0.86, 0.42), Vector2(0.78, 0.80), Vector2(0.36, 0.86)], Color(0.20, 0.20, 0.22)],
 					["poly", [Vector2(0.32, 0.28), Vector2(0.62, 0.18), Vector2(0.55, 0.42)], Color(0.48, 0.48, 0.52)]]
@@ -60,12 +66,21 @@ static func _shapes(name: String) -> Array:
 		"play":
 			return [["poly", [Vector2(0.30, 0.20), Vector2(0.80, 0.5), Vector2(0.30, 0.80)], white]]
 		"stop":
-			return [["box", 0.5, 0.5, 0.26, 0.26, Color(0.85, 0.35, 0.3)]]
+			# A steam valve handwheel: shut it.
+			return [["circle", 0.5, 0.5, 0.40, brass], ["circle", 0.5, 0.5, 0.30, clear],
+					["capsule", 0.5, 0.14, 0.5, 0.86, 0.05, brass], ["capsule", 0.14, 0.5, 0.86, 0.5, 0.05, brass],
+					["circle", 0.5, 0.5, 0.13, Color(0.75, 0.2, 0.15)], ["circle", 0.5, 0.5, 0.05, dark_gold]]
 		"attack":
-			return [["capsule", 0.18, 0.18, 0.78, 0.78, 0.05, steel], ["capsule", 0.82, 0.18, 0.22, 0.78, 0.05, steel],
-					["capsule", 0.62, 0.78, 0.78, 0.62, 0.05, gold], ["capsule", 0.38, 0.78, 0.22, 0.62, 0.05, gold]]
+			# Crossed bayonet rifles: wooden stocks, steel barrels, brass bands.
+			return [["capsule", 0.62, 0.62, 0.88, 0.88, 0.07, wood], ["capsule", 0.10, 0.10, 0.62, 0.62, 0.035, steel],
+					["capsule", 0.38, 0.62, 0.12, 0.88, 0.07, wood], ["capsule", 0.90, 0.10, 0.38, 0.62, 0.035, steel],
+					["circle", 0.62, 0.62, 0.05, brass], ["circle", 0.38, 0.62, 0.05, brass],
+					["capsule", 0.06, 0.06, 0.16, 0.16, 0.02, white], ["capsule", 0.94, 0.06, 0.84, 0.16, 0.02, white]]
 		"build":
-			return [["capsule", 0.30, 0.86, 0.62, 0.40, 0.06, wood_end], ["box", 0.64, 0.30, 0.22, 0.10, steel]]
+			# A spanner.
+			return [["capsule", 0.22, 0.82, 0.60, 0.40, 0.07, steel], ["circle", 0.66, 0.32, 0.20, steel],
+					["poly", [Vector2(0.66, 0.30), Vector2(0.98, 0.0), Vector2(1.0, 0.36)], clear], ["circle", 0.66, 0.32, 0.08, clear],
+					["circle", 0.30, 0.74, 0.05, brass]]
 		"back":
 			return [["poly", [Vector2(0.14, 0.5), Vector2(0.48, 0.18), Vector2(0.48, 0.82)], white], ["box", 0.64, 0.5, 0.22, 0.09, white]]
 		"unload":
@@ -85,12 +100,19 @@ static func _shapes(name: String) -> Array:
 					["poly", [Vector2(0.24, 0.20), Vector2(0.76, 0.20), Vector2(0.74, 0.53), Vector2(0.5, 0.84), Vector2(0.26, 0.53)], Color(0.80, 0.12, 0.15)],
 					["box", 0.5, 0.42, 0.24, 0.07, white]]
 		"medicine":
-			# Medicine: a flask with a red cross.
-			return [["box", 0.5, 0.20, 0.08, 0.12, Color(0.75, 0.85, 0.9)], ["circle", 0.5, 0.62, 0.28, Color(0.75, 0.85, 0.9)],
-					["circle", 0.5, 0.64, 0.22, white], ["box", 0.5, 0.64, 0.15, 0.05, Color(0.85, 0.15, 0.15)],
-					["box", 0.5, 0.64, 0.05, 0.15, Color(0.85, 0.15, 0.15)]]
+			# Medicine: a brass cog with an Aether syringe across it.
+			var cog := []
+			for i in 8:
+				var a := i * TAU / 8.0
+				cog.append(["circle", 0.5 + cos(a) * 0.36, 0.5 + sin(a) * 0.36, 0.08, brass])
+			cog.append_array([["circle", 0.5, 0.5, 0.33, brass], ["circle", 0.5, 0.5, 0.2, Color(0.2, 0.18, 0.16)],
+					["capsule", 0.24, 0.76, 0.70, 0.30, 0.075, Color(0.8, 0.9, 0.95)], ["capsule", 0.30, 0.70, 0.60, 0.40, 0.045, aether],
+					["capsule", 0.72, 0.28, 0.90, 0.10, 0.015, steel], ["capsule", 0.15, 0.70, 0.30, 0.85, 0.03, iron]])
+			return cog
 		"spell":
-			return [["poly", _star(0.5, 0.5, 0.42, 0.18), Color(0.70, 0.55, 1.0)], ["circle", 0.5, 0.5, 0.10, white]]
+			# An Aether discharge: a lightning bolt.
+			return [["poly", [Vector2(0.58, 0.04), Vector2(0.22, 0.54), Vector2(0.46, 0.54), Vector2(0.36, 0.96), Vector2(0.80, 0.40), Vector2(0.55, 0.40), Vector2(0.70, 0.04)], aether],
+					["poly", [Vector2(0.58, 0.10), Vector2(0.32, 0.48), Vector2(0.44, 0.48)], Color(0.85, 0.97, 1.0)]]
 		"deploy":
 			return [["box", 0.5, 0.62, 0.36, 0.16, wood], ["circle", 0.28, 0.80, 0.10, Color(0.2, 0.2, 0.2)], ["circle", 0.72, 0.80, 0.10, Color(0.2, 0.2, 0.2)]]
 	return [["circle", 0.5, 0.5, 0.3, white]]
