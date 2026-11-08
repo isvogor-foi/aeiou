@@ -278,19 +278,16 @@ static func tower(r: Node3D, P: Dictionary, rad: float, h: float, pos: Vector3, 
 
 
 ## A brick smokestack with brass bands and live smoke.
-static func stack(r: Node3D, P: Dictionary, pos: Vector3, h: float, rad := 0.13) -> void:
+static func stack(r: Node3D, P: Dictionary, pos: Vector3, h: float, rad := 0.13, smoking := true) -> void:
 	cyl(r, rad, h, pos + Vector3(0, h * 0.5, 0), brick(P) if not P.necro else iron(P), rad * 0.8)
 	for y in [0.3, 0.65]:
 		cyl(r, rad * 1.05, 0.05, pos + Vector3(0, h * y, 0), trim(P))
 	cyl(r, rad * 1.1, 0.12, pos + Vector3(0, h, 0), iron(P), rad * 1.25)
-	var chim := Gear.chimney(P.necro)
-	for c in chim.get_children():
-		if c is GPUParticles3D:
-			var smoke: GPUParticles3D = c.duplicate()
-			smoke.position = pos + Vector3(0, h + 0.1, 0)
-			smoke.scale = Vector3.ONE * (1.6 + rad * 4.0)
-			r.add_child(smoke)
-	chim.free()
+	if smoking:
+		var smoke := Gear.smoke_plume(P.necro)
+		smoke.position = pos + Vector3(0, h + 0.1, 0)
+		smoke.scale = Vector3.ONE * (1.4 + rad * 4.0)
+		r.add_child(smoke)
 
 
 ## A glass tank of glowing Aether (or souls) in a brass cage.
@@ -445,7 +442,7 @@ static func _city_croatia(r: Node3D, P: Dictionary) -> void:
 	hip_roof(r, P, 0.9, 0.8, 0.7, Vector3(0, 2.5, 1.2))
 	for i in 9:
 		box(r, Vector3(0.1, 0.1, 0.02), Vector3(-0.1 + (i % 3) * 0.1, 1.9 - (i / 3) * 0.1, 1.61), m(Color(0.75, 0.12, 0.12) if (i % 2) == 0 else Color(0.95, 0.95, 0.92)))
-	stack(r, P, Vector3(0.6, 1.8, -0.5), 1.0)
+	stack(r, P, Vector3(0.6, 1.8, -0.5), 1.0, 0.13, false)
 	banner(r, P, Vector3(-0.8, 1.4, 1.56))
 
 
@@ -529,7 +526,7 @@ static func _city_transylvania(r: Node3D, P: Dictionary) -> void:
 	cyl(r, 0.75, 1.4, Vector3(0, 4.0, -0.9), roof(P), 0.0, 4, Vector3(0, PI / 4, 0))
 	_clock(r, P, Vector3(0, 2.6, -0.48), 0.2)
 	tank(r, P, 0.15, 0.6, Vector3(0.9, 0.2, 0.9))
-	stack(r, P, Vector3(-0.8, 0.2, 0.9), 1.6, 0.1)
+	stack(r, P, Vector3(-0.8, 0.2, 0.9), 1.6, 0.1, false)
 
 
 ## Hungary: a neo-Gothic parliament: long wings, pinnacles and a ribbed dome with
@@ -546,7 +543,7 @@ static func _city_hungary(r: Node3D, P: Dictionary) -> void:
 	box(r, Vector3(1.4, 0.9, 1.0), Vector3(0, 0.65, -1.2), wall(P))
 	banner(r, P, Vector3(-0.9, 1.25, 1.11))
 	banner(r, P, Vector3(0.9, 1.25, 1.11))
-	stack(r, P, Vector3(1.4, 0.2, -1.3), 1.8)
+	stack(r, P, Vector3(1.4, 0.2, -1.3), 1.8, 0.13, false)
 
 
 static func _clock(r: Node3D, P: Dictionary, pos: Vector3, rad: float) -> void:
@@ -568,7 +565,7 @@ static func _townhouse(r: Node3D, P: Dictionary) -> void:
 	for x in [-0.35, 0.35]:
 		box(r, Vector3(0.22, 0.22, 0.18), Vector3(x, 1.38, 0.5), wall(P))
 		box(r, Vector3(0.12, 0.13, 0.02), Vector3(x, 1.38, 0.6), window(P))
-	stack(r, P, Vector3(0.5, 1.0, -0.4), 0.7, 0.08)
+	stack(r, P, Vector3(0.5, 1.0, -0.4), 0.7, 0.08, false)
 	pipes(r, P, [Vector3(-0.78, 0.1, 0.3), Vector3(-0.78, 0.9, 0.3), Vector3(-0.5, 1.2, 0.3)])
 	box(r, Vector3(0.3, 0.45, 0.04), Vector3(0, 0.36, 0.67), m(Color(0.35, 0.22, 0.14)))
 
@@ -650,7 +647,7 @@ static func _range(r: Node3D, P: Dictionary) -> void:
 		cyl(r, 0.04, 0.6, Vector3(x, 0.3, 1.0), iron(P))
 		cyl(r, 0.25, 0.04, Vector3(x, 0.7, 1.0), m(Color(0.92, 0.9, 0.84)), -1.0, 16, Vector3(PI / 2, 0, 0))
 		cyl(r, 0.12, 0.05, Vector3(x, 0.7, 1.01), team(P), -1.0, 16, Vector3(PI / 2, 0, 0))
-	stack(r, P, Vector3(1.0, 0.9, -1.0), 0.9, 0.09)
+	stack(r, P, Vector3(1.0, 0.9, -1.0), 0.9, 0.09, false)
 	wall_cog(r, P, 0.22, Vector3(-0.9, 0.55, -0.34))
 
 
@@ -800,7 +797,7 @@ static func _crypt_house(r: Node3D, P: Dictionary) -> void:
 	cyl(r, 0.75, 1.0, Vector3(0, 1.4, 0), roof(P), 0.0, 4, Vector3(0, PI / 4, 0))
 	box(r, Vector3(0.3, 0.55, 0.04), Vector3(0, 0.35, 0.67), m(Color(0.12, 0.1, 0.1)))
 	spike(r, P, Vector3(0.55, 0.9, 0.5), 0.6, 0.05)
-	stack(r, P, Vector3(-0.45, 0.9, -0.4), 0.6, 0.07)
+	stack(r, P, Vector3(-0.45, 0.9, -0.4), 0.6, 0.07, false)
 
 
 ## Storehouse (Covenant): an iron charnel vault bound with bone ribs.
@@ -850,7 +847,7 @@ static func _blood_pit(r: Node3D, P: Dictionary) -> void:
 		spike(r, P, Vector3(sin(a) * 1.3, 0.4, cos(a) * 1.3), 0.9, 0.06, Vector3(sin(a + PI / 2) * 0.0, 0, 0))
 	box(r, Vector3(0.9, 1.3, 0.7), Vector3(0, 0.65, -1.1), wall(P))
 	cyl(r, 0.6, 0.9, Vector3(0, 1.75, -1.1), roof(P), 0.0, 4, Vector3(0, PI / 4, 0))
-	stack(r, P, Vector3(0.9, 0.0, -0.9), 1.6)
+	stack(r, P, Vector3(0.9, 0.0, -0.9), 1.6, 0.13, false)
 
 
 ## Bone Range: a shed framed in giant ribs with skull targets.

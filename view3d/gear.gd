@@ -387,42 +387,106 @@ static func chimney(necro: bool) -> Node3D:
 	part(root, cyl(0.1, 0.16, 0.13), brass() if not necro else iron(), Vector3(0, 1.42, 0))
 	for y in [0.35, 0.8]:
 		part(root, box(Vector3(0.26, 0.04, 0.26)), brass() if not necro else iron(), Vector3(0, y, 0))
-	var smoke := GPUParticles3D.new()
-	smoke.amount = 10
-	smoke.lifetime = 3.5
+	var smoke := smoke_plume(necro)
 	smoke.position = Vector3(0, 1.5, 0)
+	root.add_child(smoke)
+	return root
+
+
+static var _smoke_tex: Texture2D
+static var _smoke_mats := {}
+
+
+## A soft, noisy puff (alpha) for smoke billboards, generated once.
+static func _puff_texture() -> Texture2D:
+	if _smoke_tex:
+		return _smoke_tex
+	var n := FastNoiseLite.new()
+	n.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	n.frequency = 0.06
+	n.fractal_octaves = 4
+	var size := 64
+	var img := Image.create(size, size, false, Image.FORMAT_RGBA8)
+	for y in size:
+		for x in size:
+			var d := Vector2(x - size * 0.5 + 0.5, y - size * 0.5 + 0.5).length() / (size * 0.5)
+			var fall := clampf(1.0 - d, 0.0, 1.0)
+			fall = fall * fall * (3.0 - 2.0 * fall)
+			var v := clampf(n.get_noise_2d(x, y) * 0.6 + 0.55, 0.0, 1.0)
+			var a := clampf(fall * (0.35 + 0.9 * v) - 0.08, 0.0, 1.0)
+			img.set_pixel(x, y, Color(0.75 + 0.25 * v, 0.75 + 0.25 * v, 0.75 + 0.25 * v, a))
+	img.generate_mipmaps()
+	_smoke_tex = ImageTexture.create_from_image(img)
+	return _smoke_tex
+
+
+## A rising plume of chimney smoke: soft billboards that fade in, swell, turn
+## slowly and drift downwind before thinning out. Sooty grey, or a sickly
+## green-grey for the Covenant's soul furnaces.
+static func smoke_plume(necro: bool) -> GPUParticles3D:
+	var smoke := GPUParticles3D.new()
+	smoke.amount = 14
+	smoke.lifetime = 7.0
+	smoke.preprocess = 7.0
+	smoke.randomness = 0.4
+	smoke.local_coords = true
+	smoke.visibility_aabb = AABB(Vector3(-3, -1, -3), Vector3(6, 8, 6))
 	var pm := ParticleProcessMaterial.new()
-	pm.direction = Vector3(0.2, 1, 0)
-	pm.spread = 12.0
-	pm.initial_velocity_min = 0.25
-	pm.initial_velocity_max = 0.4
-	pm.gravity = Vector3(0.05, 0.02, 0)
-	pm.scale_min = 0.6
-	pm.scale_max = 1.4
+	pm.direction = Vector3(0, 1, 0)
+	pm.spread = 8.0
+	pm.initial_velocity_min = 0.18
+	pm.initial_velocity_max = 0.3
+	# Wind carries the plume sideways as it rises and slows.
+	pm.gravity = Vector3(0.09, 0.015, 0.03)
+	pm.damping_min = 0.02
+	pm.damping_max = 0.05
+	pm.angle_min = 0.0
+	pm.angle_max = 360.0
+	pm.angular_velocity_min = -12.0
+	pm.angular_velocity_max = 12.0
+	pm.scale_min = 0.7
+	pm.scale_max = 1.2
+	pm.turbulence_enabled = true
+	pm.turbulence_noise_strength = 0.25
+	pm.turbulence_noise_scale = 2.5
+	pm.turbulence_influence_min = 0.03
+	pm.turbulence_influence_max = 0.08
 	var grow := Curve.new()
-	grow.add_point(Vector2(0, 0.4))
-	grow.add_point(Vector2(1, 1.6))
+	grow.add_point(Vector2(0.0, 0.25))
+	grow.add_point(Vector2(0.35, 0.9))
+	grow.add_point(Vector2(1.0, 2.2))
 	var gt := CurveTexture.new()
 	gt.curve = grow
 	pm.scale_curve = gt
+	var base := Color(0.32, 0.31, 0.3) if not necro else Color(0.3, 0.38, 0.3)
 	var fade := Gradient.new()
-	var tint := Color(0.75, 0.75, 0.75) if not necro else Color(0.45, 0.9, 0.5)
-	fade.set_color(0, Color(tint, 0.55))
-	fade.set_color(1, Color(tint, 0.0))
+	fade.offsets = PackedFloat32Array([0.0, 0.12, 0.55, 1.0])
+	fade.colors = PackedColorArray([Color(base * 0.6, 0.0), Color(base * 0.7, 0.5), Color(base, 0.3), Color(base * 1.25, 0.0)])
 	var ft := GradientTexture1D.new()
 	ft.gradient = fade
 	pm.color_ramp = ft
 	smoke.process_material = pm
-	var puff := sphere(0.12)
-	var pmat := StandardMaterial3D.new()
-	pmat.vertex_color_use_as_albedo = true
-	pmat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	pmat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
-	puff.material = pmat
-	smoke.draw_pass_1 = puff
+	var quad := QuadMesh.new()
+	quad.size = Vector2(0.45, 0.45)
+	if not _smoke_mats.has(necro):
+		var m := StandardMaterial3D.new()
+		m.albedo_texture = _puff_texture()
+		m.vertex_color_use_as_albedo = true
+		m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		m.billboard_mode = BaseMaterial3D.BILLBOARD_PARTICLES
+		m.billboard_keep_scale = true
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		m.roughness = 1.0
+		m.disable_receive_shadows = true
+		# Lit like the rest of the dusk scene, with a little self-light so it
+		# isn't black on the shadow side.
+		m.emission_enabled = true
+		m.emission = base * (0.35 if not necro else 0.6)
+		_smoke_mats[necro] = m
+	quad.material = _smoke_mats[necro]
+	smoke.draw_pass_1 = quad
 	smoke.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	root.add_child(smoke)
-	return root
+	return smoke
 
 
 ## A big brass cog standing against a wall, slowly turning.

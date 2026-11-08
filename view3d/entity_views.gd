@@ -102,6 +102,8 @@ func _create(e) -> Dictionary:
 			var body := Models.make_footprint_model(table.get(e.type_id, {"procedural": "crystal"}), e.owner, e.size.x, e.crown_land if e.kind == Entity.BUILDING else "")
 			node.add_child(body)
 			r.body = body
+			# The design it was built in, so proclaiming a crown land rebuilds it.
+			r.styled_land = e.crown_land if e.kind == Entity.BUILDING else ""
 			var box := Models._bounds(body, Transform3D.IDENTITY)
 			r.bar_height = box.end.y + 0.3
 			r.animated = _animated_parts(body)
@@ -246,11 +248,14 @@ func _sync_land_flag(e, r: Dictionary) -> void:
 		r.land_flag = null
 	# A city is rebuilt in the design of the land it proclaims (view3d/buildings.gd).
 	var v: Dictionary = DB.visuals.buildings.get(e.type_id, {})
-	if v.get("styled", false) and r.has("styled_land") and r.styled_land != e.crown_land:
+	if v.get("styled", false) and r.get("styled_land", "") != e.crown_land:
 		var body := Models.make_footprint_model(v, e.owner, e.size.x, e.crown_land)
 		var holder: Node = r.body.get_parent()
 		holder.add_child(body)
 		holder.move_child(body, r.body.get_index())
+		# Detach the old design first, so its moving parts aren't collected below
+		# and then touched after they are freed.
+		holder.remove_child(r.body)
 		r.body.queue_free()
 		r.body = body
 		r.animated = _animated_parts(r.node)

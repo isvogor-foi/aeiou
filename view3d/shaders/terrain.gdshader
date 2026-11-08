@@ -87,7 +87,9 @@ void fragment() {
 	float broad = fbm(wp * 0.35);
 	c *= 0.78 + 0.4 * broad;
 	// Isotropic only: a direction field here drew swirls and contour-like lines.
-	float tufts = noise(wp * 7.0 + 3.0) * 0.45 + noise(wp * 17.0) * 0.35 + noise(wp * 41.0) * 0.2;
+	// Fine detail fades with distance so it never aliases into moiré lines.
+	float fine = 1.0 - smoothstep(0.03, 0.09, length(fwidth(wp)));
+	float tufts = noise(wp * 7.0 + 3.0) * 0.55 + noise(wp * 17.0) * 0.45 * mix(0.4, 1.0, fine);
 	c *= 0.84 + 0.3 * tufts;
 	// Dry, yellowed heath and dark peaty hollows.
 	float dry = smoothstep(0.55, 0.75, fbm(wp * 0.12 + 9.0));
