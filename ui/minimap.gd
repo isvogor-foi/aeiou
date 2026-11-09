@@ -76,6 +76,15 @@ func _draw() -> void:
 			draw_rect(Rect2(Vector2(e.tile) * s, Vector2(e.size) * s), col)
 	if not gv.reveal_all:
 		draw_texture_rect(gv.fog_tex, rect, false)
+	# AEIOU relics we know of: gold diamonds over the fog, outlined so they stand out.
+	for r in gv.relics():
+		var st: Dictionary = gv.relic_status(r)
+		if st.pos == null:
+			continue
+		var c: Vector2 = st.pos / GameMap.TILE * s
+		var d := 5.0
+		draw_colored_polygon(PackedVector2Array([c + Vector2(0, -d - 1.5), c + Vector2(d + 1.5, 0), c + Vector2(0, d + 1.5), c + Vector2(-d - 1.5, 0)]), Color(0.05, 0.04, 0.02))
+		draw_colored_polygon(PackedVector2Array([c + Vector2(0, -d), c + Vector2(d, 0), c + Vector2(0, d), c + Vector2(-d, 0)]), st.color if st.state != "loose" else Color(1.0, 0.82, 0.3))
 	var frame := PackedVector2Array()
 	for p in gv.view_polygon_px():
 		frame.append((p / GameMap.TILE * s).clamp(Vector2.ZERO, size))

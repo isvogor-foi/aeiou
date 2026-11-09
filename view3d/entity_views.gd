@@ -106,8 +106,10 @@ func _create(e) -> Dictionary:
 			var body := Models.make_footprint_model(table.get(e.type_id, {"procedural": "crystal"}), e.owner, e.size.x, e.crown_land if e.kind == Entity.BUILDING else "")
 			node.add_child(body)
 			r.body = body
-			# The design it was built in, so proclaiming a crown land rebuilds it.
+			# The design and age it was built in, so proclaiming a crown land or
+			# advancing an age rebuilds it.
 			r.styled_land = e.crown_land if e.kind == Entity.BUILDING else ""
+			r.built_age = _age_of(e.owner) if e.kind == Entity.BUILDING else 0
 			var box := Models._bounds(body, Transform3D.IDENTITY)
 			r.bar_height = box.end.y + 0.3
 			r.animated = _animated_parts(body)
@@ -124,6 +126,8 @@ func _create(e) -> Dictionary:
 					var flag := Flags.make(fkind, r.bar_height * 0.85 + (0.9 if big else 0.4), 0.95 if big else 0.6)
 					flag.position = Vector3(-e.size.x * 0.42, 0, e.size.y * 0.42)
 					node.add_child(flag)
+			if e.kind == Entity.RESOURCE and e.def.get("relic", false):
+				_dress_relic(r, e)
 			if e.kind == Entity.BUILDING and e.constructing:
 				var scaffold := Models.make_footprint_model({"building": "scaffold"}, e.owner, e.size.x)
 				scaffold.scale = Vector3(e.size.x * 0.95, 1.0, e.size.y * 0.95)
@@ -202,6 +206,7 @@ func _sync_flashes(now: float) -> void:
 func sync(alpha: float, delta: float) -> void:
 	var now := Time.get_ticks_msec() / 1000.0
 	_sync_flashes(now)
+	Models.team_ages = gv.world.players.map(func(p): return p.age)
 	var seen := {}
 	var cam: Camera3D = gv.camera
 	var anim_step := ANIM_STEP_CROWD if _unit_views >= CROWD else 0.0
@@ -241,6 +246,7 @@ func sync(alpha: float, delta: float) -> void:
 			Entity.RESOURCE:
 				if r.body.get_child_count() > 0 and r.body.get_child(0).has_meta("spin"):
 					r.body.rotation.y += delta * 0.6
+				_sync_relic(e, r)
 		_animate_parts(r, delta, now)
 	_unit_views = units
 	for id in views.keys():
@@ -297,16 +303,7 @@ func _sync_land_flag(e, r: Dictionary) -> void:
 	# A city is rebuilt in the design of the land it proclaims (view3d/buildings.gd).
 	var v: Dictionary = DB.visuals.buildings.get(e.type_id, {})
 	if v.get("styled", false) and r.get("styled_land", "") != e.crown_land:
-		var body := Models.make_footprint_model(v, e.owner, e.size.x, e.crown_land)
-		var holder: Node = r.body.get_parent()
-		holder.add_child(body)
-		holder.move_child(body, r.body.get_index())
-		# Detach the old design first, so its moving parts aren't collected below
-		# and then touched after they are freed.
-		holder.remove_child(r.body)
-		r.body.queue_free()
-		r.body = body
-		r.animated = _animated_parts(r.node)
+		_rebuild_body(e, r)
 	r.styled_land = e.crown_land
 	if e.crown_land == "":
 		return
@@ -316,7 +313,75 @@ func _sync_land_flag(e, r: Dictionary) -> void:
 	r.land_flag = flag
 
 
+## Relics are hard to miss: a pillar of golden light while they lie loose, and
+## their name floating over them (and over whoever carries one).
+func _dress_relic(r: Dictionary, e) -> void:
+	var beam := MeshInstance3D.new()
+	var cyl := CylinderMesh.new()
+	cyl.top_radius = 0.02
+	cyl.bottom_radius = 0.16
+	cyl.height = 7.0
+	cyl.radial_segments = 12
+	cyl.cap_top = false
+	cyl.cap_bottom = false
+	beam.mesh = cyl
+	var mat := StandardMaterial3D.new()
+	mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	mat.blend_mode = BaseMaterial3D.BLEND_MODE_ADD
+	mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	mat.albedo_color = Color(1.0, 0.78, 0.3, 0.35)
+	beam.material_override = mat
+	beam.position.y = 3.5
+	beam.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	r.node.add_child(beam)
+	r.relic_beam = beam
+	var label := Label3D.new()
+	label.text = e.def.name
+	label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	label.no_depth_test = true
+	label.fixed_size = true
+	label.pixel_size = 0.0011
+	label.font_size = 26
+	label.outline_size = 8
+	label.modulate = Color(1.0, 0.86, 0.45)
+	label.outline_modulate = Color(0.08, 0.05, 0.02)
+	label.position.y = 1.1
+	r.node.add_child(label)
+	r.relic_label = label
+
+
+func _sync_relic(e, r: Dictionary) -> void:
+	if r.has("relic_beam"):
+		# The pillar marks it only while it lies loose; carried, its name rides along higher.
+		r.relic_beam.visible = e.carried_by < 0
+		r.relic_label.position.y = 2.1 if e.carried_by >= 0 else 1.1
+
+
+func _age_of(owner: int) -> int:
+	return gv.world.players[owner].age if owner >= 0 and owner < gv.world.players.size() else 0
+
+
+## Swaps a building's model for a fresh one (new crown-land design or new age).
+func _rebuild_body(e, r: Dictionary) -> void:
+	var v: Dictionary = DB.visuals.buildings.get(e.type_id, {})
+	var body := Models.make_footprint_model(v, e.owner, e.size.x, e.crown_land)
+	var holder: Node = r.body.get_parent()
+	holder.add_child(body)
+	holder.move_child(body, r.body.get_index())
+	# Detach the old model first, so its moving parts aren't collected below
+	# and then touched after they are freed.
+	holder.remove_child(r.body)
+	r.body.queue_free()
+	r.body = body
+	r.animated = _animated_parts(r.node)
+	r.built_age = _age_of(e.owner)
+
+
 func _sync_building(e, r: Dictionary) -> void:
+	# Buildings are dressed for their owner's age: advancing rebuilds them all.
+	if r.get("built_age", 0) != _age_of(e.owner) and DB.visuals.buildings.get(e.type_id, {}).has("building"):
+		_rebuild_body(e, r)
 	_sync_land_flag(e, r)
 	if e.constructing:
 		r.body.scale = Vector3(1.0, maxf(0.05, e.build_progress), 1.0)

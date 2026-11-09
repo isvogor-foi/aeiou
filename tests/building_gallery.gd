@@ -1,6 +1,7 @@
 extends SceneTree
 ## Visual check of every building: spawns them in rows on a cleared map and saves
-## close-ups. tools/godot --path . -s tests/building_gallery.gd -- <out_dir>
+## close-ups. tools/godot --path . -s tests/building_gallery.gd -- <out_dir> [ages]
+## ("ages" shoots the same rows dressed for each of the six ages instead).
 
 const GameConfig = preload("res://sim/game_config.gd")
 const DB = preload("res://sim/db.gd")
@@ -69,6 +70,17 @@ func _run() -> void:
 	var h = w.spawn_building("residenz", w.rebels, Vector2i(x, y0 + 20), true)
 	for i in 3:
 		await process_frame
+	if OS.get_cmdline_user_args().size() > 1 and OS.get_cmdline_user_args()[1] == "ages":
+		# The same buildings dressed for each age.
+		for age in range(1, 7):
+			for p in w.players:
+				p.age = age
+			for i in 3:
+				await process_frame
+			await _shot(gv, out + "/age%d_mon.png" % age, Vector2(18, y0 + 2), 12.0)
+			await _shot(gv, out + "/age%d_cov.png" % age, Vector2(18, y0 + 12), 12.0)
+		quit()
+		return
 	await _shot(gv, out + "/g_lands_a.png", Vector2(18, y0 + 22), 13.0)
 	await _shot(gv, out + "/g_lands_b.png", Vector2(36, y0 + 22), 13.0)
 	await _shot(gv, out + "/g_mon_a.png", Vector2(18, y0 + 2), 14.0)

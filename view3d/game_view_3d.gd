@@ -849,6 +849,44 @@ func _confirm_attack(target) -> void:
 	hud.flash("Attack: " + (target.title if target.title != "" else String(target.def.get("name", target.type_id))), 1.2)
 
 
+## Where an AEIOU relic is, as far as this player can tell:
+## {state: "hidden" (not yet found) / "loose" / "carried" / "stored", owner, where,
+##  pos (Vector2, or null when we don't know where), color (frame colour)}.
+func relic_status(r) -> Dictionary:
+	var gold := Color(1.0, 0.8, 0.3)
+	if r.inside >= 0:
+		var holder = world.get_entity(r.inside)
+		if holder and holder.alive:
+			var name: String = holder.title if holder.title != "" else String(holder.def.get("name", holder.type_id))
+			var mine: bool = holder.owner == me
+			var known: bool = mine or reveal_all or world.tile_explored(me, holder.tile)
+			return {"state": "stored", "owner": holder.owner, "where": ("kept in %s" % name) if known else "kept in an enemy city",
+					"pos": holder.pos if known else null, "color": gold if mine else world.players[holder.owner].color}
+	if r.carried_by >= 0:
+		var u = world.get_entity(r.carried_by)
+		if u and u.alive:
+			var mine: bool = u.owner == me
+			var seen: bool = mine or reveal_all or world.is_visible_to(me, u)
+			return {"state": "carried", "owner": u.owner,
+					"where": "carried by your %s" % u.def.get("name", u.type_id) if mine else "carried off by the enemy",
+					"pos": u.pos if seen else null, "color": gold.lightened(0.3) if mine else world.players[u.owner].color}
+	var found: bool = reveal_all or world.tile_explored(me, GameMap.to_tile(r.pos))
+	if not found:
+		return {"state": "hidden", "owner": -1, "where": "somewhere in the wilds - scout for it", "pos": null, "color": Color(0.45, 0.45, 0.45)}
+	return {"state": "loose", "owner": -1, "where": "lying unclaimed - send a soldier to pick it up", "pos": r.pos, "color": Color(0.95, 0.95, 0.9)}
+
+
+## The five relics in a fixed order (crown, lance, bowl, horn, orb).
+func relics() -> Array:
+	var out: Array = []
+	for id in ["relic_crown", "relic_lance", "relic_bowl", "relic_horn", "relic_orb"]:
+		for e in world.entities.values():
+			if e.alive and e.type_id == id:
+				out.append(e)
+				break
+	return out
+
+
 ## What the cursor would act on: [cursor name, hint text, entity for the ring, ring colour].
 func _cursor_state() -> Array:
 	var t = entity_at_mouse()

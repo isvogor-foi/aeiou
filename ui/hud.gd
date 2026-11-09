@@ -61,6 +61,9 @@ var _train_label: Label
 var _train_bar: ProgressBar
 var _queue_tiles: Array = []
 var _formation_bar: HBoxContainer
+var _relic_bar: HBoxContainer
+var _relic_buttons := {}
+var _relic_refresh := 0.0
 var _formation_buttons := {}
 var _cursor_hint: Label
 var _cheat_menu: PopupMenu
@@ -85,6 +88,7 @@ func _ready() -> void:
 	add_child(icons)
 	_build_resource_bar()
 	_build_status_bar()
+	_build_relic_bar()
 	_build_bottom_left()
 	_build_minimap()
 	_flash = _floating_label(17)
@@ -287,6 +291,77 @@ func _build_resource_bar() -> void:
 	var pop := _chip(HudIcons.get_icon("pop"), "Population: used / housing")
 	bar.add_child(pop[0])
 	_pop_label = pop[1]
+
+
+## The AEIOU relic tracker under the status bar: one framed icon per relic,
+## coloured by who holds it; hover for the story and where it is, click to look.
+func _build_relic_bar() -> void:
+	_relic_bar = HBoxContainer.new()
+	_relic_bar.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
+	_relic_bar.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	_relic_bar.offset_right = -MARGIN
+	_relic_bar.offset_left = -MARGIN
+	_relic_bar.offset_top = 46
+	_relic_bar.add_theme_constant_override("separation", 4)
+	add_child(_relic_bar)
+	var title := Label.new()
+	title.text = "A.E.I.O.U."
+	title.add_theme_font_size_override("font_size", 12)
+	title.add_theme_color_override("font_color", Color(1.0, 0.85, 0.45))
+	title.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+	title.add_theme_constant_override("outline_size", 4)
+	title.tooltip_text = "The five relics of the House of Austria. Store all five in your cities and hold them to win."
+	title.mouse_filter = Control.MOUSE_FILTER_PASS
+	title.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	_relic_bar.add_child(title)
+	for id in ["relic_crown", "relic_lance", "relic_bowl", "relic_horn", "relic_orb"]:
+		var b := Button.new()
+		b.icon = HudIcons.get_icon(id)
+		b.expand_icon = true
+		b.custom_minimum_size = Vector2(32, 32)
+		b.focus_mode = Control.FOCUS_NONE
+		b.pressed.connect(func(): _look_at_relic(id))
+		_relic_bar.add_child(b)
+		_relic_buttons[id] = b
+
+
+func _look_at_relic(id: String) -> void:
+	for r in gv.relics():
+		if r.type_id == id:
+			var st: Dictionary = gv.relic_status(r)
+			if st.pos != null:
+				gv.center_on(st.pos)
+			else:
+				flash("%s: %s" % [r.def.name, st.where], 2.5)
+
+
+func _refresh_relics() -> void:
+	var v: Dictionary = gv.world.rules.get("victory", {})
+	var on: bool = v.get("enabled", {}).get("relics", true)
+	_relic_bar.visible = on
+	if not on:
+		return
+	var by_id := {}
+	for r in gv.relics():
+		by_id[r.type_id] = r
+	for id in _relic_buttons:
+		var b: Button = _relic_buttons[id]
+		var d: Dictionary = DB.resources[id]
+		var col := Color(0.3, 0.3, 0.3)
+		var status := "Not yet appeared: the relics surface when someone reaches Age %d." % int(v.get("relics_spawn_age", 5))
+		if by_id.has(id):
+			var st: Dictionary = gv.relic_status(by_id[id])
+			col = st.color
+			status = st.where.substr(0, 1).to_upper() + st.where.substr(1) + "."
+		b.modulate = Color(1, 1, 1, 0.45) if not by_id.has(id) or gv.relic_status(by_id[id]).state == "hidden" else Color.WHITE
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.08, 0.07, 0.06, 0.8)
+		sb.border_color = col
+		sb.set_border_width_all(2)
+		sb.set_corner_radius_all(6)
+		for state in ["normal", "hover", "pressed"]:
+			b.add_theme_stylebox_override(state, sb)
+		b.tooltip_text = "%s\n%s\n\n%s" % [d.name, d.get("description", ""), status]
 
 
 func _build_status_bar() -> void:
@@ -579,6 +654,10 @@ func show_banner(title: String, sub: String) -> void:
 
 func refresh(delta: float) -> void:
 	var p = gv.world.players[gv.me]
+	_relic_refresh -= delta
+	if _relic_refresh <= 0.0:
+		_relic_refresh = 0.4
+		_refresh_relics()
 	for k in _res_labels:
 		_res_labels[k].text = str(int(p.res[k]))
 		_res_income[k].text = "+%.1f" % p.income[k]

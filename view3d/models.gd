@@ -15,6 +15,9 @@ static var _retextured := {}
 static var team_names: Array = []
 static var team_colors: Array = []
 static var team_factions: Array = []
+## Each player's current age, so buildings are dressed for their era (kept up to
+## date by EntityViews.sync).
+static var team_ages: Array = []
 
 
 static func scene(path: String) -> PackedScene:
@@ -200,7 +203,8 @@ static func make_footprint_model(v: Dictionary, owner: int, tiles: int, style :=
 		var st: String = style
 		if st == "":
 			st = DB.factions.get(faction, {}).get("city_style", "") if v.get("styled", false) else ""
-		root.add_child(Buildings.build(v.building, faction, team_color(owner), st))
+		var age: int = team_ages[owner] if owner >= 0 and owner < team_ages.size() else 0
+		root.add_child(Buildings.build(v.building, faction, team_color(owner), st, age))
 		return root
 	if v.get("procedural", "") == "crystal":
 		root.add_child(_crystal(DB.color_of(v.get("color", [0.5, 0.8, 1.0]))))

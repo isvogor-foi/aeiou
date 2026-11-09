@@ -115,6 +115,39 @@ static func _shapes(name: String) -> Array:
 					["poly", [Vector2(0.58, 0.10), Vector2(0.32, 0.48), Vector2(0.44, 0.48)], Color(0.85, 0.97, 1.0)]]
 		"deploy":
 			return [["box", 0.5, 0.62, 0.36, 0.16, wood], ["circle", 0.28, 0.80, 0.10, Color(0.2, 0.2, 0.2)], ["circle", 0.72, 0.80, 0.10, Color(0.2, 0.2, 0.2)]]
+		# The five AEIOU relics.
+		"relic_crown":
+			# Rudolf II's crown: a gold circlet, an arch over it, a red jewel and a cross.
+			return [["box", 0.5, 0.72, 0.32, 0.1, dark_gold], ["box", 0.5, 0.7, 0.3, 0.07, gold],
+					["poly", [Vector2(0.2, 0.62), Vector2(0.22, 0.4), Vector2(0.35, 0.5), Vector2(0.5, 0.3), Vector2(0.65, 0.5), Vector2(0.78, 0.4), Vector2(0.8, 0.62)], gold],
+					["circle", 0.5, 0.3, 0.09, Color(0.75, 0.12, 0.15)], ["box", 0.5, 0.14, 0.03, 0.08, gold], ["box", 0.5, 0.13, 0.07, 0.025, gold],
+					["circle", 0.32, 0.7, 0.035, Color(0.2, 0.45, 0.8)], ["circle", 0.68, 0.7, 0.035, Color(0.2, 0.45, 0.8)]]
+		"relic_lance":
+			# The Holy Lance: an iron blade with a gold sleeve, on a short shaft.
+			return [["capsule", 0.22, 0.92, 0.55, 0.42, 0.04, Color(0.4, 0.28, 0.16)],
+					["poly", [Vector2(0.5, 0.48), Vector2(0.62, 0.18), Vector2(0.84, 0.06), Vector2(0.74, 0.3), Vector2(0.56, 0.52)], steel],
+					["capsule", 0.5, 0.5, 0.6, 0.38, 0.06, gold]]
+		"relic_bowl":
+			# The Agate Bowl: banded brown stone, a wide shallow cup on a foot.
+			var agate := Color(0.72, 0.42, 0.22)
+			return [["circle", 0.5, 0.38, 0.38, agate], ["box", 0.5, 0.2, 0.42, 0.2, Color(0, 0, 0, 0)],
+					["box", 0.5, 0.42, 0.37, 0.025, Color(0.88, 0.62, 0.38)], ["box", 0.5, 0.52, 0.33, 0.025, Color(0.5, 0.26, 0.14)],
+					["box", 0.5, 0.42, 0.38, 0.04, Color(0.86, 0.66, 0.28)], ["box", 0.5, 0.8, 0.06, 0.06, agate], ["box", 0.5, 0.88, 0.18, 0.04, gold]]
+		"relic_horn":
+			# The 'Unicorn Horn': a long, twisted narwhal tusk with a gold cap.
+			var ivory := Color(0.93, 0.9, 0.8)
+			var shapes := [["poly", [Vector2(0.14, 0.9), Vector2(0.26, 0.96), Vector2(0.88, 0.08)], ivory]]
+			for i in 5:
+				var t := 0.15 + i * 0.16
+				var p0 := Vector2(0.2, 0.93).lerp(Vector2(0.88, 0.08), t)
+				shapes.append(["capsule", p0.x - 0.05, p0.y - 0.02, p0.x + 0.03, p0.y + 0.03, 0.012, Color(0.7, 0.66, 0.56)])
+			shapes.append(["capsule", 0.16, 0.9, 0.26, 0.95, 0.06, gold])
+			return shapes
+		"relic_orb":
+			# The Imperial Orb: a gold globe with a jewelled band and a cross.
+			return [["circle", 0.5, 0.6, 0.3, dark_gold], ["circle", 0.47, 0.57, 0.26, gold], ["box", 0.5, 0.6, 0.3, 0.035, dark_gold],
+					["box", 0.5, 0.45, 0.035, 0.15, dark_gold], ["box", 0.5, 0.18, 0.035, 0.12, gold], ["box", 0.5, 0.17, 0.09, 0.03, gold],
+					["circle", 0.5, 0.6, 0.05, Color(0.75, 0.12, 0.15)]]
 		# Mouse cursors: a dark outline under each shape so they read on any ground.
 		"cursor_sword":
 			var ink := Color(0.05, 0.04, 0.04)

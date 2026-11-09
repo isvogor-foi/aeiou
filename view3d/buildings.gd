@@ -48,10 +48,14 @@ const STYLES := {
 
 
 ## `style` is a crown land / pact / "hungary", or "" for the faction's default.
-static func build(kind: String, faction: String, team: Color, style := "") -> Node3D:
-	var key := "%s/%s/%s/%s" % [kind, faction, style, team.to_html()]
+## `age` (1-6) dresses it for its era (see _age_palette and _age_dress); 0 = undated.
+static func build(kind: String, faction: String, team: Color, style := "", age := 0) -> Node3D:
+	var key := "%s/%s/%s/%s/%d" % [kind, faction, style, team.to_html(), age]
 	if not _cache.has(key):
-		_cache[key] = Gear._bake(_raw(kind, faction, team, style))
+		var raw := _raw(kind, faction, team, style, age)
+		if age > 0 and kind != "scaffold":
+			_age_dress(raw, palette(faction, team, style, age), age)
+		_cache[key] = Gear._bake(raw)
 	var src: Dictionary = _cache[key]
 	var root := Node3D.new()
 	if src.mesh:
@@ -63,16 +67,39 @@ static func build(kind: String, faction: String, team: Color, style := "") -> No
 	return root
 
 
-static func palette(faction: String, team: Color, style: String) -> Dictionary:
+static func palette(faction: String, team: Color, style: String, age := 0) -> Dictionary:
 	var p: Dictionary = (COVENANT if faction == "covenant" else MONARCHY).duplicate()
 	p.merge(STYLES.get(style, {}), true)
 	p.team = team
 	p.style = style
+	if age > 0:
+		_age_palette(p, age)
 	return p
 
 
-static func _raw(kind: String, faction: String, team: Color, style: String) -> Node3D:
-	var P := palette(faction, team, style)
+## Each age shifts the materials: timber, shingle and candlelight in the first,
+## brass and verdigris from the third, bright gaslight then Aether-lit windows
+## at the end. (The Covenant goes from rough stone to bone-and-iron the same way.)
+static func _age_palette(p: Dictionary, age: int) -> void:
+	var wood := Color(0.36, 0.26, 0.18)
+	var old := clampf((3 - age) / 2.0, 0.0, 1.0)  # 1 in Age 1, 0.5 in Age 2, 0 after
+	if p.necro:
+		p.trim = p.trim.lerp(p.wall2, old * 0.7)
+		p.roof = p.roof.lerp(Color(0.2, 0.18, 0.17), old * 0.5)
+	else:
+		p.roof = p.roof.lerp(Color(0.3, 0.25, 0.21), old * 0.75)
+		p.trim = p.trim.lerp(wood, old * 0.8)
+		p.wall = p.wall.lerp(p.wall.darkened(0.12), old)
+	if age <= 1:
+		p.window = p.window.lerp(Color(0.85, 0.5, 0.22), 0.5)
+	elif age >= 6:
+		p.window = p.window.lerp(p.glow, 0.45)
+	elif age >= 5:
+		p.window = p.window.lightened(0.15)
+
+
+static func _raw(kind: String, faction: String, team: Color, style: String, age := 0) -> Node3D:
+	var P := palette(faction, team, style, age)
 	var r := Node3D.new()
 	var necro: bool = P.necro
 	match kind:
@@ -940,3 +967,140 @@ static func _scaffold(r: Node3D, P: Dictionary, h: float) -> void:
 			beam(r, Vector3(-0.45, y, s), Vector3(0.45, y, s), 0.03, mat)
 			beam(r, Vector3(s, y, -0.45), Vector3(s, y, 0.45), 0.03, mat)
 		box(r, Vector3(0.9, 0.03, 0.25), Vector3(0, y, 0.45), m(Color(0.45, 0.32, 0.2)))
+
+
+# --- Age dress -------------------------------------------------------------------------
+
+## Mesh bounds of every part under `n`, in `n`'s space.
+static func _part_bounds(n: Node, xf: Transform3D, out: Array) -> void:
+	for c in n.get_children():
+		if not c is Node3D:
+			continue
+		var here: Transform3D = xf * c.transform
+		if c is MeshInstance3D and c.mesh:
+			out.append(here * c.mesh.get_aabb())
+		_part_bounds(c, here, out)
+
+
+## What each age adds to a building, cumulatively: log piles and crates (Ages 1-2),
+## banners (2+), lamp posts (3+), steam pipes (4+), a gilded finial (5+) and a
+## Tesla mast with a glowing Aether conduit along the front (6). The Covenant gets
+## bone piles, tattered banners, skull lanterns, chains, bone spikes and soul-fire.
+static func _age_dress(r: Node3D, P: Dictionary, age: int) -> void:
+	var parts: Array = []
+	_part_bounds(r, Transform3D.IDENTITY, parts)
+	if parts.is_empty():
+		return
+	var box: AABB = parts[0]
+	var top: AABB = parts[0]
+	for b in parts:
+		box = box.merge(b)
+		if b.end.y > top.end.y:
+			top = b
+	var necro: bool = P.necro
+	var c := box.get_center()
+	var hx := box.size.x * 0.5
+	var hz := box.size.z * 0.5
+	var front := box.end.z
+	var h := box.size.y
+	var iron := m(Color(0.2, 0.2, 0.22), 0.7, 0.45)
+	var brass := m(Color(0.86, 0.66, 0.28), 0.75, 0.35)
+	var bone := m(Color(0.84, 0.81, 0.71), 0.0, 0.6)
+	var light_c: Color = P.glow if necro or age >= 5 else Color(1.0, 0.72, 0.35)
+	if age <= 2:
+		# Frontier clutter: stacked logs and crates (bones and coffins for the dead).
+		var side := Vector3(c.x + hx + 0.18, 0, c.z + hz * 0.4)
+		if necro:
+			for i in 4:
+				_lim(r, side + Vector3(-0.05 + i * 0.04, 0.05 + (i % 2) * 0.05, -0.1), side + Vector3(-0.05 + i * 0.04, 0.05 + (i % 2) * 0.05, 0.12), 0.025, bone)
+			box_(r, side + Vector3(0, 0.07, -0.35), Vector3(0.14, 0.12, 0.32), m(Color(0.2, 0.13, 0.1)))
+		else:
+			for i in 3:
+				_lim(r, side + Vector3(-0.08 + i * 0.08, 0.05, -0.18), side + Vector3(-0.08 + i * 0.08, 0.05, 0.18), 0.045, m(Color(0.42, 0.28, 0.16)))
+			_lim(r, side + Vector3(-0.04, 0.13, -0.16), side + Vector3(-0.04, 0.13, 0.16), 0.045, m(Color(0.42, 0.28, 0.16)))
+			box_(r, side + Vector3(0, 0.1, -0.4), Vector3(0.2, 0.2, 0.2), m(Color(0.5, 0.36, 0.2)))
+	if age >= 2:
+		# Banners on the front: the team colour (black rags with a bone skull for the dead).
+		for x in [-1.0, 1.0]:
+			var at := Vector3(c.x + x * hx * 0.55, minf(h * 0.82, 2.2), front + 0.03)
+			_lim(r, at + Vector3(-0.1, 0.02, 0), at + Vector3(0.1, 0.02, 0), 0.012, iron if necro else brass)
+			box_(r, at + Vector3(0, -0.24, 0), Vector3(0.17, 0.46, 0.015), m(Color(0.1, 0.09, 0.1) if necro else P.team))
+			if necro:
+				Gear.part(r, Gear.sphere(0.035), bone, at + Vector3(0, -0.2, 0.012))
+			else:
+				box_(r, at + Vector3(0, -0.24, 0.009), Vector3(0.06, 0.06, 0.004), brass)
+	if age >= 3:
+		# Lamp posts at the front corners: gaslight, later Aether; skull lanterns for the dead.
+		for x in [-1.0, 1.0]:
+			var post := Vector3(c.x + x * (hx + 0.12), 0, front + 0.12)
+			_lim(r, post, post + Vector3(0, 0.7, 0), 0.022, iron)
+			if necro:
+				Gear.part(r, Gear.sphere(0.06), bone, post + Vector3(0, 0.76, 0))
+				Gear.part(r, Gear.sphere(0.03), glow(light_c, 2.5), post + Vector3(0, 0.76, 0.04))
+			else:
+				_lim(r, post + Vector3(0, 0.68, 0), post + Vector3(0, 0.84, 0), 0.05, glow(light_c, 2.2), 0.04)
+				_lim(r, post + Vector3(0, 0.84, 0), post + Vector3(0, 0.88, 0), 0.06, brass, 0.0)
+	if age >= 4:
+		# Steam pipes climbing a side wall (iron chains with green vials for the dead).
+		var wall_x := c.x - hx - 0.04
+		var pz := c.z + hz * 0.3
+		var pipe := iron if necro else m(Color(0.78, 0.42, 0.25), 0.7, 0.4)
+		_lim(r, Vector3(wall_x, 0.0, pz), Vector3(wall_x, minf(h * 0.7, 1.6), pz), 0.035, pipe)
+		_lim(r, Vector3(wall_x, minf(h * 0.7, 1.6), pz), Vector3(wall_x, minf(h * 0.7, 1.6), pz - hz * 0.8), 0.035, pipe)
+		for y in [0.4, 0.9]:
+			if y < h * 0.7:
+				Gear.part(r, Gear.torus(0.03, 0.06), glow(P.glow, 1.6) if necro else brass, Vector3(wall_x - 0.02, y, pz), Vector3(0, 0, PI / 2))
+	if age >= 5:
+		# A gilded finial (or a crown of bone spikes) on the highest point.
+		var peak := Vector3(top.get_center().x, top.end.y, top.get_center().z)
+		if necro:
+			for i in 3:
+				var a := i * TAU / 3.0
+				_lim(r, peak + Vector3(cos(a) * 0.05, -0.02, sin(a) * 0.05), peak + Vector3(cos(a) * 0.09, 0.22, sin(a) * 0.09), 0.025, bone, 0.0)
+		else:
+			Gear.part(r, Gear.sphere(0.07), brass, peak + Vector3(0, 0.05, 0))
+			_lim(r, peak + Vector3(0, 0.1, 0), peak + Vector3(0, 0.3, 0), 0.015, brass, 0.0)
+	if age >= 6:
+		# The Aether age: a Tesla mast with a crackling orb, and a glowing conduit
+		# round the base (soul-fire for the Covenant).
+		# The mast stands on a roof: the highest part apart from the peak (or
+		# beside the peak's finial on a single-roofed building).
+		var seat: AABB = top
+		var seat_found := false
+		for pb in parts:
+			var apart: bool = Vector2(pb.get_center().x, pb.get_center().z).distance_to(Vector2(top.get_center().x, top.get_center().z)) > 0.3
+			if apart and pb.size.x * pb.size.z > 0.04 and (not seat_found or pb.end.y > seat.end.y):
+				seat = pb
+				seat_found = true
+		var mast := Vector3(seat.get_center().x, seat.end.y, seat.get_center().z)
+		if not seat_found:
+			mast += Vector3(clampf(seat.size.x * 0.3, 0.0, 0.25), -0.02, 0)
+		_lim(r, mast, mast + Vector3(0, 0.75, 0), 0.025, iron)
+		for y in [0.25, 0.45, 0.6]:
+			Gear.part(r, Gear.torus(0.04, 0.07 - y * 0.04), brass if not necro else bone, mast + Vector3(0, y, 0))
+		Gear.part(r, Gear.sphere(0.07), glow(P.glow, 3.0), mast + Vector3(0, 0.82, 0))
+		# A glowing Aether (or soul) conduit along the front of the base, capped in brass.
+		var span := box.size.x * 0.6
+		_lim(r, Vector3(c.x - span * 0.5, 0.06, front + 0.05), Vector3(c.x + span * 0.5, 0.06, front + 0.05), 0.03, glow(P.glow, 1.6))
+		for x in [-1.0, 1.0]:
+			Gear.part(r, Gear.cyl(0.045, 0.07), brass if not necro else iron, Vector3(c.x + x * span * 0.5, 0.06, front + 0.05), Vector3(0, 0, PI / 2))
+
+
+## Height of the roof under point `p` (x, z): the top of the highest part covering it.
+static func _roof_at(parts: Array, p: Vector2) -> float:
+	var y := 0.0
+	for b in parts:
+		if p.x >= b.position.x and p.x <= b.end.x and p.y >= b.position.z and p.y <= b.end.z:
+			y = maxf(y, b.end.y)
+	return y
+
+
+static func box_(r: Node3D, center: Vector3, size: Vector3, mat: Material) -> void:
+	Gear.part(r, Gear.box(size), mat, center)
+
+
+static func _lim(r: Node3D, a: Vector3, b: Vector3, rad: float, mat: Material, rad2 := -1.0) -> void:
+	var mi := Gear.part(r, Gear.cyl(rad, a.distance_to(b), rad2), mat, (a + b) * 0.5)
+	var dir := (b - a).normalized()
+	if absf(dir.dot(Vector3.UP)) < 0.999:
+		mi.basis = Basis(Quaternion(Vector3.UP, dir))
