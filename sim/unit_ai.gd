@@ -140,7 +140,11 @@ static func _move(w, e, o: Dictionary) -> bool:
 			return false
 		o.started = true
 		_path_to(w, e, GameMap.to_tile(o.pos), o.pos)
-	return _follow(e)
+	var done := _follow(e)
+	if done and o.has("face"):
+		# Formations: turn to face the way the group was marching.
+		e.facing = o.face
+	return done
 
 
 static func _attack(w, e, o: Dictionary) -> bool:

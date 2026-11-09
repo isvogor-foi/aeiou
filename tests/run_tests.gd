@@ -26,6 +26,7 @@ func _initialize() -> void:
 		"test_train_unit_and_pop",
 		"test_place_and_construct",
 		"test_fast_cheats",
+		"test_formations",
 		"test_city_capture_and_conquest",
 		"test_city_holds_while_defended",
 		"test_territory_and_placement",
@@ -245,6 +246,42 @@ func test_place_and_construct() -> void:
 	w.issue({"type": "place", "player": 0, "ids": [workers[0].id, workers[1].id], "building": "dwelling", "tile": spot})
 	_run(w, 20)
 	check(w.players[0].pop_cap == 25, "dwelling adds pop when done (cap %d)" % w.players[0].pop_cap)
+
+
+## Formations: each layout gives every soldier its own spot, a line is wider than
+## deep across the march, a column deeper than wide, and the troops face the march.
+func test_formations() -> void:
+	var w := _world()
+	_clear_enemy_army(w)
+	var city := _city(w, 0)
+	var start: Vector2 = city.pos + Vector2(0, 4 * GameMap.TILE)
+	var goal: Vector2 = start + Vector2(10 * GameMap.TILE, 0)
+	for kind in World.FORMATIONS:
+		var ids: Array = []
+		var units: Array = []
+		for i in 9:
+			var u = w.spawn_unit("musketeer" if i % 2 else "grenadier", 0, start + Vector2(i % 3, i / 3) * GameMap.TILE)
+			units.append(u)
+			ids.append(u.id)
+		var plan: Dictionary = w.formation_plan(units, goal, kind)
+		var distinct := {}
+		for p in plan.spots:
+			distinct[Vector2i(p / 4.0)] = true
+		check(distinct.size() == 9, "%s: every soldier gets its own spot (%d)" % [kind, distinct.size()])
+		var xs: Array = plan.spots.map(func(p): return p.x)
+		var ys: Array = plan.spots.map(func(p): return p.y)
+		var along: float = xs.max() - xs.min()
+		var across: float = ys.max() - ys.min()
+		if kind == "line":
+			check(across > along, "line: wider across the march than deep (%.0f vs %.0f)" % [across, along])
+		if kind == "column":
+			check(along > across, "column: deeper along the march than wide (%.0f vs %.0f)" % [along, across])
+		w.issue({"type": "move", "player": 0, "ids": ids, "pos": goal, "formation": kind})
+		_run(w, 25)
+		var facing_ok := units.all(func(u): return u.facing.dot(Vector2.RIGHT) > 0.9)
+		check(facing_ok, "%s: troops face the march on arrival" % kind)
+		for u in units:
+			w.kill(u)
 
 
 ## Cheats: fast building and training, fast research and ages.

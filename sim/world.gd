@@ -1532,9 +1532,15 @@ func issue(cmd: Dictionary) -> String:
 	match cmd.type:
 		"move", "attack_move":
 			var units := _own_units(pid, cmd.ids)
-			var spots := _formation(units.size(), cmd.pos, units[0].domain() if not units.is_empty() else "ground")
-			for i in units.size():
-				_give(units[i], {"type": cmd.type, "pos": spots[i]}, queue)
+			var kind := String(cmd.get("formation", ""))
+			if kind != "" and units.size() > 1 and units[0].domain() == "ground":
+				var plan := formation_plan(units, cmd.pos, kind)
+				for i in units.size():
+					_give(units[i], {"type": cmd.type, "pos": plan.spots[i], "face": plan.face}, queue)
+			else:
+				var spots := _formation(units.size(), cmd.pos, units[0].domain() if not units.is_empty() else "ground")
+				for i in units.size():
+					_give(units[i], {"type": cmd.type, "pos": spots[i]}, queue)
 		"attack":
 			var target := get_entity(cmd.target)
 			if target == null or not target.alive:
@@ -1891,6 +1897,109 @@ func _give(u: Entity, order: Dictionary, queue: bool) -> void:
 		u.orders.clear()
 		UnitAI.reset_path(u)
 	u.orders.append(order)
+
+
+const FORMATIONS := ["line", "column", "square", "wedge", "loose"]
+
+
+## A formation for `units` around `target`, facing the way the group travels:
+## {spots: [Vector2] (one per unit, same order), face: Vector2}. Melee fill the
+## front rows and ranged the back; within a row units keep their left-to-right
+## order so their paths don't cross.
+func formation_plan(units: Array, target: Vector2, kind: String) -> Dictionary:
+	var n := units.size()
+	var c := Vector2.ZERO
+	for u in units:
+		c += u.pos
+	c /= maxf(1.0, n)
+	var face := target - c
+	face = face.normalized() if face.length() > TILE * 0.5 else Vector2.DOWN
+	var right := Vector2(-face.y, face.x)
+	var gap := TILE * (1.7 if kind == "loose" else 1.0)
+	# Slots in formation space: x across (right), y back from the front.
+	var slots: Array = []
+	match kind:
+		"column":
+			var cols := 2 if n <= 10 else 3
+			for i in n:
+				slots.append(Vector2(i % cols - (mini(cols, n) - 1) * 0.5, i / cols))
+		"square":
+			var side := 2
+			while 4 * (side - 1) < n:
+				side += 1
+			var ring: Array = []
+			for i in side:
+				ring.append(Vector2(i, 0))
+			for i in range(1, side):
+				ring.append(Vector2(side - 1, i))
+			for i in range(side - 2, -1, -1):
+				ring.append(Vector2(i, side - 1))
+			for i in range(side - 2, 0, -1):
+				ring.append(Vector2(0, i))
+			for i in n:
+				slots.append(ring[i] - Vector2((side - 1) * 0.5, 0))
+		"wedge":
+			var row := 0
+			while slots.size() < n:
+				for j in row + 1:
+					if slots.size() < n:
+						slots.append(Vector2(j - row * 0.5, row))
+				row += 1
+		_:
+			# Line (wide and shallow) or loose (a spread-out grid).
+			var cols := clampi(ceili(sqrt(n * (4.0 if kind == "line" else 1.5))), 1, n)
+			var rows := ceili(float(n) / cols)
+			for r in rows:
+				var in_row := mini(cols, n - r * cols)
+				for j in in_row:
+					slots.append(Vector2(j - (in_row - 1) * 0.5, r))
+	var depth := 0.0
+	for s in slots:
+		depth = maxf(depth, s.y)
+	# Group slots by row, front first; units by reach, melee first.
+	var by_row := {}
+	for i in slots.size():
+		var key := snappedf(slots[i].y, 0.01)
+		if not by_row.has(key):
+			by_row[key] = []
+		by_row[key].append(i)
+	var rows_sorted: Array = by_row.keys()
+	rows_sorted.sort()
+	var order := units.duplicate()
+	order.sort_custom(func(a, b): return float(a.def.get("range", 1.0)) < float(b.def.get("range", 1.0)))
+	var spots: Array = []
+	spots.resize(n)
+	var used := {}
+	var next := 0
+	for key in rows_sorted:
+		var row_slots: Array = by_row[key]
+		row_slots.sort_custom(func(a, b): return slots[a].x < slots[b].x)
+		var row_units: Array = order.slice(next, next + row_slots.size())
+		next += row_slots.size()
+		row_units.sort_custom(func(a, b): return (a.pos - c).dot(right) < (b.pos - c).dot(right))
+		for k in row_units.size():
+			var s: Vector2 = slots[row_slots[k]]
+			var p := target + right * s.x * gap - face * (s.y - depth * 0.5) * gap
+			var t := GameMap.to_tile(p)
+			if not map.in_bounds(t) or not map.is_passable(t, "ground") or used.has(t):
+				# Blocked (a building, water) or taken: the nearest free tile instead.
+				t = _free_tile_near(t if map.in_bounds(t) else GameMap.to_tile(target), used)
+				p = GameMap.tile_center(t)
+			used[t] = true
+			spots[units.find(row_units[k])] = p
+	return {"spots": spots, "face": face}
+
+
+func _free_tile_near(t: Vector2i, used: Dictionary) -> Vector2i:
+	for r in range(0, 8):
+		for dy in range(-r, r + 1):
+			for dx in range(-r, r + 1):
+				if maxi(absi(dx), absi(dy)) != r:
+					continue
+				var c := t + Vector2i(dx, dy)
+				if map.in_bounds(c) and map.is_passable(c, "ground") and not used.has(c):
+					return c
+	return t
 
 
 ## Destination points for a group move: the target, then nearby walkable tiles.

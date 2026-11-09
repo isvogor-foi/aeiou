@@ -6,6 +6,7 @@ extends CanvasLayer
 
 const DB = preload("res://sim/db.gd")
 const Entity = preload("res://sim/entity.gd")
+const World = preload("res://sim/world.gd")
 const Minimap = preload("res://ui/minimap.gd")
 const Research = preload("res://sim/research.gd")
 const Abilities = preload("res://sim/abilities.gd")
@@ -59,6 +60,9 @@ var _train_row: VBoxContainer
 var _train_label: Label
 var _train_bar: ProgressBar
 var _queue_tiles: Array = []
+var _formation_bar: HBoxContainer
+var _formation_buttons := {}
+var _cursor_hint: Label
 var _cheat_menu: PopupMenu
 ## One small tile per selected unit when several are selected.
 var _group_box: HFlowContainer
@@ -365,6 +369,30 @@ func _chip_button(icon: Texture2D, tooltip: String, on_press: Callable) -> Butto
 	return b
 
 
+## Picks the formation for the next move and attack-move orders.
+func set_formation(f: String) -> void:
+	gv.formation = f
+	for k in _formation_buttons:
+		_formation_buttons[k].set_pressed_no_signal(k == f)
+	flash("Formation: " + f.capitalize(), 1.0)
+
+
+## Text next to the mouse while targeting ("Heal: click one of your units").
+func set_cursor_hint(text: String, at: Vector2) -> void:
+	if _cursor_hint == null:
+		_cursor_hint = Label.new()
+		_cursor_hint.add_theme_font_size_override("font_size", 13)
+		_cursor_hint.add_theme_color_override("font_color", Color(1.0, 0.95, 0.85))
+		_cursor_hint.add_theme_color_override("font_outline_color", Color(0, 0, 0))
+		_cursor_hint.add_theme_constant_override("outline_size", 5)
+		_cursor_hint.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		add_child(_cursor_hint)
+	_cursor_hint.visible = text != ""
+	if text != "":
+		_cursor_hint.text = text
+		_cursor_hint.position = at + Vector2(24, 20)
+
+
 ## Command grid and selection panel side by side along the bottom-left.
 func _build_bottom_left() -> void:
 	var row := HBoxContainer.new()
@@ -381,11 +409,33 @@ func _build_bottom_left() -> void:
 	_command_panel.add_theme_stylebox_override("panel", _glass(0.6, 12, Vector2(8, 8)))
 	_command_panel.size_flags_vertical = Control.SIZE_SHRINK_END
 	row.add_child(_command_panel)
+	var stack := VBoxContainer.new()
+	stack.add_theme_constant_override("separation", 6)
+	_command_panel.add_child(stack)
+	_formation_bar = HBoxContainer.new()
+	_formation_bar.add_theme_constant_override("separation", 4)
+	stack.add_child(_formation_bar)
+	var tips := {"line": "Line [Alt+1]: a wide front, ranged in the rear ranks",
+			"column": "Column [Alt+2]: narrow and deep, for roads and passes",
+			"square": "Square [Alt+3]: a hollow box that faces every way",
+			"wedge": "Wedge [Alt+4]: a spearhead to punch through",
+			"loose": "Loose [Alt+5]: spread out against bombardment"}
+	for f in World.FORMATIONS:
+		var b := Button.new()
+		b.toggle_mode = true
+		b.icon = HudIcons.get_icon("formation_" + f)
+		b.expand_icon = true
+		b.custom_minimum_size = Vector2(30, 30)
+		b.tooltip_text = tips.get(f, f)
+		b.focus_mode = Control.FOCUS_NONE
+		b.pressed.connect(func(): set_formation(f))
+		_formation_bar.add_child(b)
+		_formation_buttons[f] = b
 	_card = GridContainer.new()
 	_card.columns = CARD_COLUMNS
 	_card.add_theme_constant_override("h_separation", 6)
 	_card.add_theme_constant_override("v_separation", 6)
-	_command_panel.add_child(_card)
+	stack.add_child(_card)
 
 	_info_panel = PanelContainer.new()
 	_info_panel.add_theme_stylebox_override("panel", _glass(0.6, 12, Vector2(10, 10)))
@@ -553,6 +603,10 @@ func refresh(delta: float) -> void:
 	_refresh_info()
 	_refresh_card()
 	_command_panel.visible = not _card_entries.is_empty()
+	var soldiers: bool = gv.selected_entities().any(func(e): return e.owner == gv.me and e.kind == Entity.UNIT and e.can_attack() and not e.is_worker() and e.domain() == "ground")
+	_formation_bar.visible = soldiers
+	for f in _formation_buttons:
+		_formation_buttons[f].set_pressed_no_signal(f == gv.formation)
 	_info_panel.visible = not gv.selection.is_empty()
 	_hint.visible = gv.selection.is_empty()
 	minimap.tick(delta)

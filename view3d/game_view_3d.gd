@@ -23,6 +23,7 @@ const AudioManager = preload("res://audio/audio_manager.gd")
 const Scenario = preload("res://scenarios/scenario.gd")
 const Graphics = preload("res://ui/graphics.gd")
 const Abilities = preload("res://sim/abilities.gd")
+const HudIcons = preload("res://ui/hud_icons.gd")
 
 const TILE := GameMap.TILE
 const SPEEDS := [0.5, 1.0, 1.5, 2.0]
@@ -45,6 +46,9 @@ var me := 0
 var selection: Array[int] = []
 var groups := {}
 var mode := Mode.NORMAL
+## Formation for move and attack-move orders of soldiers (World.FORMATIONS).
+var formation := "line"
+var _cursor := ""
 var place_type := ""
 ## Spell waiting for a target click (Mode.CAST).
 var cast_ability := ""
@@ -292,6 +296,7 @@ func _process(delta: float) -> void:
 	_update_ghost()
 	_update_rally_flag()
 	_update_marker()
+	_update_cursor()
 	if cheat_resources:
 		var p = world.players[me]
 		for k in p.res:
@@ -607,6 +612,10 @@ func do_action(action: Dictionary) -> void:
 				hud.flash("%s autocast %s" % [Abilities.def(action.ability).name, "on" if on else "off"])
 
 
+func _exit_tree() -> void:
+	Input.set_custom_mouse_cursor(null)
+
+
 func _report(err: String) -> void:
 	if err != "":
 		hud.flash(err)
@@ -663,13 +672,17 @@ func _on_mouse_button(ev: InputEventMouseButton) -> void:
 					_report(err)
 					if err == "":
 						effects.add_marker(terrain.to3(mouse_px()), Color(0.6, 0.5, 1.0))
+						if t:
+							entity_views.flash_target(t.id, Color(0.4, 1.0, 0.45) if t.owner == me else Color(1.0, 0.3, 0.25))
 					mode = Mode.NORMAL
 				elif mode == Mode.ATTACK_MOVE:
 					var t = entity_at_mouse()
 					if t and t.owner >= 0 and t.owner != me:
 						world.issue({"type": "attack", "player": me, "ids": selection.duplicate(), "target": t.id, "queue": ev.shift_pressed})
+						_confirm_attack(t)
 					else:
-						world.issue({"type": "attack_move", "player": me, "ids": selection.duplicate(), "pos": mouse_px(), "queue": ev.shift_pressed})
+						world.issue({"type": "attack_move", "player": me, "ids": selection.duplicate(), "pos": mouse_px(), "queue": ev.shift_pressed,
+								"formation": _formation_for(selected_entities().filter(func(e): return e.owner == me and e.kind == Entity.UNIT))})
 						effects.add_marker(terrain.to3(mouse_px()), Color(1.0, 0.4, 0.3))
 					mode = Mode.NORMAL
 				else:
@@ -799,7 +812,8 @@ func _smart_command(p: Vector2, target, queue: bool) -> void:
 		return
 	if target and target.owner >= 0 and target.owner != me:
 		world.issue(base.merged({"type": "attack", "ids": ids, "target": target.id}))
-		marker = Color(1.0, 0.35, 0.3)
+		_confirm_attack(target)
+		return
 	elif target and world.is_gatherable(target, me) and not worker_ids.is_empty():
 		world.issue(base.merged({"type": "gather", "ids": worker_ids, "target": target.id}))
 		_move_or_skip(base, other_ids, p)
@@ -812,17 +826,77 @@ func _smart_command(p: Vector2, target, queue: bool) -> void:
 		_move_or_skip(base, other_ids, p)
 		marker = Color(1.0, 0.85, 0.3)
 	else:
-		world.issue(base.merged({"type": "move", "ids": units.map(func(e): return e.id), "pos": p}))
+		world.issue(base.merged({"type": "move", "ids": units.map(func(e): return e.id), "pos": p, "formation": _formation_for(units)}))
 	effects.add_marker(terrain.to3(p), marker)
 
 
 func _move_or_skip(base: Dictionary, ids: Array, p: Vector2) -> void:
 	if not ids.is_empty():
-		world.issue(base.merged({"type": "move", "ids": ids, "pos": p}))
+		world.issue(base.merged({"type": "move", "ids": ids, "pos": p, "formation": formation}))
+
+
+## The chosen formation when the group has soldiers in it (Settlers just gather round).
+func _formation_for(units: Array) -> String:
+	return formation if units.any(func(e): return e.can_attack() and not e.is_worker()) else ""
+
+
+## A clear "attack!" acknowledgement: the target's ring blinks red, a red marker
+## drops on it and a clash of steel sounds.
+func _confirm_attack(target) -> void:
+	entity_views.flash_target(target.id, Color(1.0, 0.25, 0.2))
+	effects.add_marker(terrain.to3(target.pos), Color(1.0, 0.3, 0.25))
+	audio.play("clang", null, 0.45)
+	hud.flash("Attack: " + (target.title if target.title != "" else String(target.def.get("name", target.type_id))), 1.2)
+
+
+## What the cursor would act on: [cursor name, hint text, entity for the ring, ring colour].
+func _cursor_state() -> Array:
+	var t = entity_at_mouse()
+	match mode:
+		Mode.CAST:
+			var a := Abilities.def(cast_ability)
+			match a.target:
+				"unit_ally":
+					var ok: bool = t != null and t.kind == Entity.UNIT and t.owner == me
+					if t != null and not ok:
+						return ["cursor_forbid", "%s: choose one of YOUR units" % a.name, null, Color.WHITE]
+					return ["cursor_spell_ally", "%s: click one of your units" % a.name, t if ok else null, Color(0.4, 1.0, 0.45)]
+				"unit_enemy":
+					var ok: bool = t != null and t.kind != Entity.RESOURCE and t.owner >= 0 and t.owner != me
+					if ok and a.has("target_domain") and (t.kind != Entity.UNIT or t.domain() != a.target_domain):
+						ok = false
+					if t != null and not ok:
+						return ["cursor_forbid", "%s: choose an ENEMY%s" % [a.name, " ship" if a.get("target_domain", "") == "naval" else ""], null, Color.WHITE]
+					return ["cursor_spell_enemy", "%s: click an enemy" % a.name, t if ok else null, Color(1.0, 0.3, 0.25)]
+				_:
+					return ["cursor_spell_ground", "%s: click the ground" % a.name, null, Color.WHITE]
+		Mode.ATTACK_MOVE:
+			var enemy: bool = t != null and t.owner >= 0 and t.owner != me
+			return ["cursor_sword", "Attack-move: click the ground, or an enemy to attack it", t if enemy else null, Color(1.0, 0.3, 0.25)]
+		Mode.NORMAL:
+			if t != null and t.owner >= 0 and t.owner != me and selected_entities().any(func(e): return e.owner == me and e.kind == Entity.UNIT and e.can_attack()):
+				return ["cursor_sword", "", t, Color(1.0, 0.3, 0.25)]
+	return ["", "", null, Color.WHITE]
+
+
+func _update_cursor() -> void:
+	var st := _cursor_state()
+	if st[0] != _cursor:
+		_cursor = st[0]
+		if _cursor == "":
+			Input.set_custom_mouse_cursor(null)
+		else:
+			var hot := Vector2(2, 2) if _cursor == "cursor_sword" else Vector2(16, 16)
+			Input.set_custom_mouse_cursor(HudIcons.get_icon(_cursor), Input.CURSOR_ARROW, hot)
+	entity_views.show_hover(st[2], st[3])
+	hud.set_cursor_hint(st[1], get_viewport().get_mouse_position())
 
 
 func _on_key(ev: InputEventKey) -> void:
 	var key := ev.keycode
+	if ev.alt_pressed and key >= KEY_1 and key <= KEY_5:
+		hud.set_formation(World.FORMATIONS[key - KEY_1])
+		return
 	if key >= KEY_0 and key <= KEY_9:
 		_control_group(key - KEY_0, ev.ctrl_pressed)
 		return

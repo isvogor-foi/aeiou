@@ -115,6 +115,61 @@ static func _shapes(name: String) -> Array:
 					["poly", [Vector2(0.58, 0.10), Vector2(0.32, 0.48), Vector2(0.44, 0.48)], Color(0.85, 0.97, 1.0)]]
 		"deploy":
 			return [["box", 0.5, 0.62, 0.36, 0.16, wood], ["circle", 0.28, 0.80, 0.10, Color(0.2, 0.2, 0.2)], ["circle", 0.72, 0.80, 0.10, Color(0.2, 0.2, 0.2)]]
+		# Mouse cursors: a dark outline under each shape so they read on any ground.
+		"cursor_sword":
+			var ink := Color(0.05, 0.04, 0.04)
+			return [["capsule", 0.06, 0.06, 0.64, 0.64, 0.085, ink], ["capsule", 0.52, 0.76, 0.76, 0.52, 0.085, ink],
+					["capsule", 0.66, 0.66, 0.88, 0.88, 0.085, ink], ["circle", 0.9, 0.9, 0.1, ink],
+					["capsule", 0.07, 0.07, 0.63, 0.63, 0.05, Color(0.9, 0.92, 0.95)], ["capsule", 0.12, 0.08, 0.6, 0.56, 0.018, Color(0.62, 0.65, 0.7)],
+					["capsule", 0.53, 0.75, 0.75, 0.53, 0.05, brass], ["capsule", 0.67, 0.67, 0.86, 0.86, 0.05, Color(0.45, 0.28, 0.15)],
+					["circle", 0.9, 0.9, 0.065, brass], ["circle", 0.06, 0.06, 0.04, Color(1.0, 0.35, 0.3)]]
+		"cursor_forbid":
+			var ink := Color(0.05, 0.04, 0.04)
+			var grey := Color(0.8, 0.78, 0.74)
+			return [["circle", 0.5, 0.5, 0.44, ink], ["circle", 0.5, 0.5, 0.38, grey], ["circle", 0.5, 0.5, 0.28, ink],
+					["circle", 0.5, 0.5, 0.25, clear], ["capsule", 0.26, 0.26, 0.74, 0.74, 0.08, ink], ["capsule", 0.27, 0.27, 0.73, 0.73, 0.05, grey]]
+		"formation_line":
+			var dots := []
+			for r in 2:
+				for c in 5:
+					dots.append(["circle", 0.14 + c * 0.18, 0.4 + r * 0.22, 0.07, white if r == 0 else steel])
+			return dots
+		"formation_column":
+			var dots := []
+			for r in 5:
+				for c in 2:
+					dots.append(["circle", 0.38 + c * 0.24, 0.12 + r * 0.19, 0.07, white if r == 0 else steel])
+			return dots
+		"formation_square":
+			var dots := []
+			for i in 4:
+				for side in 4:
+					var pts := [Vector2(0.15 + i * 0.233, 0.15), Vector2(0.85, 0.15 + i * 0.233), Vector2(0.85 - i * 0.233, 0.85), Vector2(0.15, 0.85 - i * 0.233)]
+					dots.append(["circle", pts[side].x, pts[side].y, 0.07, white if side == 0 else steel])
+			return dots
+		"formation_wedge":
+			var dots := []
+			for r in 4:
+				for j in r + 1:
+					dots.append(["circle", 0.5 + (j - r * 0.5) * 0.2, 0.16 + r * 0.22, 0.07, white if r == 0 else steel])
+			return dots
+		"formation_loose":
+			var pts := [Vector2(0.15, 0.2), Vector2(0.55, 0.15), Vector2(0.85, 0.35), Vector2(0.3, 0.5), Vector2(0.7, 0.62), Vector2(0.18, 0.84), Vector2(0.55, 0.88)]
+			var dots := []
+			for q in pts:
+				dots.append(["circle", q.x, q.y, 0.07, steel])
+			return dots
+	if name.begins_with("cursor_spell_"):
+		# A targeting reticle around an Aether bolt, tinted by what it may target.
+		var tint: Color = {"cursor_spell_ally": Color(0.4, 1.0, 0.45), "cursor_spell_enemy": Color(1.0, 0.35, 0.3)}.get(name, aether)
+		var ink := Color(0.05, 0.04, 0.04)
+		var shapes := [["circle", 0.5, 0.5, 0.46, ink], ["circle", 0.5, 0.5, 0.41, tint], ["circle", 0.5, 0.5, 0.33, ink], ["circle", 0.5, 0.5, 0.3, clear]]
+		for d in [Vector2(0.5, 0.02), Vector2(0.5, 0.98), Vector2(0.02, 0.5), Vector2(0.98, 0.5)]:
+			shapes.append(["capsule", d.x, d.y, 0.5 + (d.x - 0.5) * 0.6, 0.5 + (d.y - 0.5) * 0.6, 0.05, ink])
+			shapes.append(["capsule", d.x, d.y, 0.5 + (d.x - 0.5) * 0.62, 0.5 + (d.y - 0.5) * 0.62, 0.025, tint])
+		shapes.append(["poly", [Vector2(0.54, 0.3), Vector2(0.4, 0.52), Vector2(0.49, 0.52), Vector2(0.45, 0.7), Vector2(0.62, 0.46), Vector2(0.53, 0.46), Vector2(0.6, 0.3)], ink])
+		shapes.append(["poly", [Vector2(0.54, 0.33), Vector2(0.43, 0.5), Vector2(0.5, 0.5), Vector2(0.47, 0.65), Vector2(0.59, 0.48), Vector2(0.52, 0.48), Vector2(0.58, 0.33)], tint.lightened(0.4)])
+		return shapes
 	return [["circle", 0.5, 0.5, 0.3, white]]
 
 

@@ -22,6 +22,10 @@ var _dying: Array = []
 var _ring_mesh := TorusMesh.new()
 var _thin_ring_mesh := TorusMesh.new()
 var _ring_materials := {}
+## Target ring under whatever the cursor would act on (attack, spell), and
+## blinking rings on targets just ordered: [ring, until_seconds].
+var _hover_ring: MeshInstance3D
+var _flashes: Array = []
 
 
 func _ready() -> void:
@@ -152,8 +156,52 @@ const ANIM_STEP_CROWD := 1.0 / 20.0
 const CROWD := 120
 
 
+## Puts the target ring under entity `e` in `color`, or hides it when e is null.
+func show_hover(e, color: Color) -> void:
+	if _hover_ring == null:
+		_hover_ring = _ring(1.0, color)
+		add_child(_hover_ring)
+	var r = views.get(e.id) if e != null else null
+	_hover_ring.visible = r != null and r.node.visible
+	if not _hover_ring.visible:
+		return
+	_hover_ring.material_override = _ring_material(Color(color, 0.9))
+	var rad: float = 0.62 if e.kind == Entity.UNIT else e.size.x * 0.8
+	_hover_ring.scale = Vector3(rad, 0.06, rad)
+	_hover_ring.global_position = r.node.global_position + Vector3(0, 0.05, 0)
+
+
+## Confirms an order on entity `id`: its ring blinks in `color` for a moment.
+func flash_target(id: int, color: Color) -> void:
+	var r = views.get(id)
+	if r == null:
+		return
+	var e = gv.world.get_entity(id)
+	var rad: float = 0.7 if e == null or e.kind == Entity.UNIT else e.size.x * 0.85
+	var ring := _ring(rad, color)
+	r.node.add_child(ring)
+	_flashes.append([ring, Time.get_ticks_msec() / 1000.0 + 0.9])
+
+
+func _sync_flashes(now: float) -> void:
+	for f in _flashes.duplicate():
+		var ring: MeshInstance3D = f[0]
+		if not is_instance_valid(ring) or now > f[1]:
+			if is_instance_valid(ring):
+				ring.queue_free()
+			_flashes.erase(f)
+			continue
+		# Three quick blinks, the ring tightening onto the target.
+		var left: float = f[1] - now
+		ring.visible = fmod(left, 0.3) > 0.12
+		var k := 1.0 + left * 0.5
+		ring.scale = Vector3(ring.scale.x / maxf(0.01, ring.get_meta("k", 1.0)) * k, 0.06, ring.scale.z / maxf(0.01, ring.get_meta("k", 1.0)) * k)
+		ring.set_meta("k", k)
+
+
 func sync(alpha: float, delta: float) -> void:
 	var now := Time.get_ticks_msec() / 1000.0
+	_sync_flashes(now)
 	var seen := {}
 	var cam: Camera3D = gv.camera
 	var anim_step := ANIM_STEP_CROWD if _unit_views >= CROWD else 0.0
