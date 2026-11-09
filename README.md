@@ -77,8 +77,9 @@ Rules of thumb:
 
 **3D view:**
 - Gently rolling terrain, lakes, forests, and borders drawn on the ground.
-- Animated KayKit characters: Monarchy soldiers and Covenant skeletons.
-- Medieval buildings in team colours, construction scaffolding, and rubble when buildings are destroyed.
+- Animated soldiers and monsters: one Quaternius figure dressed in code (dieselpunk Monarchy, necro-industrial Covenant, golems and colossi), cavalry on shaped horses in barding.
+- Steam and necro machines, wagons and walkers built from primitives (view3d/machines.gd, view3d/mounts.gd).
+- Procedural steampunk buildings in team colours, construction scaffolding, and rubble when buildings are destroyed.
 - Fog of war done as a depth-based screen pass.
 
 **Phase 3 (computer opponent)** is done:
