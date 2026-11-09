@@ -4,6 +4,7 @@ extends RefCounted
 ## and smoke stay live nodes. All face +Z, about one tile long.
 
 const Gear = preload("res://view3d/gear.gd")
+const Mounts = preload("res://view3d/mounts.gd")
 
 static var _cache := {}
 
@@ -25,6 +26,8 @@ static func build(kind: String, team: Color) -> Node3D:
 
 static func _raw(kind: String, team: Color) -> Node3D:
 	match kind:
+		"horse", "horse_heavy", "bone_horse", "supply_tractor", "bone_wagon", "war_wagon", "steam_walker":
+			return Mounts.build(kind, team)
 		"landpanzer":
 			return landpanzer(team)
 		"juggernaut":

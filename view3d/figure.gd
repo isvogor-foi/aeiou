@@ -131,6 +131,12 @@ const OUTFITS := {
 	"shadow_sovereign": {"skin": BONE, "coat": NIGHT, "trousers": NIGHT, "boots": NIGHT, "cuffs": GOLD, "style": "robe", "hat": "crown_dark", "vials": true, "tanks": "soul", "weapon": "bone_staff"},
 	"blood_countess": {"skin": Color(0.9, 0.86, 0.84), "coat": BLOOD, "trousers": BLOOD, "boots": BLACK, "cuffs": BLACK, "style": "dress", "hat": "crown_dark", "vials": true, "weapon": "blade", "hair": BLACK},
 	"bone_herald": {"skin": BONE, "coat": Color(0.25, 0.24, 0.26), "trousers": NIGHT, "boots": NIGHT, "cuffs": NIGHT, "style": "short", "hat": "horned", "cuirass": true, "plates": true, "struts": true, "jaw": true, "weapon": "axe"},
+	# Monsters: big figures in the soldiers' style.
+	"abomination": {"skin": Color(0.58, 0.62, 0.5), "coat": Color(0.58, 0.62, 0.5), "trousers": RAG, "boots": RAG, "cuffs": Color(0.2, 0.2, 0.21), "style": "short", "bulk": 1.15, "plates": true, "stitches": true, "jaw": true, "vials": true, "apron": true, "weapon": "hook"},
+	"bone_golem": {"skin": BONE, "coat": Color(0.3, 0.27, 0.24), "trousers": Color(0.3, 0.27, 0.24), "boots": Color(0.2, 0.2, 0.21), "cuffs": BONE, "style": "short", "ribs": true, "jaw": true, "struts": true, "weapon": "axe"},
+	"bone_colossus": {"skin": BONE, "coat": Color(0.3, 0.27, 0.24), "trousers": Color(0.3, 0.27, 0.24), "boots": Color(0.2, 0.2, 0.21), "cuffs": BONE, "style": "short", "ribs": true, "jaw": true, "struts": true, "hat": "horned", "tanks": "soul", "vials": true, "weapon": "axe"},
+	"prague_golem": {"skin": Color(0.5, 0.36, 0.26), "coat": Color(0.5, 0.36, 0.26), "trousers": Color(0.46, 0.33, 0.24), "boots": Color(0.4, 0.29, 0.21), "cuffs": Color(0.46, 0.33, 0.24), "style": "short", "bulk": 1.2, "bulk_style": "stone", "rune": true, "weapon": "fist", "belt": Color(0.3, 0.2, 0.12)},
+	"aether_colossus": {"skin": SKIN, "coat": GUNMETAL, "trousers": GUNMETAL, "boots": BLACK, "cuffs": GOLD, "style": "short", "bulk": 1.15, "bulk_style": "plate", "hat": "diving", "cuirass": true, "plates": true, "tanks": "aether", "weapon": "flamethrower", "gloves": STEEL},
 	"ghoul_rider": {"skin": BONE, "coat": RAG, "trousers": RAG, "boots": RAG, "cuffs": RAG, "style": "short", "hat": "hood", "jaw": true, "struts": true, "weapon": "blade"},
 }
 
@@ -341,6 +347,8 @@ static func _dress(o: Dictionary, team: Color) -> ArrayMesh:
 			cube(acc, chest + Vector3(0, -0.12 + i * 0.05, 0.13), Vector3(0.18, 0.012, 0.01), mat(GOLD, 0.6, 0.4), "DEF-spine.003")
 	if o.get("sash", false):
 		cube(acc, chest + Vector3(0, -0.08, 0.13), Vector3(0.07, 0.46, 0.014), mat(team), "DEF-spine.003", Vector3(-0.08, 0, 0.6))
+	if o.has("bulk"):
+		_bulk(acc, o)
 	_diesel(acc, o, team)
 	_head(acc, o)
 	_hat(acc, o, team)
@@ -349,6 +357,64 @@ static func _dress(o: Dictionary, team: Color) -> ArrayMesh:
 		var pack: Node3D = Gear._build_raw(o.kit)
 		tree(acc, pack, Transform3D(Basis().scaled(Vector3.ONE * 0.38), chest + Vector3(0, -0.06, -0.2)), "DEF-spine.003")
 	return acc.commit()
+
+
+## Hulking monsters: muscle (or stone, or plate) masses bound to the bones so they
+## move with every animation, plus stitched seams on flesh golems.
+static func _bulk(acc: Acc, o: Dictionary) -> void:
+	var k: float = o.bulk
+	var kind: String = o.get("bulk_style", "flesh")
+	var chest := at("DEF-spine.003")
+	var hips := at("DEF-hips")
+	var body_m := mat(o.coat, 0.0, 0.7) if kind == "flesh" else (mat(o.coat, 0.0, 0.95) if kind == "stone" else mat(o.coat, 0.7, 0.45))
+	var legs_m := mat(o.trousers, 0.0, 0.75) if kind != "plate" else mat(o.trousers, 0.7, 0.45)
+	var rivet := mat(GOLD, 0.7, 0.35)
+	if kind == "flesh":
+		blob(acc, chest + Vector3(0, -0.04, 0.03), Vector3(0.4, 0.3, 0.27) * k, body_m, "DEF-spine.003")
+		blob(acc, hips + Vector3(0, 0.14, 0.07), Vector3(0.36, 0.3, 0.3) * k, body_m, "DEF-spine.001")
+		for side in ["L", "R"]:
+			var ua := at("DEF-upper_arm." + side)
+			var fa := at("DEF-forearm." + side)
+			blob(acc, ua.lerp(fa, 0.35), Vector3(0.14, 0.2, 0.14) * k, body_m, "DEF-upper_arm." + side)
+			blob(acc, fa.lerp(at("DEF-hand." + side), 0.4), Vector3(0.12, 0.16, 0.12) * k, body_m, "DEF-forearm." + side)
+			var th := at("DEF-thigh." + side)
+			blob(acc, th.lerp(at("DEF-shin." + side), 0.45), Vector3(0.15, 0.24, 0.15) * k, legs_m, "DEF-thigh." + side)
+	else:
+		# Stone slabs or riveted armour blocks, slightly askew.
+		cube(acc, chest + Vector3(0, -0.05, 0.04), Vector3(0.4, 0.3, 0.26) * k, body_m, "DEF-spine.003", Vector3(0.05, 0, 0.03))
+		cube(acc, hips.lerp(chest, 0.45) + Vector3(0, 0, 0.03), Vector3(0.32, 0.18, 0.22) * k, body_m, "DEF-spine.001", Vector3(-0.04, 0, -0.03))
+		for side in ["L", "R"]:
+			var sx := -1.0 if side == "L" else 1.0
+			var ua := at("DEF-upper_arm." + side)
+			var fa := at("DEF-forearm." + side)
+			var hd := at("DEF-hand." + side)
+			cube(acc, ua + Vector3(0, 0.03, 0), Vector3(0.2, 0.14, 0.2) * k, body_m, "DEF-upper_arm." + side, Vector3(0, 0, sx * 0.2))
+			cube(acc, ua.lerp(fa, 0.55), Vector3(0.12, 0.16, 0.12) * k, body_m, "DEF-upper_arm." + side)
+			cube(acc, fa.lerp(hd, 0.45), Vector3(0.13, 0.17, 0.13) * k, body_m, "DEF-forearm." + side)
+			cube(acc, hd, Vector3(0.12, 0.1, 0.12) * k, body_m, "DEF-hand." + side)
+			var th := at("DEF-thigh." + side)
+			var sh := at("DEF-shin." + side)
+			cube(acc, th.lerp(sh, 0.45), Vector3(0.15, 0.24, 0.16) * k, legs_m, "DEF-thigh." + side)
+			cube(acc, sh.lerp(at("DEF-foot." + side), 0.45), Vector3(0.13, 0.22, 0.14) * k, legs_m, "DEF-shin." + side)
+			if kind == "plate":
+				for y in [-0.06, 0.06]:
+					blob(acc, chest + Vector3(sx * 0.15 * k, y - 0.05, 0.17 * k), Vector3(0.025, 0.025, 0.015), rivet, "DEF-spine.003")
+			else:
+				# Glowing cracks in the clay.
+				cube(acc, chest + Vector3(sx * 0.08, -0.08 + sx * 0.04, 0.175 * k), Vector3(0.012, 0.12, 0.01), mat(Color(1.0, 0.65, 0.25), 0.0, 0.3, 2.5), "DEF-spine.003", Vector3(0, 0, sx * 0.5))
+	if o.get("stitches", false):
+		var thread := mat(Color(0.1, 0.08, 0.07))
+		for i in 7:
+			cube(acc, chest + Vector3(-0.02 + (i % 2) * 0.04, -0.2 + i * 0.05, 0.17 * k), Vector3(0.08, 0.012, 0.012), thread, "DEF-spine.003", Vector3(0, 0, 0.6 if i % 2 == 0 else -0.6))
+		for side in ["L", "R"]:
+			var ua := at("DEF-upper_arm." + side)
+			for i in 3:
+				cube(acc, ua + Vector3(0, -0.04 - i * 0.05, 0.1 * k), Vector3(0.012, 0.012, 0.06), thread, "DEF-upper_arm." + side)
+	if o.get("rune", false):
+		var h := at("DEF-head")
+		cube(acc, h + Vector3(0, 0.17, 0.11), Vector3(0.1, 0.035, 0.02), mat(Color(1.0, 0.7, 0.3), 0.0, 0.3, 3.0), "DEF-head")
+		for side in [-1.0, 1.0]:
+			blob(acc, h + Vector3(side * 0.035, 0.12, 0.1), Vector3(0.03, 0.02, 0.01), mat(Color(1.0, 0.7, 0.3), 0.0, 0.3, 2.5), "DEF-head")
 
 
 ## Dieselpunk and necro-industrial kit: armour plates, back tanks with hoses,
@@ -403,7 +469,7 @@ static func _diesel(acc: Acc, o: Dictionary, team: Color) -> void:
 			var v := chest + Vector3(t * 0.75, -0.08 - t * 0.55, 0.15)
 			limb(acc, v + Vector3(0, -0.035, 0), v + Vector3(0, 0.035, 0), 0.016, mat(SOUL_GLOW, 0.0, 0.3, 2.5), "DEF-spine.003")
 			limb(acc, v + Vector3(0, 0.035, 0), v + Vector3(0, 0.05, 0), 0.018, mat(Color(0.2, 0.2, 0.21), 0.7, 0.45), "DEF-spine.003")
-	if o.get("jaw", false) and not o.get("plates", false) and not o.get("cuirass", false) and not o.get("vials", false):
+	if o.get("ribs", false) or (o.get("jaw", false) and not o.get("plates", false) and not o.get("cuirass", false) and not o.get("vials", false) and not o.has("bulk")):
 		# The dead's ribcage bared through torn rags, ribs wired together in iron.
 		var rib := mat(BONE, 0.0, 0.6)
 		for i in 4:
@@ -482,6 +548,16 @@ static func _hat(acc: Acc, o: Dictionary, team: Color) -> void:
 	var felt := mat(BLACK, 0.0, 0.7)
 	var gold := mat(GOLD, 0.6, 0.4)
 	match o.get("hat", ""):
+		"diving":
+			# Brass diving-suit helmet: a round dome, a glowing porthole visor, bolts and a collar.
+			var shell := mat(GOLD, 0.7, 0.35)
+			blob(acc, h + Vector3(0, 0.12, 0.0), Vector3(0.36, 0.36, 0.36), shell, "DEF-head")
+			limb(acc, h + Vector3(0, -0.06, 0), h + Vector3(0, 0.0, 0), 0.2, mat(GUNMETAL, 0.75, 0.4), "DEF-head")
+			limb(acc, h + Vector3(0, 0.12, 0.16), h + Vector3(0, 0.12, 0.19), 0.1, mat(GUNMETAL, 0.75, 0.4), "DEF-head")
+			blob(acc, h + Vector3(0, 0.12, 0.19), Vector3(0.16, 0.16, 0.03), mat(AETHER_GLOW, 0.0, 0.2, 2.5), "DEF-head")
+			for side in [-1.0, 1.0]:
+				blob(acc, h + Vector3(side * 0.17, 0.12, 0.0), Vector3(0.08, 0.08, 0.04), mat(AETHER_GLOW, 0.0, 0.2, 1.5), "DEF-head", Vector3(0, PI / 2, 0))
+			limb(acc, h + Vector3(0, 0.3, 0), h + Vector3(0, 0.36, 0), 0.05, mat(GUNMETAL, 0.75, 0.4), "DEF-head")
 		"stahlhelm", "pickel":
 			# Steel trench helmet: a deep dome over a flared skirt, team stripe, brass eagle, vent bolts.
 			var shell := mat(Color(0.3, 0.32, 0.3), 0.55, 0.5)
@@ -601,6 +677,15 @@ static func _weapon(acc: Acc, o: Dictionary) -> void:
 		"axe":
 			limb(acc, grip - along * 0.15, grip + along * 0.55, 0.018, wood, "DEF-hand.R")
 			cube(acc, grip + along * 0.5 + up * 0.06, Vector3(0.03, 0.14, 0.1), iron, "DEF-hand.R")
+		"hook":
+			# A butcher's chain hook.
+			var hk := mat(Color(0.25, 0.25, 0.27), 0.7, 0.4)
+			limb(acc, grip - along * 0.05, grip + along * 0.45, 0.02, hk, "DEF-hand.R")
+			var across := along.cross(up).normalized()
+			limb(acc, grip + along * 0.45, grip + along * 0.55 + across * 0.08, 0.02, hk, "DEF-hand.R")
+			limb(acc, grip + along * 0.55 + across * 0.08, grip + along * 0.5 + across * 0.16, 0.017, hk, "DEF-hand.R", 0.0)
+		"fist":
+			pass
 		"wrench":
 			var wr := mat(GUNMETAL, 0.75, 0.4)
 			limb(acc, grip - along * 0.1, grip + along * 0.32, 0.016, wr, "DEF-hand.R")

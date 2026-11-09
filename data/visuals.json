@@ -39,19 +39,8 @@
 			}
 		},
 		"tross_wagon": {
-			"model": "res://assets/kaykit/medieval/decoration/props/wheelbarrow.gltf",
-			"height": 0.65,
-			"extra": [
-				{
-					"model": "res://assets/kaykit/medieval/decoration/props/sack.gltf",
-					"offset": [
-						0,
-						0.25,
-						-0.05
-					],
-					"scale": 1.2
-				}
-			]
+			"procedural": "supply_tractor",
+			"scale": 1.0
 		},
 		"thrall": {
 			"figure": "thrall",
@@ -86,19 +75,8 @@
 			}
 		},
 		"bone_cart": {
-			"model": "res://assets/kaykit/medieval/decoration/props/wheelbarrow.gltf",
-			"height": 0.65,
-			"extra": [
-				{
-					"model": "res://assets/kaykit/medieval/decoration/props/barrel.gltf",
-					"offset": [
-						0,
-						0.22,
-						-0.05
-					],
-					"scale": 1.0
-				}
-			]
+			"procedural": "bone_wagon",
+			"scale": 1.0
 		},
 		"jaeger": {
 			"figure": "jaeger",
@@ -130,8 +108,8 @@
 				"attack": "Driving",
 				"death": "Death01"
 			},
-			"mount": "horse",
-			"saddle": 0.62
+			"mount": "horse_heavy",
+			"saddle": 0.7
 		},
 		"rudolf": {
 			"figure": "rudolf",
@@ -318,7 +296,7 @@
 				"death": "Death01"
 			},
 			"mount": "horse",
-			"saddle": 0.7
+			"saddle": 0.78
 		},
 		"ghoul_rider": {
 			"figure": "ghoul_rider",
@@ -330,7 +308,7 @@
 				"death": "Death01"
 			},
 			"mount": "bone_horse",
-			"saddle": 0.7
+			"saddle": 0.78
 		},
 		"aethership": {
 			"procedural": "aethership",
@@ -363,65 +341,36 @@
 			}
 		},
 		"aether_colossus": {
-			"model": "res://assets/kaykit/adventures/Knight_hd.glb",
+			"figure": "aether_colossus",
 			"height": 3.4,
-			"tint": [
-				1.25,
-				0.95,
-				0.55
-			],
-			"hide": [
-				"1H_Sword_Offhand",
-				"Badge_Shield",
-				"Round_Shield",
-				"Spike_Shield",
-				"1H_Sword"
-			],
 			"anims": {
-				"idle": "2H_Melee_Idle",
-				"walk": "Walking_A",
-				"attack": "2H_Melee_Attack_Chop",
-				"death": "Death_A"
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01",
+				"cast": "Sword_Attack"
 			}
 		},
 		"bone_colossus": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
+			"figure": "bone_colossus",
 			"height": 3.4,
-			"tint": [
-				1.1,
-				1.05,
-				0.95
-			],
-			"attach": {
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf"
-			},
 			"anims": {
-				"idle": "Idle_Combat",
-				"walk": "Walking_D_Skeletons",
-				"attack": "2H_Melee_Attack_Chop",
-				"death": "Death_C_Skeletons"
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01",
+				"cast": "Sword_Attack"
 			}
 		},
 		"abomination": {
-			"model": "res://assets/kaykit/adventures/Barbarian_hd.glb",
+			"figure": "abomination",
 			"height": 1.9,
-			"tint": [
-				0.65,
-				0.85,
-				0.6
-			],
-			"hide": [
-				"Barbarian_Round_Shield",
-				"Mug",
-				"1H_Axe_Offhand",
-				"2H_Axe"
-			],
 			"anims": {
 				"idle": "Idle",
-				"walk": "Walking_A",
-				"attack": "1H_Melee_Attack_Chop",
-				"cast": "Throw",
-				"death": "Death_A"
+				"walk": "Walk",
+				"attack": "Punch_Cross",
+				"death": "Death01",
+				"cast": "Punch_Jab"
 			}
 		},
 		"lich": {
@@ -446,22 +395,14 @@
 			}
 		},
 		"bone_golem": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
+			"figure": "bone_golem",
 			"height": 1.55,
-			"tint": [
-				1.1,
-				1.05,
-				0.95
-			],
-			"attach": {
-				"handslot.l": "res://assets/kaykit/skeletons/weapons/Skeleton_Shield_Small_A.gltf",
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf"
-			},
 			"anims": {
-				"idle": "Idle_Combat",
-				"walk": "Walking_D_Skeletons",
-				"attack": "2H_Melee_Attack_Chop",
-				"death": "Death_C_Skeletons"
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01",
+				"cast": "Sword_Attack"
 			}
 		},
 		"wraith": {
@@ -587,8 +528,8 @@
 				"attack": "Driving",
 				"death": "Death01"
 			},
-			"mount": "horse",
-			"saddle": 0.62
+			"mount": "horse_heavy",
+			"saddle": 0.7
 		},
 		"aether_train": {
 			"procedural": "aether_train",
@@ -599,22 +540,14 @@
 			"scale": 2.1
 		},
 		"prague_golem": {
-			"model": "res://assets/kaykit/skeletons/Skeleton_Warrior_hd.glb",
+			"figure": "prague_golem",
 			"height": 2.2,
-			"tint": [
-				0.62,
-				0.45,
-				0.32
-			],
-			"attach": {
-				"handslot.l": "res://assets/kaykit/skeletons/weapons/Skeleton_Shield_Small_A.gltf",
-				"handslot.r": "res://assets/kaykit/skeletons/weapons/Skeleton_Axe.gltf"
-			},
 			"anims": {
-				"idle": "Idle_Combat",
-				"walk": "Walking_D_Skeletons",
-				"attack": "2H_Melee_Attack_Chop",
-				"death": "Death_C_Skeletons"
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Punch_Cross",
+				"death": "Death01",
+				"cast": "Punch_Jab"
 			}
 		},
 		"bombardier": {
@@ -647,7 +580,7 @@
 				"death": "Death01"
 			},
 			"mount": "horse",
-			"saddle": 0.7
+			"saddle": 0.78
 		},
 		"honved": {
 			"figure": "honved",

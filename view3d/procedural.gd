@@ -50,20 +50,14 @@ static func build(kind: String, team: Color) -> Node3D:
 			return _hat("bicorne")
 		"crown":
 			return _hat("crown")
-		"war_wagon":
-			return _war_wagon(team)
+		"war_wagon", "steam_walker", "horse", "horse_heavy", "bone_horse", "supply_tractor", "bone_wagon":
+			return Machines.build(kind, team)
 		"glider":
 			return _glider()
-		"steam_walker":
-			return _steam_walker(team)
 		"mortar":
 			return _mortar(team)
 		"catapult":
 			return _catapult(team)
-		"horse":
-			return _horse(false)
-		"bone_horse":
-			return _horse(true)
 		"aethership":
 			return _aethership(team)
 		"ironclad":
@@ -348,29 +342,6 @@ static func _hat(style: String) -> Node3D:
 	return root
 
 
-## The Hussite war wagon: armoured box on four wheels, team-coloured pavises.
-## Side boards (meta "deploy") swing out when it deploys into a Wagenburg.
-static func _war_wagon(team: Color) -> Node3D:
-	var root := Node3D.new()
-	var wood := mat(Color(0.45, 0.3, 0.17))
-	var dark := mat(Color(0.28, 0.18, 0.1))
-	var paint := mat(team.darkened(0.2))
-	_part(root, _box(Vector3(0.8, 0.45, 1.5)), wood, Vector3(0, 0.45, 0))
-	_part(root, _box(Vector3(0.85, 0.08, 1.55)), dark, Vector3(0, 0.7, 0))
-	for x in [-0.42, 0.42]:
-		for z in [-0.5, 0.5]:
-			_part(root, _cyl(0.2, 0.08, 10), dark, Vector3(x, 0.2, z), Vector3(0, 0, PI / 2))
-	for side in [-1.0, 1.0]:
-		var pivot := Node3D.new()
-		pivot.position = Vector3(side * 0.42, 0.7, 0)
-		pivot.set_meta("deploy", side)
-		root.add_child(pivot)
-		_part(pivot, _box(Vector3(0.06, 0.55, 1.4)), paint, Vector3(side * 0.03, 0.27, 0))
-		_part(pivot, _box(Vector3(0.07, 0.1, 1.42)), dark, Vector3(side * 0.03, 0.5, 0))
-	_part(root, _cyl(0.025, 0.7), dark, Vector3(0, 0.45, 1.05), Vector3(PI / 2, 0, 0))
-	return root
-
-
 ## Black two-headed eagle with golden beaks and crown.
 static func _double_eagle() -> Node3D:
 	var root := Node3D.new()
@@ -421,31 +392,6 @@ static func _brass() -> StandardMaterial3D:
 	return m
 
 
-## Two-legged steam engine: boiler body, smoke stack, rotary gun; legs swing ("gallop").
-static func _steam_walker(team: Color) -> Node3D:
-	var root := Node3D.new()
-	var iron := mat(Color(0.3, 0.3, 0.33))
-	var brass := _brass()
-	var glow := mat(Color(0.45, 0.85, 1.0), 3.0)
-	_part(root, _cyl(0.32, 0.7, 10), iron, Vector3(0, 1.0, 0), Vector3(PI / 2, 0, 0))
-	_part(root, _box(Vector3(0.5, 0.35, 0.5)), brass, Vector3(0, 1.25, -0.1))
-	_part(root, _cyl(0.07, 0.5), iron, Vector3(0.15, 1.6, -0.2))
-	_part(root, _sphere(0.1, 8), glow, Vector3(0, 1.0, 0.38))
-	_part(root, _box(Vector3(0.62, 0.08, 0.3)), mat(team), Vector3(0, 1.36, 0.05))
-	for i in 4:
-		var a := TAU * i / 4.0
-		_part(root, _cyl(0.03, 0.55), iron, Vector3(0.3 + cos(a) * 0.05, 1.0 + sin(a) * 0.05, 0.45), Vector3(PI / 2, 0, 0))
-	for side in [-1.0, 1.0]:
-		var hip := Node3D.new()
-		hip.position = Vector3(side * 0.25, 0.8, 0)
-		hip.set_meta("gallop", side)
-		root.add_child(hip)
-		_part(hip, _box(Vector3(0.12, 0.45, 0.12)), iron, Vector3(0, -0.22, 0))
-		_part(hip, _box(Vector3(0.1, 0.4, 0.1)), brass, Vector3(0, -0.6, 0.06))
-		_part(hip, _box(Vector3(0.22, 0.06, 0.32)), iron, Vector3(0, -0.8, 0.08))
-	return root
-
-
 ## Škoda siege mortar on a wheeled carriage.
 static func _mortar(team: Color) -> Node3D:
 	var root := Node3D.new()
@@ -474,33 +420,6 @@ static func _catapult(team: Color) -> Node3D:
 	_part(root, _box(Vector3(0.1, 0.1, 1.3)), wood, Vector3(0, 0.95, -0.15), Vector3(0.5, 0, 0))
 	_part(root, _sphere(0.18, 8), mat(Color(0.45, 0.85, 0.25), 1.5), Vector3(0, 1.3, -0.7))
 	_part(root, _box(Vector3(0.82, 0.06, 0.15)), mat(team), Vector3(0, 0.36, 0.6))
-	return root
-
-
-## A horse (or a skeletal one) whose legs swing while it moves ("gallop").
-static func _horse(bony: bool) -> Node3D:
-	var root := Node3D.new()
-	var coat := mat(Color(0.86, 0.83, 0.74)) if bony else mat(Color(0.42, 0.27, 0.15))
-	var dark := mat(Color(0.2, 0.14, 0.1)) if not bony else mat(Color(0.3, 0.9, 0.35), 2.0)
-	var body := CapsuleMesh.new()
-	body.radius = 0.22 if not bony else 0.16
-	body.height = 1.1
-	_part(root, body, coat, Vector3(0, 0.75, 0), Vector3(PI / 2, 0, 0))
-	_part(root, _cyl(0.1, 0.5), coat, Vector3(0, 1.0, 0.55), Vector3(0.7, 0, 0))
-	_part(root, _box(Vector3(0.16, 0.18, 0.4)), coat, Vector3(0, 1.15, 0.78), Vector3(0.4, 0, 0))
-	_part(root, _box(Vector3(0.05, 0.25, 0.4)), dark, Vector3(0, 1.15, 0.45), Vector3(0.6, 0, 0))
-	if bony:
-		for side in [-0.06, 0.06]:
-			_part(root, _sphere(0.035, 6), dark, Vector3(side, 1.2, 0.95))
-	for x in [-0.14, 0.14]:
-		for z in [-0.38, 0.38]:
-			var hip := Node3D.new()
-			hip.position = Vector3(x, 0.62, z)
-			hip.set_meta("gallop", 1.0 if (x > 0) == (z > 0) else -1.0)
-			root.add_child(hip)
-			_part(hip, _cyl(0.05 if not bony else 0.035, 0.6), coat, Vector3(0, -0.3, 0))
-	_part(root, _cyl(0.04, 0.45), dark, Vector3(0, 0.85, -0.65), Vector3(-0.5, 0, 0))
-	_part(root, _box(Vector3(0.36, 0.08, 0.4)), mat(Color(0.5, 0.1, 0.1)) if not bony else dark, Vector3(0, 0.98, -0.05))
 	return root
 
 
