@@ -10,6 +10,9 @@ const TRACKS := {
 	"menu": "res://assets/music/kaiserhymne.ogg",
 	"peace": "res://assets/music/blue_danube.mp3",
 	"battle": "res://assets/music/radetzky_march.mp3",
+	# The modern ages (7-12): 1920s dance band in peacetime, a march in battle.
+	"peace_modern": "res://assets/music/japanese_sandman.mp3",
+	"battle_modern": "res://assets/music/alte_kameraden.mp3",
 }
 const CROSSFADE := 2.5
 

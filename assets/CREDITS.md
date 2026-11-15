@@ -17,6 +17,10 @@ Which model each unit, building and resource uses is set in `data/visuals.json`.
 | `music/kaiserhymne.ogg` | Haydn, *Gott erhalte Franz den Kaiser* (Kaiserhymne) | Commons: "Gott erhalte Franz den Kaiser.ogg" | CC0 |
 | `music/radetzky_march.mp3` | Johann Strauss I, *Radetzky March* | "The President's Own" U.S. Marine Band | Public domain (U.S. government work) |
 | `music/blue_danube.mp3` | Johann Strauss II, *An der schönen blauen Donau* | U.S. Marine Band | Public domain (U.S. government work) |
+| `music/japanese_sandman.mp3` | Richard Whiting, *The Japanese Sandman* (1920) | Harry Raderman's Novelty Orchestra, 1920 | Public domain (composer d. 1938, lyricist d. 1952; 1920 recording). Commons: "\"The Japanese Sandman\" (1920) 1920s dance band music for flappers Harry Raderman's Novelty Orchestra.opus", converted to MP3 |
+| `music/alte_kameraden.mp3` | Carl Teike, *Alte Kameraden* (1889) | Anker-Orchester | CC0 / public domain (composer d. 1922). Commons: "CC0-CH - Anker-Orchester - Alte Kameraden - Carl Teike - Anker-5387-10815.flac", converted to MP3 |
+
+The last two play from the Age of the Federation (7) on, in peace and in battle.
 
 Sound effects are synthesised in code (`audio/sfx.gd`).
 

@@ -312,7 +312,9 @@ func _process(delta: float) -> void:
 	_fp("hud")
 	audio.listener = camera.focus
 	audio.hearing = camera.distance * 1.6
-	audio.music("battle" if (world.tick_count - _last_combat) * World.DT < 15.0 else "peace")
+	var mood := "battle" if (world.tick_count - _last_combat) * World.DT < 15.0 else "peace"
+	# From the Age of the Federation the music moves on to the 1920s.
+	audio.music(mood + ("_modern" if world.players[me].age >= 7 else ""))
 
 
 # --- Save and load ---------------------------------------------------------------------

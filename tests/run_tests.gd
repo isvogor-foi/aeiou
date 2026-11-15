@@ -661,6 +661,14 @@ func test_animation_names() -> void:
 			check(clips.has(DB.visuals.anim_presets[preset][key]), "preset %s %s: no clip %s" % [preset, key, DB.visuals.anim_presets[preset][key]])
 
 
+## Every music track loads (including the modern ages' 1920s ones).
+func test_music_tracks() -> void:
+	const AudioManager = preload("res://audio/audio_manager.gd")
+	for track in AudioManager.TRACKS:
+		var stream = load(AudioManager.TRACKS[track])
+		check(stream != null and stream.get_length() > 60.0, "music %s loads (%s)" % [track, AudioManager.TRACKS[track]])
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)
