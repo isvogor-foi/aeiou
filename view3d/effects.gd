@@ -205,18 +205,23 @@ func add_bomb(ev: Dictionary) -> void:
 	for i in 6:
 		var a := TAU * i / 6.0
 		_puff(at + Vector3(cos(a) * r * 0.3, 3.2, sin(a) * r * 0.3), Color(0.4, 0.43, 0.46, 0.85), r * 0.55, 7.0, 1.1, 0.8)
-	# The scar is a decal, so it lies on the ground however the terrain rolls:
-	# charred in the middle, a cooling Aether glow at the rim.
+	add_scar(at, r, 3.0)
+
+
+## A bomb scar on the ground (also on its own, for a scar left from an earlier
+## chapter): a decal, so it lies on the terrain however it rolls; charred in the
+## middle, an Aether glow at the rim that cools from `heat` to a faint lasting one.
+func add_scar(at: Vector3, r: float, heat := 0.5) -> void:
 	var scar := Decal.new()
 	scar.size = Vector3(r * 1.7, 4.0, r * 1.7)
 	scar.position = at
 	scar.texture_albedo = _scar_texture(false)
 	scar.texture_emission = _scar_texture(true)
-	scar.emission_energy = 3.0
+	scar.emission_energy = heat
 	scar.upper_fade = 0.3
 	scar.lower_fade = 0.3
 	add_child(scar)
-	_scars.append({"node": scar, "t": 0.0})
+	_scars.append({"node": scar, "t": 0.0 if heat > 0.5 else 30.0})
 
 
 var _scar_tex := {}

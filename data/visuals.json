@@ -864,6 +864,28 @@
 			"figure": "lise_meitner",
 			"height": 1.15,
 			"anims": "caster"
+		},
+		"viribus_mech": {
+			"figure": "viribus_mech",
+			"height": 3.8,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01",
+				"cast": "Sword_Attack"
+			}
+		},
+		"necropolis_titan": {
+			"figure": "necropolis_titan",
+			"height": 3.8,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Sword_Attack",
+				"death": "Death01",
+				"cast": "Sword_Attack"
+			}
 		}
 	},
 	"buildings": {

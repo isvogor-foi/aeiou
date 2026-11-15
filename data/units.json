@@ -1197,7 +1197,8 @@
 		},
 		"train_time": 70,
 		"hotkey": "E",
-		"glyph": "C"
+		"glyph": "C",
+		"upgrades_to": "viribus_mech"
 	},
 	"abomination": {
 		"name": "Abomination",
@@ -1436,7 +1437,8 @@
 		},
 		"train_time": 70,
 		"hotkey": "E",
-		"glyph": "C"
+		"glyph": "C",
+		"upgrades_to": "necropolis_titan"
 	},
 	"vampire": {
 		"name": "Vampire",
@@ -3257,5 +3259,85 @@
 		"cost": {},
 		"train_time": 1,
 		"sight": 10
+	},
+	"viribus_mech": {
+		"name": "Viribus Mech",
+		"faction": "monarchy",
+		"role": "melee",
+		"domain": "ground",
+		"limit": 1,
+		"description": "The Federation's walking fortress: a steel giant with an Aether reactor (only one at a time). Crushes buildings (+100%), its blows splash, and allies near it fight 15% harder.",
+		"hp": 3400,
+		"armor": "machine",
+		"damage": 95,
+		"dtype": "aether",
+		"range": 1.0,
+		"cooldown": 2.2,
+		"speed": 1.8,
+		"sight": 9,
+		"pop": 6,
+		"age": 12,
+		"passives": {
+			"cleave": {
+				"radius": 1.6,
+				"share": 0.6
+			}
+		},
+		"bonus_vs": {
+			"structure": 1.0
+		},
+		"aura": {
+			"radius": 6,
+			"damage": 0.15
+		},
+		"cost": {
+			"gold": 900,
+			"timber": 300,
+			"coal": 400,
+			"mana": 300
+		},
+		"train_time": 70,
+		"hotkey": "E",
+		"glyph": "C"
+	},
+	"necropolis_titan": {
+		"name": "Necropolis Titan",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"limit": 1,
+		"description": "The Concern's last machine: ten thousand of the dead in a single frame of iron and bone (only one at a time). Crushes buildings (+100%), its blows splash, and enemies near it deal 20% less damage.",
+		"hp": 3400,
+		"armor": "machine",
+		"damage": 90,
+		"dtype": "blade",
+		"range": 1.0,
+		"cooldown": 2.2,
+		"speed": 1.8,
+		"sight": 9,
+		"pop": 6,
+		"age": 12,
+		"passives": {
+			"cleave": {
+				"radius": 1.6,
+				"share": 0.6
+			}
+		},
+		"bonus_vs": {
+			"structure": 1.0
+		},
+		"aura": {
+			"radius": 6,
+			"enemy_damage": -0.2
+		},
+		"cost": {
+			"gold": 860,
+			"timber": 280,
+			"coal": 400,
+			"mana": 300
+		},
+		"train_time": 70,
+		"hotkey": "E",
+		"glyph": "C"
 	}
 }

@@ -19,6 +19,7 @@ func _initialize() -> void:
 	_ice_crown()
 	_long_winter()
 	_aether_bomb()
+	_treaty()
 	quit()
 
 
@@ -212,3 +213,23 @@ func _aether_bomb() -> void:
 			w.tick()
 		t += 5
 	print("aether bomb (on foot): winner %d after %ds, step %d, army left %d" % [w.winner, t, w.scenario.step, _army(w).size()])
+
+
+func _treaty() -> void:
+	# Each gate in turn, then the Count (the Emperor stays home).
+	var w := _world("m12_treaty")
+	var t := 0
+	while w.winner < 0 and t < 1500:
+		var army: Array = _army(w).filter(func(i): return w.get_entity(i).type_id != "archduke")
+		var open: Array = w.scenario.get("points", []).filter(func(pt): return pt.owner != 0)
+		var goal: Vector2
+		if w.scenario.step == 0 and not open.is_empty():
+			goal = open[0].pos
+		else:
+			var b = w.get_entity(int(w.scenario.get("boss", -1)))
+			goal = b.pos if b and b.alive else w.get_entity(int(w.scenario.flags.necro)).pos
+		w.issue({"type": "attack_move", "player": 0, "ids": army, "pos": goal})
+		for i in 5 * World.TICK_RATE:
+			w.tick()
+		t += 5
+	print("treaty (bomb %s): winner %d after %ds, step %d, army left %d" % [w.scenario.flags.bomb, w.winner, t, w.scenario.step, _army(w).size()])

@@ -141,6 +141,9 @@ Tiers: Škoda Siege Crawler → Aether Rocket Battery, Kaiserjäger → Paratroo
 ### Age 11, the Atom: roster and chapter done 2026-11-15 (still "wip")
 Tiers: Sturmtrupp → Atom Trooper (Aether automatic rifle), Biplane → Jet Fighter; new Flame Trooper (Laboratorium). Concern: Bat-Plane → Wraith Jet, Tommy-gun Ghoul → Reactor Ghoul. Hero: Lise Meitner (Aether Arc, Field Dressing). Chapter 11 shipped with it, with the scenario choice cards.
 
+### Age 12, Rockets: roster and chapter done 2026-11-15 (still "wip")
+Tiers: Aether Colossus → Viribus Mech, Bone Colossus → Necropolis Titan (both bigger and stronger; one at a time). Chapter 12 shipped with it.
+
 ### Roster sketch (to refine age by age)
 
 | Age | Monarchy | The Concern |
@@ -176,7 +179,7 @@ Tiers: Sturmtrupp → Atom Trooper (Aether automatic rifle), Biplane → Jet Fig
   - [x] **L** 9 The Ice Crown (Age 9): snow; build a Kaserne before the light goes (3 min), hold Camp Tegetthoff through the polar night (5 min of Frost Dead waves; a supply zeppelin midway), sunrise freezes the attackers near the camp, then destroy the foundry under the glacier (it collapses at 1 HP) guarded by the Ice Engine. Hedy Lamarr must survive. The Concern runs no AI here: an outpost, scripted. Bot: won with 3 units left.
   - [x] **L** 10 The Long Winter (Age 10): snow and half-night; three Carpathian passes start ours and the Concern's scripted offensive strikes them in turn every 50s (front points: `update_front`, either side can take them); all three lost loses; at 4:00 Tesla's radar comes online (a Radar Truck, the whole map revealed, reinforcements); after 8:00 break through to the winter headquarters (collapses at 1 HP). Tesla must survive. Bot: won, all passes held.
   - [x] **L** 11 The Aether Bomb (Age 11): take two relay pylons to find the soul reactor, then a choice card: drop the bomb (flash, mushroom cloud, a glowing scar; wins at once) or go in on foot against the garrison and the Reactor Lich (break or capture the reactor). The choice is remembered for Chapter 12 (`Scenario.choice("bomb")`). Lise Meitner must survive. Bot, on foot: won with 5 units left.
-  - [ ] **L** 12 The Treaty of the Living (Age 12)
+  - [x] **L** 12 The Treaty of the Living (Age 12): break the three gates of the machine-necropolis (waves every 50s), then destroy Count Szentkirályi (boss, three phases) as the crown lands' regiments arrive. Chapter 11's choice: the bomb's scar glows on the field and the Count starts at 70%, or Houdini's ghost returns. The Emperor must survive. Win: the Treaty, signed by the Emperor (and, if no bomb was dropped, a wedding). Bot: won with 6 units left.
 - [ ] **S** Extend `tests/campaign_bot.gd` and the chapter tests to every new chapter.
 
 ## Phase 6: Balance, performance and polish

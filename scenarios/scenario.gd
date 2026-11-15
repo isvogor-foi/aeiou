@@ -17,7 +17,7 @@ const FOE := 1
 ## Mission order for the campaign menu (the tutorial stands apart).
 const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
 ## Campaign 2, The Undying Century (1926-1955): one chapter per age 7-12, added as built.
-const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter", "m11_aether_bomb"]
+const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter", "m11_aether_bomb", "m12_treaty"]
 
 var id := ""
 var title := ""
@@ -447,6 +447,9 @@ const MISSIONS := {
 	"m8_black_thursday": ["8. Black Thursday", "The crash: keep the crown lands loyal while the Concern buys their debts.",
 			"The crown lands  ·  October 1929",
 			"Wall Street has crashed, and every bank in the crown lands is calling in its loans. Someone is buying the debts, city by city, and paying in cash: the Szentkirályi Concern. Where its collectors walk, loyalty bleeds away. Hold the Federation together until the markets reopen."],
+	"m12_treaty": ["12. The Treaty of the Living", "Break the gates of the Concern's machine-necropolis and end Count Szentkirályi.",
+			"The machine-necropolis  ·  1955",
+			"Forty years after Sarajevo, the Concern is down to its last fortress: a necropolis of iron and bone where the dead are made to order. The Emperor is ninety-two. He has signed every paper of the Federation himself, and he intends to be present for the last one."],
 	"m11_aether_bomb": ["11. The Aether Bomb", "Find the Concern's soul reactor, then decide: drop the Aether bomb, or go in on foot.",
 			"The Pannonian plain  ·  Spring 1945",
 			"Lise Meitner has split Aether. What she built can end a war in a single flash. The Concern has built a reactor that runs on souls; at full power it will raise every grave from Pressburg to Belgrade. Find it. Then decide."],

@@ -449,6 +449,8 @@ func _consume_events() -> void:
 			"cloud":
 				if _point_shown(ev.pos):
 					effects.add_cloud(ev)
+			"bomb_scar":
+				effects.add_scar(terrain.to3(ev.pos), float(ev.radius) / 32.0)
 			"bomb":
 				# The Aether bomb is seen and heard across the map.
 				effects.add_bomb(ev)

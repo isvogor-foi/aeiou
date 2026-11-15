@@ -1561,7 +1561,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter", "m11_aether_bomb"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter", "m11_aether_bomb", "m12_treaty"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1767,6 +1767,30 @@ func test_aether_bomb() -> void:
 			w.kill(w.get_entity(int(w.scenario.flags.reactor)))
 			_run(w, 2)
 			check(w.winner == 0, "breaking the reactor wins (winner %d)" % w.winner)
+
+
+## The Treaty of the Living: Chapter 11's choice shapes the start (Houdini's ghost
+## after "foot", a weakened Count after "drop"); the gates bring the Count; his
+## end wins the campaign.
+func test_treaty() -> void:
+	const Scenario = preload("res://scenarios/scenario.gd")
+	var before := Scenario.choice("bomb")
+	for pick in ["foot", "drop"]:
+		Scenario.record_choice("bomb", pick)
+		var w := _scenario_world("m12_treaty")
+		check((w.type_count(0, "houdini") == 1) == (pick == "foot"), "%s: Houdini's ghost only after going in on foot" % pick)
+		check(w.type_count(0, "viribus_mech") == 1 and int(DB.units.viribus_mech.age) == 12, "the Viribus Mech is in the army")
+		for pt in w.scenario.points:
+			pt.owner = 0
+		_run(w, 2)
+		var b = w.get_entity(int(w.scenario.get("boss", -1)))
+		check(b != null and b.type_id == "szentkiralyi", "%s: the gates bring the Count" % pick)
+		if b:
+			check((b.hp < b.max_hp * 0.8) == (pick == "drop"), "%s: the bomb spent his reserves" % pick)
+			w.kill(b)
+		_run(w, 2)
+		check(w.winner == 0, "%s: his end wins (winner %d)" % [pick, w.winner])
+	Scenario.record_choice("bomb", before)
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.
