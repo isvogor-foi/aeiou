@@ -12,7 +12,17 @@ Sizes: **S** an hour or two, **M** a day, **L** several days.
 
 - [x] **S** Settle the `main` / `origin/main` split (reset to `origin/main`, or force-push) and commit the pending work.
 - [ ] **M** Playtest Campaign 1, chapters 1–6; fix what turns up (Chapter 2's Grave Engine and Chapter 5's Empress are the balance suspects).
-- [ ] **L** Phase 8 balance for Ages 1–6 (see the to-do list in technical.md): pacing to 25–35 minutes, 50/50 fairness, victory tuning. Ages 7–12 will be balanced against this baseline, so it should be stable first.
+- [x] **L** Phase 8 balance for Ages 1–6 (2026-11-15), five AI-vs-AI batches of 16–18 games (`tests/run_balance.sh`, Normal, 60-minute cap):
+
+  | Batch | Wins M / C / none | Decided median | Reached Age 3 (M, C) |
+  |---|---|---|---|
+  | baseline | 6 / 9 / 3 | 30 min | 3/18, 4/18 |
+  | 2 (AI saves at 15%, ages 3–6 −25%) | 6 / 1 / 9 | 42 min | 14/16, 14/16 |
+  | 3 (saves at 22%, Covenant rush back) | 7 / 2 / 7 | 31 min | 15/16, 10/16 |
+  | 4 (Covenant economy) | 7 / 1 / 8 | 40 min | 14/16, 15/16 |
+  | 5 (round 3 + Covenant units −10%) | **7 / 6 / 3** | **33 min** | **12/16, 9/16** |
+
+  Kept: the AI saves for an age once it is a fifth paid for (was a third) and needs fewer workers to age up; ages 3–12 cost 25% less and ages 3–6 take 20% less time; Covenant units of ages 1–6 cost 10% less. Still open: Age 4+ is rarely reached in a 33-minute game, and victory tuning (territory, relics, wonders) was not touched.
 
 ## Phase 1: Foundations for 12 ages (engine, no new content) ✔ done 2026-11-15
 

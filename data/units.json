@@ -121,8 +121,8 @@
 		"sight": 6,
 		"pop": 1,
 		"cost": {
-			"herbs": 50,
-			"gold": 20
+			"herbs": 45,
+			"gold": 18
 		},
 		"train_time": 15,
 		"hotkey": "W",
@@ -151,9 +151,9 @@
 		"sight": 8,
 		"pop": 1,
 		"cost": {
-			"herbs": 40,
-			"gold": 25,
-			"mana": 20
+			"herbs": 36,
+			"gold": 22,
+			"mana": 18
 		},
 		"train_time": 20,
 		"hotkey": "E",
@@ -210,8 +210,8 @@
 		"supply_radius": 6,
 		"age": 2,
 		"cost": {
-			"timber": 60,
-			"gold": 40
+			"timber": 54,
+			"gold": 36
 		},
 		"train_time": 20,
 		"hotkey": "R",
@@ -369,9 +369,9 @@
 		"pop": 1,
 		"age": 2,
 		"cost": {
-			"herbs": 40,
-			"gold": 35,
-			"timber": 30
+			"herbs": 36,
+			"gold": 32,
+			"timber": 27
 		},
 		"train_time": 22,
 		"hotkey": "Q",
@@ -402,9 +402,9 @@
 			"raise_dead"
 		],
 		"cost": {
-			"herbs": 50,
-			"gold": 40,
-			"mana": 40
+			"herbs": 45,
+			"gold": 36,
+			"mana": 36
 		},
 		"train_time": 25,
 		"hotkey": "Q",
@@ -434,10 +434,10 @@
 			}
 		},
 		"cost": {
-			"herbs": 60,
-			"gold": 70,
-			"timber": 50,
-			"mana": 10
+			"herbs": 54,
+			"gold": 63,
+			"timber": 45,
+			"mana": 9
 		},
 		"train_time": 30,
 		"hotkey": "T",
@@ -574,9 +574,9 @@
 		"pop": 1,
 		"age": 2,
 		"cost": {
-			"herbs": 40,
-			"gold": 40,
-			"mana": 20
+			"herbs": 36,
+			"gold": 36,
+			"mana": 18
 		},
 		"train_time": 20,
 		"hotkey": "Q",
@@ -609,9 +609,9 @@
 			}
 		},
 		"cost": {
-			"herbs": 70,
-			"gold": 100,
-			"mana": 30
+			"herbs": 63,
+			"gold": 90,
+			"mana": 27
 		},
 		"train_time": 32,
 		"hotkey": "W",
@@ -1219,9 +1219,9 @@
 			"hook"
 		],
 		"cost": {
-			"herbs": 100,
-			"gold": 90,
-			"coal": 40
+			"herbs": 90,
+			"gold": 81,
+			"coal": 36
 		},
 		"train_time": 34,
 		"hotkey": "H",
@@ -1252,8 +1252,8 @@
 			}
 		},
 		"cost": {
-			"herbs": 70,
-			"gold": 70
+			"herbs": 63,
+			"gold": 63
 		},
 		"train_time": 24,
 		"hotkey": "G",
@@ -1295,9 +1295,9 @@
 			"structure": 0.6
 		},
 		"cost": {
-			"gold": 130,
-			"timber": 90,
-			"coal": 60
+			"gold": 117,
+			"timber": 81,
+			"coal": 54
 		},
 		"train_time": 38,
 		"hotkey": "Q",
@@ -1326,10 +1326,10 @@
 			}
 		},
 		"cost": {
-			"herbs": 120,
-			"gold": 160,
-			"coal": 60,
-			"mana": 80
+			"herbs": 108,
+			"gold": 144,
+			"coal": 54,
+			"mana": 72
 		},
 		"train_time": 45,
 		"hotkey": "E",
@@ -1361,9 +1361,9 @@
 			"ship": 0.5
 		},
 		"cost": {
-			"gold": 160,
-			"timber": 120,
-			"coal": 60
+			"gold": 144,
+			"timber": 108,
+			"coal": 54
 		},
 		"train_time": 40,
 		"hotkey": "R",
@@ -1390,9 +1390,9 @@
 			"mass_raise"
 		],
 		"cost": {
-			"herbs": 90,
-			"gold": 90,
-			"mana": 120
+			"herbs": 81,
+			"gold": 81,
+			"mana": 108
 		},
 		"train_time": 34,
 		"hotkey": "W",
@@ -1429,10 +1429,10 @@
 			"enemy_damage": -0.2
 		},
 		"cost": {
-			"gold": 450,
-			"timber": 150,
-			"coal": 250,
-			"herbs": 200
+			"gold": 405,
+			"timber": 135,
+			"coal": 225,
+			"herbs": 180
 		},
 		"train_time": 70,
 		"hotkey": "E",
@@ -1459,9 +1459,9 @@
 			"lifesteal": 0.5
 		},
 		"cost": {
-			"herbs": 70,
-			"gold": 50,
-			"mana": 20
+			"herbs": 63,
+			"gold": 45,
+			"mana": 18
 		},
 		"train_time": 22,
 		"hotkey": "V",
@@ -1485,9 +1485,9 @@
 		"pop": 2,
 		"age": 3,
 		"cost": {
-			"herbs": 90,
-			"gold": 60,
-			"timber": 40
+			"herbs": 81,
+			"gold": 54,
+			"timber": 36
 		},
 		"train_time": 30,
 		"hotkey": "Y",
@@ -1517,9 +1517,9 @@
 			}
 		},
 		"cost": {
-			"herbs": 50,
-			"gold": 50,
-			"mana": 30
+			"herbs": 45,
+			"gold": 45,
+			"mana": 27
 		},
 		"train_time": 22,
 		"hotkey": "E",
@@ -1769,9 +1769,9 @@
 		"pop": 3,
 		"age": 4,
 		"cost": {
-			"gold": 280,
-			"timber": 120,
-			"coal": 120
+			"gold": 252,
+			"timber": 108,
+			"coal": 108
 		},
 		"train_time": 45,
 		"hotkey": "R",
