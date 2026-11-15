@@ -119,6 +119,9 @@ Repeat this checklist for each age, **7 → 12**. Each age ships with its chapte
 ### Age 7, the Federation ✔ done 2026-11-15 (no longer "wip": skirmish can play to Age 7)
 Tiers: Grenadier → Sturmtrupp, Musketeer → Rifleman, Field Alchemist → Sanitäter, Kürassier → Armoured Car, Uhlan → Motorcycle Scout (Galicia), Tross Wagon → Supply Lorry; Reaver → Tommy-gun Ghoul, Soul Caller → Gas Trooper, Bonebow → Debt Collector, Bone Cart → Hearse. No new buildings (the tiers train where their lines do); research levels VII exist; the AI fields every tier (checked AI-vs-AI). Chapter 7 shipped with it.
 
+### Age 8, Zeppelins: roster and chapter done 2026-11-15 (still "wip" until the balance pass lands)
+Tiers: Kress Gyrocopter → Biplane, Lohner Aethership → Aether Zeppelin, Jäger → Gebirgsjäger; new Radio Spotter (Laboratorium; long sight, Bombardment). Concern: Plague Balloon → Corpse-Zeppelin, Bone Drake → Bat-Plane, Necromancer → Wireless Medium. Chapter 8 shipped with it.
+
 ### Roster sketch (to refine age by age)
 
 | Age | Monarchy | The Concern |
@@ -150,7 +153,7 @@ Tiers: Grenadier → Sturmtrupp, Musketeer → Rifleman, Field Alchemist → San
 - [ ] **M** Scenario toolkit additions: weather (the polar night and blizzards for Chapter 9), a player choice with a remembered outcome (the bomb in Chapter 11), market and economy events (Chapter 8), fronts with many capture points (Chapter 10).
 - [ ] Chapters, each built with its age in Phase 4:
   - [x] **L** 7 Rosabelle, Believe (Age 7): three séance parlours give the words of Houdini's code and free his ghost; then storm the counting-house (guarded, with waves) where Szentkirályi steps out, speaks and leaves; Vienna sends reinforcements with Landpanzers, since rifles can't crack buildings. Bot-played: won with 7 units left.
-  - [ ] **L** 8 Black Thursday (Age 8)
+  - [x] **L** 8 Black Thursday (Age 8): Vienna and four crown-land cities; every 70s the Concern "buys" a city's debt and its collectors loiter inside the borders out of the guns' reach, draining loyalty (~24s to a revolt if nobody answers); Federal Charters hold a city at half; corpse-zeppelins raid the supply lorries; reinforcements every third buy-out. Hold 12 minutes; three lands lost loses. Bot (charters two cities, answers every buy-out): won with nothing lost.
   - [ ] **L** 9 The Ice Crown (Age 9)
   - [ ] **L** 10 The Long Winter (Age 10)
   - [ ] **L** 11 The Aether Bomb (Age 11)

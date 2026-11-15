@@ -677,6 +677,48 @@
 			"figure": "szentkiralyi",
 			"height": 1.35,
 			"anims": "caster"
+		},
+		"biplane": {
+			"procedural": "biplane",
+			"scale": 1.0,
+			"fly_height": 2.0,
+			"bank": true,
+			"circle": 0.7,
+			"shot": "burst",
+			"burst": 4
+		},
+		"zeppelin": {
+			"procedural": "zeppelin",
+			"scale": 0.8,
+			"fly_height": 2.9,
+			"shot": "shell"
+		},
+		"gebirgsjaeger": {
+			"figure": "gebirgsjaeger",
+			"height": 1.2,
+			"anims": "rifleman"
+		},
+		"corpse_zeppelin": {
+			"procedural": "corpse_zeppelin",
+			"scale": 0.8,
+			"fly_height": 2.8
+		},
+		"bat_plane": {
+			"procedural": "bat_plane",
+			"scale": 1.1,
+			"fly_height": 2.2,
+			"bank": true,
+			"circle": 0.6
+		},
+		"wireless_medium": {
+			"figure": "wireless_medium",
+			"height": 1.25,
+			"anims": "radio"
+		},
+		"radio_spotter": {
+			"figure": "radio_spotter",
+			"height": 1.2,
+			"anims": "radio"
 		}
 	},
 	"buildings": {

@@ -17,7 +17,7 @@ const FOE := 1
 ## Mission order for the campaign menu (the tutorial stands apart).
 const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
 ## Campaign 2, The Undying Century (1926-1955): one chapter per age 7-12, added as built.
-const CAMPAIGN2 := ["m7_rosabelle"]
+const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday"]
 
 var id := ""
 var title := ""
@@ -389,6 +389,9 @@ const MISSIONS := {
 	"m7_rosabelle": ["7. Rosabelle, Believe", "Shut down the Concern's séance parlours, free Houdini's soul, and storm its counting-house.",
 			"Vienna and Budapest  ·  November 1926",
 			"Harry Houdini died on Halloween. Before he went, he told his wife a code that any honest medium would have to give: ten words that spell \"Rosabelle, believe\". Last night a Viennese medium spoke it. The Concern is keeping his soul in its séance parlours, and charging admission."],
+	"m8_black_thursday": ["8. Black Thursday", "The crash: keep the crown lands loyal while the Concern buys their debts.",
+			"The crown lands  ·  October 1929",
+			"Wall Street has crashed, and every bank in the crown lands is calling in its loans. Someone is buying the debts, city by city, and paying in cash: the Szentkirályi Concern. Where its collectors walk, loyalty bleeds away. Hold the Federation together until the markets reopen."],
 }
 
 ## Title cards before Chapter 1: the premise, one page at a time.

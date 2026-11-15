@@ -307,7 +307,8 @@
 		"armor": "structure",
 		"sight": 6,
 		"trains": [
-			"field_alchemist"
+			"field_alchemist",
+			"radio_spotter"
 		],
 		"age": 2,
 		"cost": {

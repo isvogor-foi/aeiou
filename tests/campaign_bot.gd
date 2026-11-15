@@ -15,6 +15,7 @@ func _initialize() -> void:
 	_buda()
 	_vienna()
 	_rosabelle()
+	_black_thursday()
 	quit()
 
 
@@ -110,3 +111,32 @@ func _rosabelle() -> void:
 	var house = w.get_entity(int(w.scenario.flags.house))
 	print("rosabelle: winner %d after %ds, step %d, parlours %d, house hp %d, army left %d" % [w.winner, t, w.scenario.step,
 			w.scenario.get("points", []).filter(func(pt): return pt.owner == 0).size(), house.hp if house else 0, _army(w).size()])
+
+
+func _black_thursday() -> void:
+	# Charter two cities, then answer each buy-out with the army.
+	var w := _world("m8_black_thursday")
+	var cities: Array = w.scenario.flags.cities
+	for i in 2:
+		print("  charter: ", w.issue({"type": "charter", "player": 0, "building": int(cities[i])}))
+	var t := 0
+	while w.winner < 0 and t < 800:
+		var target := Vector2.INF
+		for e in w.entities.values():
+			if e.alive and e.owner == 1 and e.kind == Entity.UNIT and e.can_attack():
+				for id in cities:
+					var c = w.get_entity(int(id))
+					if c and c.alive and c.owner == 0 and e.pos.distance_to(c.pos) < 13 * 32:
+						target = e.pos
+		var army: Array = _army(w).filter(func(i): return w.get_entity(i).type_id != "archduke")
+		if target != Vector2.INF:
+			w.issue({"type": "attack_move", "player": 0, "ids": army, "pos": target})
+		for i in 5 * World.TICK_RATE:
+			w.tick()
+		t += 5
+	var lost := 0
+	for id in cities:
+		var c = w.get_entity(int(id))
+		if c == null or c.owner != 0:
+			lost += 1
+	print("black thursday: winner %d after %ds, crown lands lost %d, army left %d" % [w.winner, t, lost, _army(w).size()])

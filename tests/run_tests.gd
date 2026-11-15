@@ -1541,7 +1541,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1632,6 +1632,44 @@ func test_rosabelle() -> void:
 	w.capture_city(house, 0)
 	_run(w, 2)
 	check(w.winner == 0, "taking the counting-house wins (winner %d)" % w.winner)
+
+
+## Black Thursday: four crown-land cities; buy-outs bring collectors that drain a
+## city's loyalty; losing three lands loses, holding to the end wins.
+func test_black_thursday() -> void:
+	var w := _scenario_world("m8_black_thursday")
+	check(w.scenario.flags.cities.size() == 4, "four crown-land cities (%d)" % w.scenario.flags.cities.size())
+	w.ais.clear()
+	_run(w, 41)
+	check(int(w.scenario.flags.buyouts) >= 1, "the Concern buys a city's debt")
+	var before := {}
+	for id in w.scenario.flags.cities:
+		before[id] = w.get_entity(int(id)).loyalty
+	_run(w, 20)
+	var drop := 0.0
+	for id in w.scenario.flags.cities:
+		var c = w.get_entity(int(id))
+		if c and c.owner == 0:
+			drop = maxf(drop, float(before[id]) - c.loyalty)
+	check(drop > 10.0, "collectors drain a city's loyalty (%.1f)" % drop)
+	for i in 3:
+		w.revolt(w.get_entity(int(w.scenario.flags.cities[i])))
+	_run(w, 2)
+	check(w.winner == 1, "three crown lands lost loses (winner %d)" % w.winner)
+	w = _scenario_world("m8_black_thursday")
+	w.ais.clear()
+	# Keep every collector away (as a perfect defence would) and hold to the end.
+	for sec in int(Scenario_HOLD) + 5:
+		for e in w.entities.values():
+			if e.alive and e.owner == 1 and e.kind == Entity.UNIT:
+				w.kill(e)
+		_run(w, 1)
+		if w.winner >= 0:
+			break
+	check(w.winner == 0, "holding until the markets reopen wins (winner %d)" % w.winner)
+
+
+const Scenario_HOLD := 720.0
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.

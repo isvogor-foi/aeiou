@@ -250,7 +250,8 @@
 				"still": 2.0,
 				"detect": 3.0
 			}
-		}
+		},
+		"upgrades_to": "gebirgsjaeger"
 	},
 	"field_alchemist": {
 		"name": "Field Alchemist",
@@ -407,7 +408,8 @@
 		},
 		"train_time": 25,
 		"hotkey": "Q",
-		"glyph": "N"
+		"glyph": "N",
+		"upgrades_to": "wireless_medium"
 	},
 	"grave_brute": {
 		"name": "Grave Brute",
@@ -523,7 +525,8 @@
 		"glyph": "b",
 		"abilities": [
 			"aether_bomb"
-		]
+		],
+		"upgrades_to": "biplane"
 	},
 	"double_eagle": {
 		"name": "Double Eagle",
@@ -579,7 +582,8 @@
 		"glyph": "v",
 		"abilities": [
 			"plague_drop"
-		]
+		],
+		"upgrades_to": "corpse_zeppelin"
 	},
 	"bone_drake": {
 		"name": "Bone Drake",
@@ -610,7 +614,8 @@
 		},
 		"train_time": 32,
 		"hotkey": "W",
-		"glyph": "D"
+		"glyph": "D",
+		"upgrades_to": "bat_plane"
 	},
 	"skiff": {
 		"name": "Fishing Skiff",
@@ -1083,7 +1088,8 @@
 		},
 		"train_time": 45,
 		"hotkey": "E",
-		"glyph": "Z"
+		"glyph": "Z",
+		"upgrades_to": "zeppelin"
 	},
 	"ironclad": {
 		"name": "Tegetthoff Ironclad",
@@ -2382,5 +2388,231 @@
 		"cost": {},
 		"train_time": 1,
 		"sight": 10
+	},
+	"biplane": {
+		"name": "Biplane",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A fabric-and-wire fighter with a synchronised machine gun: fast, deadly to other flyers, and it still carries an Aether Bomb (D).",
+		"hp": 170,
+		"armor": "air",
+		"damage": 7,
+		"dtype": "ballistic",
+		"range": 3,
+		"cooldown": 0.5,
+		"speed": 5.2,
+		"sight": 10,
+		"pop": 1,
+		"age": 8,
+		"cost": {
+			"herbs": 50,
+			"gold": 70,
+			"mana": 20,
+			"coal": 20
+		},
+		"train_time": 24,
+		"hotkey": "Q",
+		"glyph": "b",
+		"abilities": [
+			"aether_bomb"
+		],
+		"bonus_vs": {
+			"air": 0.5
+		}
+	},
+	"zeppelin": {
+		"name": "Aether Zeppelin",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A silvered Aether zeppelin. Bombs everything below (splash) and carries 8 troops (board it like a transport; select it and use Unload).",
+		"hp": 1100,
+		"armor": "air",
+		"damage": 30,
+		"dtype": "explosive",
+		"range": 2,
+		"cooldown": 3.0,
+		"speed": 2.2,
+		"sight": 10,
+		"pop": 4,
+		"age": 8,
+		"capacity": 8,
+		"passives": {
+			"cleave": {
+				"radius": 1.5,
+				"share": 0.8
+			}
+		},
+		"bonus_vs": {
+			"structure": 0.5
+		},
+		"cost": {
+			"gold": 260,
+			"timber": 140,
+			"coal": 120,
+			"mana": 80
+		},
+		"train_time": 50,
+		"hotkey": "E",
+		"glyph": "Z"
+	},
+	"gebirgsjaeger": {
+		"name": "Gebirgsjäger",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Mountain sharpshooter with a scoped rifle. Camouflage: hidden while it keeps still (and until it fires); enemies spot it within 3 tiles.",
+		"hp": 90,
+		"armor": "infantry",
+		"damage": 16,
+		"dtype": "ballistic",
+		"range": 8,
+		"cooldown": 1.8,
+		"speed": 2.5,
+		"sight": 10,
+		"pop": 1,
+		"age": 8,
+		"cost": {
+			"herbs": 50,
+			"gold": 50,
+			"timber": 30
+		},
+		"train_time": 24,
+		"hotkey": "Q",
+		"glyph": "R",
+		"bonus_vs": {
+			"air": 0.5
+		},
+		"passives": {
+			"stealth": {
+				"still": 2.0,
+				"detect": 3.0
+			}
+		}
+	},
+	"corpse_zeppelin": {
+		"name": "Corpse-Zeppelin",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A stitched envelope of the dead on bone ribs. Slow and hard to bring down; Plague Drop (D) leaves a lingering poison cloud, and its soul-bombs splash.",
+		"hp": 650,
+		"armor": "air",
+		"damage": 18,
+		"dtype": "soul",
+		"range": 2.5,
+		"cooldown": 2.2,
+		"speed": 2.4,
+		"sight": 10,
+		"pop": 3,
+		"age": 8,
+		"cost": {
+			"herbs": 120,
+			"gold": 160,
+			"mana": 60,
+			"coal": 60
+		},
+		"train_time": 40,
+		"hotkey": "Q",
+		"glyph": "v",
+		"abilities": [
+			"plague_drop"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.5,
+				"share": 0.7
+			}
+		}
+	},
+	"bat_plane": {
+		"name": "Bat-Plane",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A bone airframe under flapping membrane wings, flown by the dead. Fast, and its soul-fire scorches around its target.",
+		"hp": 300,
+		"armor": "air",
+		"damage": 12,
+		"dtype": "soul",
+		"range": 3,
+		"cooldown": 1.0,
+		"speed": 4.6,
+		"sight": 9,
+		"pop": 2,
+		"age": 8,
+		"passives": {
+			"cleave": {
+				"radius": 1.4,
+				"share": 0.6
+			}
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 110,
+			"mana": 30,
+			"coal": 20
+		},
+		"train_time": 30,
+		"hotkey": "W",
+		"glyph": "D"
+	},
+	"wireless_medium": {
+		"name": "Wireless Medium",
+		"faction": "covenant",
+		"role": "caster",
+		"domain": "ground",
+		"description": "A séance by radio: drains life to heal itself (autocast) and Raises the Dead; hears everything within a long way.",
+		"hp": 95,
+		"armor": "undead",
+		"damage": 6,
+		"dtype": "soul",
+		"range": 5,
+		"cooldown": 2.0,
+		"speed": 2.4,
+		"sight": 12,
+		"pop": 1,
+		"age": 8,
+		"abilities": [
+			"life_drain",
+			"raise_dead"
+		],
+		"cost": {
+			"herbs": 60,
+			"gold": 50,
+			"mana": 40
+		},
+		"train_time": 25,
+		"hotkey": "Q",
+		"glyph": "N"
+	},
+	"radio_spotter": {
+		"name": "Radio Spotter",
+		"faction": "monarchy",
+		"role": "caster",
+		"domain": "ground",
+		"description": "A signaller with a field radio and binoculars. Sees far, and calls in Bombardment (D): shells an area, buildings included.",
+		"hp": 75,
+		"armor": "infantry",
+		"damage": 6,
+		"dtype": "ballistic",
+		"range": 4,
+		"cooldown": 1.6,
+		"speed": 2.5,
+		"sight": 14,
+		"pop": 1,
+		"age": 8,
+		"abilities": [
+			"bombardment"
+		],
+		"cost": {
+			"herbs": 60,
+			"gold": 60,
+			"mana": 40
+		},
+		"train_time": 26,
+		"hotkey": "R",
+		"glyph": "S"
 	}
 }
