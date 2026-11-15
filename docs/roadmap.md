@@ -129,19 +129,19 @@ Repeat this checklist for each age, **7 → 12**. Each age ships with its chapte
 ### Age 7, the Federation ✔ done 2026-11-15 (no longer "wip": skirmish can play to Age 7)
 Tiers: Grenadier → Sturmtrupp, Musketeer → Rifleman, Field Alchemist → Sanitäter, Kürassier → Armoured Car, Uhlan → Motorcycle Scout (Galicia), Tross Wagon → Supply Lorry; Reaver → Tommy-gun Ghoul, Soul Caller → Gas Trooper, Bonebow → Debt Collector, Bone Cart → Hearse. No new buildings (the tiers train where their lines do); research levels VII exist; the AI fields every tier (checked AI-vs-AI). Chapter 7 shipped with it.
 
-### Age 8, Zeppelins: roster and chapter done 2026-11-15 (still "wip" until the balance pass lands)
+### Age 8, Zeppelins: roster and chapter done 2026-11-15 (finished; playable in skirmish)
 Tiers: Kress Gyrocopter → Biplane, Lohner Aethership → Aether Zeppelin, Jäger → Gebirgsjäger; new Radio Spotter (Laboratorium; long sight, Bombardment). Concern: Plague Balloon → Corpse-Zeppelin, Bone Drake → Bat-Plane, Necromancer → Wireless Medium. Chapter 8 shipped with it.
 
-### Age 9, Diesel: roster and chapter done 2026-11-15 (still "wip" until the balance pass lands)
+### Age 9, Diesel: roster and chapter done 2026-11-15 (finished; playable in skirmish)
 Tiers: Landpanzer → Porsche Heavy Tank, Armoured Car → Light Tank, Supply Lorry → Halftrack (supply and a 6-troop transport); new Arctic Trooper (Kaserne; "hardy": half attrition). Concern: Bone Juggernaut → Undead Panzer, Ghoul Rider → Bone Halftrack, Hearse → Corpse-Truck; Debt Collector → Frost Dead (Age 10, defined early for Chapter 9). Hero: Hedy Lamarr (Frequency Hopping jams and slows enemies; Great Escape). Scenario weather: snow and a polar night (dims the sun). Chapter 9 shipped with it.
 
-### Age 10, Radar: roster done 2026-11-15 (still "wip")
+### Age 10, Radar: roster done 2026-11-15 (finished; playable in skirmish)
 Tiers: Škoda Siege Crawler → Aether Rocket Battery, Kaiserjäger → Paratrooper, Double Eagle → Monoplane Fighter; new Radar Truck (Fabrik; sight 16, `"detector": 9` exposes stealth from 9 tiles) and Rocket Trooper (Schießstand; anti-machine rockets). Concern: Debt Collector → Frost Dead, Abomination → Plated Abomination.
 
-### Age 11, the Atom: roster and chapter done 2026-11-15 (still "wip")
+### Age 11, the Atom: roster and chapter done 2026-11-15 (finished; playable in skirmish)
 Tiers: Sturmtrupp → Atom Trooper (Aether automatic rifle), Biplane → Jet Fighter; new Flame Trooper (Laboratorium). Concern: Bat-Plane → Wraith Jet, Tommy-gun Ghoul → Reactor Ghoul. Hero: Lise Meitner (Aether Arc, Field Dressing). Chapter 11 shipped with it, with the scenario choice cards.
 
-### Age 12, Rockets: roster and chapter done 2026-11-15 (still "wip")
+### Age 12, Rockets: roster and chapter done 2026-11-15 (finished; playable in skirmish)
 Tiers: Aether Colossus → Viribus Mech, Bone Colossus → Necropolis Titan (both bigger and stronger; one at a time). Chapter 12 shipped with it.
 
 ### Roster sketch (to refine age by age)
