@@ -116,6 +116,9 @@ Repeat this checklist for each age, **7 → 12**. Each age ships with its chapte
 - [ ] AI: build order, unit mix and research order for the age.
 - [ ] Gallery screenshots, tests, and a short AI-vs-AI soak.
 
+### Age 7, the Federation ✔ done 2026-11-15 (no longer "wip": skirmish can play to Age 7)
+Tiers: Grenadier → Sturmtrupp, Musketeer → Rifleman, Field Alchemist → Sanitäter, Kürassier → Armoured Car, Uhlan → Motorcycle Scout (Galicia), Tross Wagon → Supply Lorry; Reaver → Tommy-gun Ghoul, Soul Caller → Gas Trooper, Bonebow → Debt Collector, Bone Cart → Hearse. No new buildings (the tiers train where their lines do); research levels VII exist; the AI fields every tier (checked AI-vs-AI). Chapter 7 shipped with it.
+
 ### Roster sketch (to refine age by age)
 
 | Age | Monarchy | The Concern |
