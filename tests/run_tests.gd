@@ -1561,7 +1561,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1715,6 +1715,32 @@ func test_ice_crown() -> void:
 			w.kill(e)
 	_run(w, 2)
 	check(w.winner == 1, "losing Hedy Lamarr loses")
+
+
+## The Long Winter: the passes start ours; enemies standing alone take one back;
+## Tesla's radar comes online; after the hold, the headquarters' fall wins.
+func test_long_winter() -> void:
+	var w := _scenario_world("m10_long_winter")
+	check(w.scenario.points.filter(func(p): return p.owner == 0).size() == 3, "three passes start ours")
+	var pt: Dictionary = w.scenario.points[0]
+	for e in w.entities.values():
+		if e.alive and e.owner == 0 and e.kind == Entity.UNIT and e.pos.distance_to(pt.pos) < 14 * GameMap.TILE:
+			w.kill(e)
+	var foe := w.spawn_unit("frost_dead", 1, pt.pos)
+	for i in 18:
+		foe.pos = pt.pos
+		foe.orders.clear()
+		_run(w, 1)
+	check(pt.owner == 1, "the enemy takes an unguarded pass (%d, %.2f)" % [pt.owner, pt.progress])
+	w.scenario.started = w.tick_count - int(241 * World.TICK_RATE)
+	_run(w, 2)
+	check(w.type_count(0, "radar_truck") == 1, "Tesla's radar comes online")
+	w.scenario.started = w.tick_count - int(481 * World.TICK_RATE)
+	_run(w, 2)
+	check(w.scenario.step == 1, "the passes held: break through")
+	w.kill(w.get_entity(int(w.scenario.flags.hq)))
+	_run(w, 2)
+	check(w.winner == 0, "the headquarters' fall wins (winner %d)" % w.winner)
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.

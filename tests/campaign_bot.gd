@@ -17,6 +17,7 @@ func _initialize() -> void:
 	_rosabelle()
 	_black_thursday()
 	_ice_crown()
+	_long_winter()
 	quit()
 
 
@@ -162,3 +163,29 @@ func _ice_crown() -> void:
 		t += 5
 	var f = w.get_entity(int(w.scenario.flags.foundry))
 	print("ice crown: winner %d after %ds, step %d, foundry hp %d, army left %d" % [w.winner, t, w.scenario.step, f.hp if f and f.alive else 0, _army(w).size()])
+
+
+func _long_winter() -> void:
+	# Answer whichever pass the enemy is nearest; after the hold, storm the HQ.
+	var w := _world("m10_long_winter")
+	var t := 0
+	while w.winner < 0 and t < 1200:
+		var army: Array = _army(w).filter(func(i): return w.get_entity(i).type_id != "tesla")
+		var goal: Vector2 = w.scenario.points[0].pos
+		if w.scenario.step == 1:
+			goal = w.get_entity(int(w.scenario.flags.hq)).pos
+		else:
+			var best := INF
+			for e in w.entities.values():
+				if e.alive and e.owner == 1 and e.kind == Entity.UNIT and e.can_attack():
+					for pt in w.scenario.points:
+						var d: float = e.pos.distance_to(pt.pos)
+						if d < best:
+							best = d
+							goal = pt.pos
+		w.issue({"type": "attack_move", "player": 0, "ids": army, "pos": goal})
+		for i in 5 * World.TICK_RATE:
+			w.tick()
+		t += 5
+	var held: int = w.scenario.points.filter(func(p): return p.owner == 0).size()
+	print("long winter: winner %d after %ds, step %d, passes held %d, army left %d" % [w.winner, t, w.scenario.step, held, _army(w).size()])

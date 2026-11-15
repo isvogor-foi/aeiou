@@ -17,7 +17,7 @@ const FOE := 1
 ## Mission order for the campaign menu (the tutorial stands apart).
 const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
 ## Campaign 2, The Undying Century (1926-1955): one chapter per age 7-12, added as built.
-const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown"]
+const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter"]
 
 var id := ""
 var title := ""
@@ -285,6 +285,36 @@ func update_points(w, seconds_to_take := 6.0) -> Array:
 	return taken
 
 
+## Contested points for a front: progress runs from -1 (the enemy's) to +1 (ours);
+## whoever stands alone at a point pushes it their way. Returns
+## {"taken": [keys we took], "lost": [keys the enemy took]} this second.
+func update_front(w, seconds_to_take := 8.0) -> Dictionary:
+	var out := {"taken": [], "lost": []}
+	for pt in w.scenario.get("points", []):
+		var mine := 0
+		var theirs := 0
+		for e in w.entities.values():
+			if e.alive and e.kind == Entity.UNIT and e.can_attack() and not e.is_worker() and e.pos.distance_to(pt.pos) <= 3.0 * TILE:
+				if e.owner == ME:
+					mine += 1
+				elif e.owner == FOE:
+					theirs += 1
+		var step := 1.0 / seconds_to_take
+		if mine > 0 and theirs == 0:
+			pt.progress = minf(1.0, pt.progress + step)
+		elif theirs > 0 and mine == 0:
+			pt.progress = maxf(-1.0, pt.progress - step)
+		if pt.progress >= 1.0 and pt.owner != ME:
+			pt.owner = ME
+			out.taken.append(pt.key)
+		elif pt.progress <= -1.0 and pt.owner != FOE:
+			pt.owner = FOE
+			out.lost.append(pt.key)
+	if not out.taken.is_empty() or not out.lost.is_empty():
+		_sync_markers(w)
+	return out
+
+
 func points_held(w) -> int:
 	return w.scenario.get("points", []).filter(func(pt): return pt.owner == ME).size()
 
@@ -392,6 +422,9 @@ const MISSIONS := {
 	"m8_black_thursday": ["8. Black Thursday", "The crash: keep the crown lands loyal while the Concern buys their debts.",
 			"The crown lands  ·  October 1929",
 			"Wall Street has crashed, and every bank in the crown lands is calling in its loans. Someone is buying the debts, city by city, and paying in cash: the Szentkirályi Concern. Where its collectors walk, loyalty bleeds away. Hold the Federation together until the markets reopen."],
+	"m10_long_winter": ["10. The Long Winter", "Hold three Carpathian passes against the Concern's winter offensive, then break through.",
+			"The Carpathians  ·  Winter 1941",
+			"Szentkirályi's dead are marching on the Federation through the Carpathian passes, under a séance-fog no scout can see through. Nikola Tesla, eighty-five, has one more invention for the empire. Hold the passes until it is ready, then take the war to the Concern."],
 	"m9_ice_crown": ["9. The Ice Crown", "Build a camp on the ice, hold through the polar night, then destroy the Concern's foundry under the glacier.",
 			"Franz Josef Land  ·  February 1934",
 			"In 1873 an Austro-Hungarian expedition discovered an archipelago in the Arctic and named it for the Emperor. Now there is smoke under its glacier: the Concern has built a foundry where no one would look. An airship expedition is on its way, with Hedy Lamarr on the radio. There are a few hours of daylight left."],
