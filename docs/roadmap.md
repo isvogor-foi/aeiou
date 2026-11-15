@@ -192,7 +192,14 @@ Tiers: Aether Colossus → Viribus Mech, Bone Colossus → Necropolis Titan (bot
 
 ## Phase 6: Balance, performance and polish
 
-- [ ] **L** Balance the full ladder: `tests/run_balance.sh` across Classic, Modern and Full games; both sides about 50/50; game lengths per preset.
+- [~] **L** Balance the modern ladder (2026-11-15, `START_AGE=7 tests/run_balance.sh`, 16 games each):
+
+  | Batch | Wins M / C / none | Decided median | Reached Age 8 (M, C) |
+  |---|---|---|---|
+  | Ages 8–12 at the placeholder costs | 6 / 4 / 6 | 30 min | 0/16, 1/16 |
+  | Ages 8–12 costs ×0.55, times ×0.8 | **5 / 5 / 6** | **29.5 min** | 1/16, 4/16 |
+
+  Kept the second. Age 7 (entered from Age 6) costs ×0.72, so it is the era's entry fee, a little above Age 8. Open: games started at Age 7 spend most of half an hour building an economy, so the later ages are still rare in a 30-minute game (as Age 4+ is on the classic ladder); 6 of 16 games time out (mostly islands and inland). A "Full" batch (Ages 1–12) was not run.
 - [x] **M** Performance (2026-11-15, Iris Xe, Medium, 75 v 75, `tests/bench_fps.gd`, `MODERN=1` for the modern mix): classic 27.5 fps; modern 27.3 fps, then 28.2 once wheels, tracks and turrets animate only on screen. Modern battles draw fewer calls (2,604 vs 3,064) but the views do more (7.5 vs 6.3 ms). City traffic is capped per quality setting (off on Low). Not done: vehicle LODs; a 400-unit modern stress test.
 - [x] **M** AI: anti-air (2026-11-15): seeing three or more enemy flyers, the AI weighs lines with an anti-air bonus and its own fighters 2.5x in its army mix (`_share`). Not done: combined-arms formations (tanks kept with infantry).
 - [ ] **S** Docs: README features and screenshot, technical.md, story.md "as built".
