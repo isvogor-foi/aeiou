@@ -1,10 +1,12 @@
 extends Node3D
 ## Atmosphere that follows the camera: drifting aether motes (glowing, slowly
-## rising) and falling soot from the empire's chimneys. Purely cosmetic.
+## rising) and falling soot from the empire's chimneys, thickening as the ages
+## industrialise (Age 7 on). Purely cosmetic.
 
 const Graphics = preload("res://ui/graphics.gd")
 
 var camera
+var gv
 var _motes: GPUParticles3D
 var _ash: GPUParticles3D
 
@@ -15,7 +17,9 @@ func _ready() -> void:
 		return
 	var many := level == "high"
 	_motes = _make(160 if many else 80, 0.07, Color(0.45, 0.85, 1.0), 4.0, Vector3(0, 0.25, 0), 9.0)
-	_ash = _make(260 if many else 120, 0.045, Color(0.16, 0.15, 0.15), 0.0, Vector3(0.15, -0.35, 0.05), 10.0)
+	# Room for twice the soot of the early ages; amount_ratio dials it in by age.
+	_ash = _make(520 if many else 240, 0.045, Color(0.16, 0.15, 0.15), 0.0, Vector3(0.15, -0.35, 0.05), 10.0)
+	_ash.amount_ratio = 0.5
 	add_child(_motes)
 	add_child(_ash)
 
@@ -72,3 +76,7 @@ func _make(amount: int, size: float, color: Color, glow: float, drift: Vector3, 
 func _process(_delta: float) -> void:
 	if camera and _motes:
 		global_position = camera.focus + Vector3(0, 1.5, 0)
+	if gv and _ash:
+		# Half the room until the Age of the Federation, then up to all of it by Age 12.
+		var age: int = gv.world.players[gv.me].age
+		_ash.amount_ratio = 0.5 + 0.5 * clampf((age - 6) / 6.0, 0.0, 1.0)

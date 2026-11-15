@@ -141,7 +141,12 @@ func _ready() -> void:
 	camera.make_current()
 	var ambience := preload("res://view3d/ambience.gd").new()
 	ambience.camera = camera
+	ambience.gv = self
 	add_child(ambience)
+	var traffic := preload("res://view3d/traffic.gd").new()
+	traffic.gv = self
+	traffic.terrain = terrain
+	add_child(traffic)
 
 	var overlay_layer := CanvasLayer.new()
 	overlay_layer.layer = 0

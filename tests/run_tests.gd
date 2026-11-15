@@ -578,7 +578,7 @@ func test_vehicle_kit() -> void:
 		var turrets := parts.filter(func(c): return c.has_meta("turret")).size()
 		check(n.get_child_count() > 0 and n.get_child(0) is MeshInstance3D, "%s bakes a hull mesh" % kind)
 		var props := parts.filter(func(c): return c.has_meta("spin_z") or c.has_meta("flap")).size()
-		if kind in Vehicles.GROUND:
+		if kind in Vehicles.GROUND or kind in Vehicles.CIVILIAN:
 			check(rolls >= 2, "%s has turning wheels (%d)" % [kind, rolls])
 		elif kind not in ["jet", "wraith_jet"]:
 			check(props >= 1, "%s has a propeller or wings that move (%d)" % [kind, props])

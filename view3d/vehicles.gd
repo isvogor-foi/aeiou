@@ -18,7 +18,9 @@ static var _tread: ShaderMaterial
 const GROUND := ["staff_car", "armoured_car", "motorcycle", "lorry", "halftrack", "light_tank", "heavy_tank", "rocket_truck",
 		"hearse", "corpse_truck", "undead_panzer", "bone_halftrack"]
 const AIR := ["biplane", "zeppelin", "monoplane", "jet", "corpse_zeppelin", "bat_plane", "wraith_jet"]
-const KINDS := GROUND + AIR
+## Civilian traffic for the cities (view3d/traffic.gd): `team` is the body paint.
+const CIVILIAN := ["sedan", "bus", "hearse_civil"]
+const KINDS := GROUND + AIR + CIVILIAN
 ## The Concern's machines (galleries put them on the Covenant side).
 const CONCERN := ["hearse", "corpse_truck", "undead_panzer", "bone_halftrack", "corpse_zeppelin", "bat_plane", "wraith_jet"]
 
@@ -64,6 +66,12 @@ static func raw(kind: String, team: Color) -> Node3D:
 			return bat_plane(team)
 		"wraith_jet":
 			return wraith_jet(team)
+		"sedan":
+			return sedan(team)
+		"bus":
+			return bus(team)
+		"hearse_civil":
+			return hearse(team)
 	return Node3D.new()
 
 
@@ -830,4 +838,55 @@ static func wraith_jet(team: Color) -> Node3D:
 		Gear.part(root, Gear.sphere(0.025), Gear.mat(team), Vector3(s * 0.42, -0.01, -0.28))
 	Gear.part(root, Gear.box(Vector3(0.014, 0.2, 0.2)), black, Vector3(0, 0.1, -0.4), Vector3(-0.5, 0, 0))
 	contrail(root, Vector3(0, 0, -0.55), Color(0.45, 1.0, 0.45, 0.5))
+	return root
+
+
+# --- Civilian traffic -------------------------------------------------------------------
+
+## A 1920s-30s saloon car in `paint`: long bonnet, upright cabin, running boards,
+## chrome radiator, spare wheel on the back.
+static func sedan(paint: Color) -> Node3D:
+	var root := Node3D.new()
+	var body := m(paint, 0.45, 0.3)
+	var black := m(Color(0.06, 0.06, 0.07), 0.3, 0.5)
+	var chrome := m(Color(0.8, 0.82, 0.85), 0.9, 0.2)
+	for z in [-0.32, 0.32]:
+		for s in [-1.0, 1.0]:
+			wheel(root, Vector3(s * 0.24, 0.13, z), 0.13, 0.07, true)
+	Gear.part(root, Gear.box(Vector3(0.4, 0.07, 1.0)), black, Vector3(0, 0.17, 0))
+	for s in [-1.0, 1.0]:
+		Gear.part(root, Gear.box(Vector3(0.09, 0.02, 0.36)), black, Vector3(s * 0.25, 0.15, 0))
+		for z in [-0.32, 0.32]:
+			Gear.part(root, Gear.box(Vector3(0.11, 0.02, 0.3)), body, Vector3(s * 0.24, 0.28, z), Vector3(-0.15 * signf(z), 0, 0))
+	Gear.part(root, Gear.box(Vector3(0.32, 0.17, 0.36)), body, Vector3(0, 0.3, 0.3))
+	Gear.part(root, Gear.box(Vector3(0.3, 0.2, 0.03)), chrome, Vector3(0, 0.31, 0.49))
+	headlights(root, 0.14, 0.38, 0.5)
+	Gear.part(root, Gear.box(Vector3(0.4, 0.2, 0.52)), body, Vector3(0, 0.3, -0.16))
+	Gear.part(root, Gear.box(Vector3(0.38, 0.17, 0.46)), body, Vector3(0, 0.48, -0.17))
+	Gear.part(root, Gear.box(Vector3(0.39, 0.1, 0.42)), m(Color(0.3, 0.38, 0.45), 0.6, 0.1), Vector3(0, 0.49, -0.17))
+	Gear.part(root, Gear.box(Vector3(0.4, 0.025, 0.48)), black, Vector3(0, 0.575, -0.17))
+	Gear.part(root, Gear.cyl(0.11, 0.06), black, Vector3(0, 0.32, -0.45), Vector3(PI / 2, 0, 0))
+	return root
+
+
+## A city bus in `paint` with a cream band, many windows and a destination board.
+static func bus(paint: Color) -> Node3D:
+	var root := Node3D.new()
+	var body := m(paint, 0.3, 0.4)
+	var cream := m(Color(0.9, 0.86, 0.72), 0.1, 0.5)
+	var glass := m(Color(0.3, 0.38, 0.45), 0.6, 0.1)
+	for s in [-1.0, 1.0]:
+		wheel(root, Vector3(s * 0.27, 0.15, 0.55), 0.15, 0.09)
+		wheel(root, Vector3(s * 0.28, 0.15, -0.5), 0.15, 0.12)
+	Gear.part(root, Gear.box(Vector3(0.56, 0.42, 1.6)), body, Vector3(0, 0.42, 0))
+	Gear.part(root, Gear.box(Vector3(0.57, 0.08, 1.61)), cream, Vector3(0, 0.5, 0))
+	for s in [-1.0, 1.0]:
+		for i in 6:
+			Gear.part(root, Gear.box(Vector3(0.012, 0.13, 0.18)), glass, Vector3(s * 0.285, 0.66, -0.6 + i * 0.22))
+	Gear.part(root, Gear.box(Vector3(0.58, 0.2, 1.62)), body, Vector3(0, 0.72, 0))
+	Gear.part(root, Gear.box(Vector3(0.46, 0.16, 0.012)), glass, Vector3(0, 0.66, 0.805))
+	Gear.part(root, Gear.box(Vector3(0.3, 0.06, 0.012)), Gear.mat(Color(1.0, 0.85, 0.5), 1.5), Vector3(0, 0.8, 0.81))
+	Gear.part(root, Gear.box(Vector3(0.58, 0.04, 1.6)), cream, Vector3(0, 0.84, 0))
+	headlights(root, 0.2, 0.3, 0.8)
+	exhaust(root, Vector3(0.2, 0.22, -0.8))
 	return root

@@ -88,10 +88,10 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [ ] **M** City designs per crown land, modern versions (Austria's palace with a radio mast; Galicia's oil city grows refineries; Bohemia's Prague spires with Škoda works).
 - [x] **S** `tests/building_gallery.gd` renders ages 1–12 (`-- <out_dir> ages`).
 
-### City life and ambience (`view3d/ambience.gd`)
-- [ ] **M** Civilian traffic inside your borders from Age 7: cars, trams, buses and pedestrians on the cobbled city ground. Purely visual and culled off screen.
-- [ ] **S** Night lighting grows with the ages: gas → electric → neon → floodlight.
-- [ ] **S** Smog and contrails thicken with industry.
+### City life and ambience (`view3d/traffic.gd`, `view3d/ambience.gd`)
+- [x] **M** Civilian traffic (2026-11-15): from Age 7 saloon cars, from Age 8 a city bus, and townspeople wander the open ground of cities near the camera, in straight lines between free tiles of the city's own land; the Concern's cities get hearses and dead clerks in bowlers. Only the nearest cities get traffic (Medium: 3 cities, 3 cars, a bus, 6 walkers each; High: 5 cities and more; Low: none). Hidden in the fog; pauses with the game. Not in the simulation. Trams were left out (they need rails).
+- [x] **S** Night lighting grows with the ages: gaslight → electric globes (7) → neon signs (7) → fluorescent windows (11) → searchlights (10) (done with the building dressing).
+- [x] **S** Soot thickens with industry: half the falling soot until Age 6, rising to double by Age 12.
 
 ### Effects and sound
 - [ ] **M** Effects: SMG tracer bursts, grenade and shell explosions, rocket trails, flak bursts, the Aether bomb flash and its lasting scar on the ground.
