@@ -68,6 +68,64 @@ static func _make(name: String) -> AudioStreamWAV:
 				_mix_at(s, hit, int(RATE * 0.28 * i), 0.9)
 		"whoosh":
 			s = _noise(rng, 0.35, 0.15, 4.0, 0.6)
+		# --- The modern ages (7-12) ---
+		"smg", "mg":
+			# A burst of sharp cracks: four for a submachine gun, seven for a machine gun.
+			var shots := 4 if name == "smg" else 7
+			var gap := 0.075 if name == "smg" else 0.065
+			s = PackedFloat32Array()
+			for i in shots:
+				var crack := _noise(rng, 0.09, 0.0, 38.0, 0.45)
+				_mix(crack, _tone(0.09, 140.0 if name == "smg" else 100.0, -40.0, 30.0), 0.7)
+				_mix_at(s, crack, int(RATE * gap * i), 0.9 - i * 0.04)
+		"tank_gun":
+			# A heavy gun: a sharp crack over a deep boom and a ringing tail.
+			s = _noise(rng, 0.9, 0.0, 6.0, 0.6)
+			_mix(s, _tone(0.9, 48.0, -15.0, 4.0), 1.2)
+			_mix(s, _tone(0.9, 210.0, 0.0, 9.0), 0.25)
+		"rocket":
+			# A rising hiss as it leaves the rail, then the bang.
+			s = _noise(rng, 0.45, 0.05, 2.0, 0.85)
+			_mix(s, _sweep(0.45, 300.0, 900.0, 3.0), 0.25)
+			_mix_at(s, _explosion(rng, 0.8), int(RATE * 0.4), 0.9)
+		"explosion":
+			s = _explosion(rng, 1.0)
+		"bomb":
+			# The Aether bomb: a long rolling rumble under a crackling Aether whine.
+			s = _noise(rng, 3.5, 0.02, 0.9, 0.12)
+			_mix(s, _tone(3.5, 32.0, -10.0, 0.8), 1.4)
+			_mix(s, _sweep(2.0, 1800.0, 300.0, 1.5), 0.2)
+			_mix(s, _crackle(rng, 3.5), 0.5)
+		"siren":
+			# An air-raid siren: rising and falling twice.
+			var n := int(RATE * 3.0)
+			s = PackedFloat32Array()
+			s.resize(n)
+			var phase := 0.0
+			for i in n:
+				var t := float(i) / RATE
+				var f := 380.0 + 260.0 * (0.5 - 0.5 * cos(t * TAU / 1.5))
+				phase += TAU * f / RATE
+				var env := minf(1.0, t * 3.0) * minf(1.0, (3.0 - t) * 3.0)
+				s[i] = (sin(phase) + 0.3 * sin(phase * 2.0)) * 0.6 * env
+		"radio":
+			# Radio static with two morse pips.
+			s = _noise(rng, 0.6, 0.02, 2.5, 0.9)
+			_mix(s, _crackle(rng, 0.6), 0.8)
+			for k in 2:
+				_mix_at(s, _tone(0.07, 1000.0, 0.0, 2.0), int(RATE * (0.12 + k * 0.16)), 0.5)
+		"engine":
+			# A motor starting up and settling into a chug.
+			var n := int(RATE * 1.0)
+			s = PackedFloat32Array()
+			s.resize(n)
+			var phase := 0.0
+			for i in n:
+				var t := float(i) / RATE
+				var f := 28.0 + 18.0 * minf(1.0, t * 3.0)
+				phase += TAU * f / RATE
+				var chug := 0.5 + 0.5 * sin(phase * 0.25)
+				s[i] = (sin(phase) * 0.6 + rng.randf_range(-0.3, 0.3) * chug) * minf(1.0, t * 8.0) * exp(-1.2 * t)
 		_:
 			s = _tone(0.1, 440.0, 0.0, 20.0)
 	return _to_wav(s)
@@ -112,6 +170,14 @@ static func _noise(rng: RandomNumberGenerator, seconds: float, attack: float, de
 		y = lerpf(y, rng.randf_range(-1.0, 1.0), clampf(bright, 0.02, 1.0))
 		var env := (minf(1.0, t / attack) if attack > 0.0 else 1.0) * exp(-decay * t)
 		out[i] = y * env * (1.0 / sqrt(maxf(bright, 0.05)))
+	return out
+
+
+## A shell or grenade bursting: a noise blast over a falling low tone, with debris.
+static func _explosion(rng: RandomNumberGenerator, seconds: float) -> PackedFloat32Array:
+	var out := _noise(rng, seconds, 0.003, 4.5, 0.3)
+	_mix(out, _tone(seconds, 70.0, -40.0, 5.0), 1.1)
+	_mix(out, _crackle(rng, seconds), 0.4)
 	return out
 
 

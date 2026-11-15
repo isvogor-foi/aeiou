@@ -383,7 +383,7 @@ func deal_damage(attacker: Entity, target: Entity, base_override := -1.0, dtype_
 	var steal := float(passives.get("lifesteal", 0.0))
 	var dtype: String = attacker.def.dtype if dtype_override == "" else dtype_override
 	events.append({
-		"type": "hit", "from": attacker.pos, "to": target.pos, "dtype": dtype,
+		"type": "hit", "from": attacker.pos, "to": target.pos, "dtype": dtype, "unit": attacker.type_id,
 		"ranged": float(attacker.def.range) > 1.0, "target": target.id, "source": attacker.id,
 		"owners": [attacker.owner, target.owner], "siege": passives.has("cleave") and float(attacker.def.range) > 1.0,
 	})

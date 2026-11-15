@@ -403,6 +403,9 @@ func _consume_events() -> void:
 				audio.play("fanfare" if ev.type == "wonder" else "magic")
 			"story":
 				hud.story(ev.speaker, ev.text)
+				# From the Age of Zeppelins, reports come in over the wireless.
+				if world.players[me].age >= 8:
+					audio.play("radio", null, 0.5)
 			"objective":
 				hud.flash("New objective: " + ev.text, 4.0)
 				audio.play("click")
@@ -419,6 +422,10 @@ func _consume_events() -> void:
 			"cloud":
 				if _point_shown(ev.pos):
 					effects.add_cloud(ev)
+			"bomb":
+				# The Aether bomb is seen and heard across the map.
+				effects.add_bomb(ev)
+				audio.play("bomb", null, 1.0)
 			"unrest":
 				if ev.owner == me:
 					hud.flash("Unrest! A city's %s is failing - garrison it or it will revolt." % ev.label.to_lower(), 5.0)
@@ -449,6 +456,19 @@ func _consume_events() -> void:
 
 
 func _hit_sound(ev: Dictionary) -> String:
+	# Modern weapons name their sound by shot style (visuals.json "shot").
+	var shot: String = DB.visuals.units.get(ev.get("unit", ""), {}).get("shot", "")
+	match shot:
+		"burst":
+			return "mg" if DB.visuals.units[ev.unit].get("burst", 4) > 5 else "smg"
+		"shell":
+			return "tank_gun"
+		"rocket":
+			return "rocket"
+		"flame":
+			return "fire"
+		"flak":
+			return "explosion"
 	if ev.get("siege", false):
 		return "cannon"
 	if not ev.ranged:

@@ -607,6 +607,14 @@ func test_outfit_variants() -> void:
 			check(int(key.get_slice("@", 1)) in range(2, DB.ages.size() + 1), "variant %s names a real age" % key)
 
 
+## The modern-age sounds synthesise to real audio.
+func test_modern_sounds() -> void:
+	const Sfx = preload("res://audio/sfx.gd")
+	for name in ["smg", "mg", "tank_gun", "rocket", "explosion", "bomb", "siren", "radio", "engine"]:
+		var wav: AudioStreamWAV = Sfx.get_stream(name)
+		check(wav != null and wav.data.size() > 2000, "%s has audio (%d bytes)" % [name, wav.data.size() if wav else 0])
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

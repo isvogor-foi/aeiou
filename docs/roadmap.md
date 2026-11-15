@@ -94,8 +94,8 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [x] **S** Soot thickens with industry: half the falling soot until Age 6, rising to double by Age 12.
 
 ### Effects and sound
-- [ ] **M** Effects: SMG tracer bursts, grenade and shell explosions, rocket trails, flak bursts, the Aether bomb flash and its lasting scar on the ground.
-- [ ] **M** Sound (`audio/sfx.gd`): SMG and machine-gun fire, engines (car, tank, prop, jet), sirens, radio static, rocket launch.
+- [x] **M** Effects (2026-11-15, `view3d/effects.gd`): a unit's visuals.json `"shot"` picks its fire: `"burst"` (tracers; `"burst": n` rounds), `"shell"` (a tracer and an explosion), `"rocket"` (a smoking rocket and an explosion), `"flame"`, `"flak"` (black puffs). Explosions flash, ring and smoke. The Aether bomb (a `"bomb"` event: pos, radius) flashes, rings twice, raises a mushroom cloud and leaves a scar decal that cools to a faint lasting glow (view only: lost on reload). Hit events now name the firing unit (`"unit"`). `tests/effects_gallery.gd` shows them all.
+- [x] **M** Sound (`audio/sfx.gd`): submachine gun and machine gun bursts, tank gun, rocket, explosion, the Aether bomb, an air-raid siren, radio static with morse pips, an engine starting. Shot styles pick their sound; from Age 8 story lines open with radio static. Not yet triggered: the siren (wants an "enemy aircraft over your city" alert) and the engine (wants vehicles to exist).
 - [ ] **S** Music: find public-domain recordings for the 1920s–50s (early jazz and dance band recordings, and military marches). Check each licence in `assets/CREDITS.md`.
 
 ### HUD
