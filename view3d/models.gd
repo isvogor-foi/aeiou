@@ -84,6 +84,15 @@ static func unit_scale(type_id: String) -> float:
 	return GROUND_UNIT_SCALE if d.get("domain", "ground") == "ground" else 1.0
 
 
+## The outfit a figure unit wears for its owner's age ("settler@7" etc.), or "".
+static func unit_variant(type_id: String, owner: int) -> String:
+	var v: Dictionary = DB.visuals.units.get(type_id, {})
+	if not v.has("figure"):
+		return ""
+	var age: int = team_ages[owner] if owner >= 0 and owner < team_ages.size() else 1
+	return Figure.variant(v.figure, age)
+
+
 static func make_unit(type_id: String, owner: int) -> Node3D:
 	var v: Dictionary = DB.visuals.units.get(type_id, {})
 	var root := Node3D.new()
@@ -99,7 +108,7 @@ static func make_unit(type_id: String, owner: int) -> Node3D:
 	var s: float
 	if v.has("figure"):
 		# A realistic figure dressed in code (view3d/figure.gd).
-		model = Figure.build(v.figure, team_color(owner))
+		model = Figure.build(unit_variant(type_id, owner), team_color(owner))
 		s = float(v.height) / Figure.HEIGHT
 	else:
 		var path := resolve(v.model, owner)

@@ -592,6 +592,21 @@ func test_vehicle_kit() -> void:
 		n.free()
 
 
+## Era variants: "id@N" outfits apply from Age N on, latest first; every variant
+## belongs to a real outfit.
+func test_outfit_variants() -> void:
+	const Figure = preload("res://view3d/figure.gd")
+	check(Figure.variant("settler", 1) == "settler", "Age 1 settler wears the base outfit")
+	check(Figure.variant("settler", 7) == "settler@7", "Age 7 settler wears overalls")
+	check(Figure.variant("settler", 9) == "settler@7", "variants hold until the next one")
+	check(Figure.variant("settler", 12) == "settler@10", "the latest variant wins")
+	check(Figure.variant("grenadier", 12) == "grenadier", "outfits without variants never change")
+	for key in Figure.OUTFITS:
+		if "@" in key:
+			check(Figure.OUTFITS.has(key.get_slice("@", 0)), "variant %s has a base outfit" % key)
+			check(int(key.get_slice("@", 1)) in range(2, DB.ages.size() + 1), "variant %s names a real age" % key)
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

@@ -57,13 +57,13 @@ No real lines exist yet: the first ones arrive with Age 7's roster in Phase 4. V
 
 Each of these is a toolkit that every age then uses. Build and gallery-test each before making content.
 
-### People: uniforms by era (`view3d/figure.gd`, `view3d/gear.gd`)
-- [ ] **M** Era layer on outfits: one unit type can be dressed for its era without a new figure.
-- [ ] **M** Monarchy kit, 1920s → 1950s: peaked caps and Bergmütze, short tunics, puttees → boots, webbing, steel helmets of a later pattern, flight suits, tank crew overalls, radiation hoods (Age 11–12). Team colour stays on collar, armband and helmet stripe.
-- [ ] **M** Concern kit: undead in suits and bowler hats (the debt-bound), gangster ghouls with tommy guns, gas troops in rubber, frost-crusted soldiers, armoured abominations in riveted plate.
-- [ ] **M** Weapons: bolt-action rifle, submachine gun, light machine gun, bazooka/rocket tube, flamethrower (updated), radio pack, binoculars.
+### People: uniforms by era (`view3d/figure.gd`)
+- [x] **M** Era layer (2026-11-15): an outfit `"id@N"` dresses `id` from Age N on (`Figure.variant`); the view rebuilds figures when an age-up changes what they wear. Variants so far: the Settler (overalls at 7, hard hat at 10), the Thrall (suit and bowler at 7), Franz Ferdinand (field grey, peaked cap, grey moustache at 7), Tesla (grey at 7).
+- [x] **M** Monarchy kit for the planned tiers: `rifleman`, `sturmtrupp`, `sanitaeter`, `gebirgsjaeger`, `radio_spotter`, `paratrooper`, `rocket_trooper`, `flame_trooper`, `atom_trooper`, `arctic_trooper`, plus `tank_crew` and `pilot`. New coat styles (tunic, suit, overalls, flight jacket, parka), hats (later helmet, jump helmet, Bergmütze, peaked cap, flying helmet, tanker helmet, fur cap, hard hat, gas hood, radiation hood), webbing, armbands, headphones. The outfit ids are the unit ids Phase 4 should use.
+- [x] **M** Concern kit: `debt_bound` (suit, bowler), `tommy_ghoul` (fedora, drum gun), `gas_trooper` (rubber hood, soul sprayer), `wireless_medium` (headphones, radio pack), `frost_dead` (parka, rime and icicles). Armoured abominations already exist (`abomination`).
+- [x] **M** Weapons: bolt-action rifle (optional scope), automatic rifle, submachine gun, tommy gun, light machine gun with bipod, Aether rocket tube, binoculars, soul gas sprayer; kits: field radio, medic's bag.
 - [ ] **S** Animations: check the Quaternius library covers SMG fire, prone/crouch, throwing (grenades) and carrying a radio; add procedural poses where it doesn't.
-- [ ] **S** `tests/unit_gallery.gd` renders every era.
+- [x] **S** Gallery: `tests/era_gallery.gd` renders every new outfit and the era variants at Ages 1, 7 and 10.
 
 ### Vehicles (`view3d/vehicles.gd`, routed through `view3d/machines.gd`)
 - [x] **L** Vehicle kit (2026-11-15): wheels that turn with the distance driven (`"roll"`), track belts whose tread scrolls (`"tread"`, a small instance-uniform shader), turrets that swing to the last target and back (`"turret"`), hull rumble while driving (`"rumble"` in visuals.json), exhaust smoke, headlights, seated crew. Moving parts are baked one mesh each; the rest of the vehicle is one mesh per material, as before. `tests/vehicle_gallery.gd` parks and drives them all; `test_vehicle_kit` checks every model.

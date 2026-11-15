@@ -138,7 +138,44 @@ const OUTFITS := {
 	"prague_golem": {"skin": Color(0.5, 0.36, 0.26), "coat": Color(0.5, 0.36, 0.26), "trousers": Color(0.46, 0.33, 0.24), "boots": Color(0.4, 0.29, 0.21), "cuffs": Color(0.46, 0.33, 0.24), "style": "short", "bulk": 1.2, "bulk_style": "stone", "rune": true, "weapon": "fist", "belt": Color(0.3, 0.2, 0.12)},
 	"aether_colossus": {"skin": SKIN, "coat": GUNMETAL, "trousers": GUNMETAL, "boots": BLACK, "cuffs": GOLD, "style": "short", "bulk": 1.15, "bulk_style": "plate", "hat": "diving", "cuirass": true, "plates": true, "tanks": "aether", "weapon": "flamethrower", "gloves": STEEL},
 	"ghoul_rider": {"skin": BONE, "coat": RAG, "trousers": RAG, "boots": RAG, "cuffs": RAG, "style": "short", "hat": "hood", "jaw": true, "struts": true, "weapon": "blade"},
+	# --- The modern ages (7-12): outfits for the upgrade-line tiers and new units of
+	# docs/roadmap.md (ids are the planned unit ids). Monarchy field kit moves from
+	# 1920s tunics and webbing to 1950s radiation hoods; the Concern's dead wear suits.
+	"rifleman": {"coat": FIELD, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "stahlhelm", "webbing": true, "weapon": "bolt_rifle"},
+	"sturmtrupp": {"coat": FIELD, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "stahlhelm", "gasmask": true, "webbing": true, "plates": true, "weapon": "smg"},
+	"sanitaeter": {"coat": FIELD, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "peaked", "armband": WHITE, "kit": "medic_bag", "weapon": "pistol", "moustache": true},
+	"gebirgsjaeger": {"coat": Color(0.3, 0.34, 0.28), "trousers": Color(0.26, 0.28, 0.24), "boots": BROWN, "cuffs": Color(0.2, 0.36, 0.22), "style": "tunic", "hat": "bergmuetze", "webbing": true, "weapon": "bolt_rifle", "scope": true, "moustache": true},
+	"radio_spotter": {"coat": FIELD, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "m35", "headphones": true, "kit": "radio_pack", "weapon": "binoculars"},
+	"paratrooper": {"coat": Color(0.4, 0.42, 0.34), "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "jump", "webbing": true, "weapon": "smg"},
+	"rocket_trooper": {"coat": FIELD, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "m35", "webbing": true, "weapon": "rocket_tube"},
+	"flame_trooper": {"coat": Color(0.62, 0.6, 0.55), "trousers": Color(0.62, 0.6, 0.55), "boots": BLACK, "cuffs": Color(0.5, 0.48, 0.44), "style": "overalls", "hat": "gas_hood", "tanks": "fire", "weapon": "flamethrower"},
+	"atom_trooper": {"coat": Color(0.3, 0.34, 0.3), "trousers": FIELD_DARK, "boots": BLACK, "cuffs": FIELD_DARK, "style": "tunic", "hat": "rad_hood", "plates": true, "webbing": true, "tanks": "aether", "weapon": "auto_rifle"},
+	"arctic_trooper": {"coat": Color(0.85, 0.86, 0.84), "trousers": Color(0.8, 0.81, 0.8), "boots": BROWN, "cuffs": Color(0.8, 0.81, 0.8), "style": "parka", "hat": "fur_cap", "webbing": true, "weapon": "bolt_rifle", "moustache": true},
+	"tank_crew": {"coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": BLACK, "style": "overalls", "hat": "tanker", "weapon": "pistol"},
+	"pilot": {"coat": BROWN, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": BROWN, "style": "flight", "hat": "flight_helmet", "weapon": "pistol", "moustache": true},
+	"debt_bound": {"skin": BONE, "coat": Color(0.2, 0.19, 0.18), "trousers": Color(0.17, 0.16, 0.15), "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "bowler", "jaw": true, "weapon": "hammer"},
+	"tommy_ghoul": {"skin": BONE, "coat": NIGHT, "trousers": NIGHT, "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "fedora", "jaw": true, "vials": true, "weapon": "tommy_gun"},
+	"gas_trooper": {"skin": BONE, "coat": Color(0.14, 0.15, 0.13), "trousers": Color(0.14, 0.15, 0.13), "boots": BLACK, "cuffs": Color(0.14, 0.15, 0.13), "style": "overalls", "hat": "gas_hood", "tanks": "soul", "weapon": "gas_sprayer"},
+	"wireless_medium": {"skin": BONE, "coat": NIGHT, "trousers": NIGHT, "boots": NIGHT, "cuffs": SOUL_GLOW, "style": "robe", "headphones": true, "kit": "radio_pack", "jaw": true, "vials": true, "weapon": "soul_lantern"},
+	"frost_dead": {"skin": Color(0.7, 0.8, 0.86), "coat": Color(0.4, 0.45, 0.5), "trousers": Color(0.34, 0.38, 0.42), "boots": NIGHT, "cuffs": Color(0.34, 0.38, 0.42), "style": "parka", "hat": "fur_cap", "jaw": true, "struts": true, "frost": true, "weapon": "bolt_rifle"},
+	# --- Era variants: "id@N" dresses `id` from Age N on (see variant()), for units
+	# that stay the same type across the ages (workers, heroes).
+	"settler@7": {"coat": Color(0.22, 0.28, 0.38), "trousers": Color(0.22, 0.28, 0.38), "boots": BLACK, "cuffs": Color(0.22, 0.28, 0.38), "style": "overalls", "hat": "cap", "weapon": "wrench", "kit": "tool_pack", "moustache": true},
+	"settler@10": {"coat": Color(0.22, 0.28, 0.38), "trousers": Color(0.22, 0.28, 0.38), "boots": BLACK, "cuffs": Color(0.22, 0.28, 0.38), "style": "overalls", "hat": "hardhat", "weapon": "wrench", "kit": "tool_pack"},
+	"thrall@7": {"skin": BONE, "coat": Color(0.2, 0.19, 0.18), "trousers": Color(0.17, 0.16, 0.15), "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "bowler", "jaw": true, "weapon": "hammer", "kit": "grave_pack"},
+	"archduke@7": {"coat": FIELD, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": RED, "style": "great", "hat": "peaked", "weapon": "sabre", "moustache": true, "moustache_color": Color(0.72, 0.7, 0.68), "sash": true, "skin": Color(0.86, 0.72, 0.62)},
+	"tesla@7": {"coat": Color(0.16, 0.16, 0.2), "trousers": Color(0.16, 0.16, 0.2), "boots": BLACK, "cuffs": WHITE, "style": "long", "goggles": true, "tanks": "aether", "weapon": "gauntlet", "moustache": true, "moustache_color": Color(0.6, 0.6, 0.6), "hair": Color(0.62, 0.62, 0.64)},
 }
+
+
+## The outfit `outfit_id` wears in `age`: the latest "id@N" variant with N <= age, or
+## the outfit itself.
+static func variant(outfit_id: String, age: int) -> String:
+	for n in range(age, 0, -1):
+		var key := "%s@%d" % [outfit_id, n]
+		if OUTFITS.has(key):
+			return key
+	return outfit_id
 
 
 # --- Painting the uniform onto the body ---------------------------------------------------------
@@ -336,6 +373,39 @@ static func _dress(o: Dictionary, team: Color) -> ArrayMesh:
 			for side in [-1.0, 1.0]:
 				for i in 4:
 					blob(acc, chest + Vector3(side * 0.06, -0.15 + i * 0.065, 0.135), Vector3(0.022, 0.022, 0.012), mat(GOLD, 0.7, 0.35), "DEF-spine.003")
+		"tunic":
+			# 1930s field tunic: a short skirt below a leather belt, four patch pockets, a stand collar.
+			limb(acc, hips + Vector3(0, 0.05, 0), hips + Vector3(0, -0.17, -0.005), 0.17, coat, "DEF-hips", 0.19)
+			limb(acc, hips + Vector3(0, 0.02, 0), hips + Vector3(0, 0.055, 0), 0.178, mat(OILSKIN, 0.0, 0.6), "DEF-hips")
+			cube(acc, hips + Vector3(0, 0.037, 0.178), Vector3(0.045, 0.035, 0.01), mat(GUNMETAL, 0.75, 0.4), "DEF-hips")
+			for side in [-1.0, 1.0]:
+				cube(acc, chest + Vector3(side * 0.075, -0.04, 0.135), Vector3(0.07, 0.07, 0.012), coat, "DEF-spine.003")
+				cube(acc, hips + Vector3(side * 0.09, -0.06, 0.17), Vector3(0.075, 0.08, 0.012), coat, "DEF-hips")
+			limb(acc, at("DEF-neck") + Vector3(0, -0.03, 0), at("DEF-neck") + Vector3(0, 0.01, 0), 0.075, coat, "DEF-spine.003")
+		"suit":
+			# A three-piece suit: jacket skirt, lapels, white shirt, a dark tie.
+			limb(acc, hips + Vector3(0, 0.05, 0), hips + Vector3(0, -0.2, -0.005), 0.17, coat, "DEF-hips", 0.2)
+			cube(acc, chest + Vector3(0, -0.03, 0.128), Vector3(0.08, 0.24, 0.012), mat(WHITE), "DEF-spine.003")
+			cube(acc, chest + Vector3(0, -0.05, 0.137), Vector3(0.026, 0.2, 0.012), mat(Color(0.3, 0.06, 0.08)), "DEF-spine.003")
+			for side in [-1.0, 1.0]:
+				cube(acc, chest + Vector3(side * 0.06, 0.0, 0.14), Vector3(0.05, 0.2, 0.01), coat, "DEF-spine.003", Vector3(0, 0, side * 0.35))
+		"overalls":
+			# Workwear and crew overalls: a bib with straps and a big pocket.
+			cube(acc, chest + Vector3(0, -0.1, 0.13), Vector3(0.22, 0.2, 0.02), coat, "DEF-spine.003")
+			cube(acc, chest + Vector3(0, -0.1, 0.142), Vector3(0.1, 0.07, 0.01), mat(Color(o.coat).darkened(0.25)), "DEF-spine.003")
+			for side in [-1.0, 1.0]:
+				cube(acc, chest + Vector3(side * 0.075, 0.03, 0.12), Vector3(0.035, 0.22, 0.012), coat, "DEF-spine.003")
+				blob(acc, chest + Vector3(side * 0.075, 0.0, 0.135), Vector3(0.02, 0.02, 0.01), mat(GUNMETAL, 0.75, 0.4), "DEF-spine.003")
+		"flight":
+			# Leather flying jacket: sheepskin collar, a zip.
+			limb(acc, at("DEF-neck") + Vector3(0, -0.05, -0.01), at("DEF-neck") + Vector3(0, 0.02, -0.02), 0.11, mat(Color(0.82, 0.74, 0.6), 0.0, 0.95), "DEF-spine.003", 0.13)
+			cube(acc, chest + Vector3(0, -0.06, 0.135), Vector3(0.012, 0.3, 0.01), mat(GUNMETAL, 0.75, 0.4), "DEF-spine.003")
+			limb(acc, hips + Vector3(0, 0.05, 0), hips + Vector3(0, -0.06, 0), 0.172, coat, "DEF-hips")
+		"parka":
+			# Padded winter parka to the knee with a fur-trimmed hem.
+			limb(acc, hips + Vector3(0, 0.08, 0), hips + Vector3(0, -0.48, -0.01), 0.19, coat, "DEF-hips", 0.25)
+			limb(acc, hips + Vector3(0, -0.48, -0.01), hips + Vector3(0, -0.44, -0.01), 0.255, mat(Color(0.74, 0.66, 0.52), 0.0, 0.95), "DEF-hips")
+			limb(acc, chest + Vector3(0, -0.15, 0), chest + Vector3(0, 0.1, 0), 0.165, coat, "DEF-spine.003", 0.15)
 	# Gear across the chest.
 	if o.get("belts", false):
 		for side in [-1.0, 1.0]:
@@ -350,13 +420,68 @@ static func _dress(o: Dictionary, team: Color) -> ArrayMesh:
 	if o.has("bulk"):
 		_bulk(acc, o)
 	_diesel(acc, o, team)
+	_modern(acc, o, team)
 	_head(acc, o)
 	_hat(acc, o, team)
 	_weapon(acc, o)
-	if o.has("kit") and not o.has("tanks"):
+	if o.get("kit", "") in ["radio_pack", "medic_bag"]:
+		_kit(acc, o)
+	elif o.has("kit") and not o.has("tanks"):
 		var pack: Node3D = Gear._build_raw(o.kit)
 		tree(acc, pack, Transform3D(Basis().scaled(Vector3.ONE * 0.38), chest + Vector3(0, -0.06, -0.2)), "DEF-spine.003")
 	return acc.commit()
+
+
+## Modern field kit: webbing, armbands, headphones, frost (ages 7-12).
+static func _modern(acc: Acc, o: Dictionary, team: Color) -> void:
+	var chest := at("DEF-spine.003")
+	var hips := at("DEF-hips")
+	var webbing := mat(Color(0.36, 0.34, 0.26), 0.0, 0.85)
+	if o.get("webbing", false):
+		# Y-straps, ammunition pouches on the belt, a canteen on the hip.
+		for side in [-1.0, 1.0]:
+			cube(acc, chest + Vector3(side * 0.06, -0.02, 0.14), Vector3(0.03, 0.3, 0.012), webbing, "DEF-spine.003", Vector3(0, 0, side * 0.18))
+			cube(acc, chest + Vector3(side * 0.06, -0.02, -0.13), Vector3(0.03, 0.3, 0.012), webbing, "DEF-spine.003", Vector3(0, 0, -side * 0.18))
+			for i in 2:
+				cube(acc, hips + Vector3(side * (0.06 + i * 0.07), 0.02, 0.17), Vector3(0.06, 0.07, 0.04), webbing, "DEF-hips")
+		limb(acc, hips + Vector3(0.17, -0.02, -0.04), hips + Vector3(0.17, -0.12, -0.04), 0.035, mat(Color(0.3, 0.32, 0.26), 0.3, 0.6), "DEF-hips")
+	if o.has("armband"):
+		var arm := at("DEF-upper_arm.L")
+		limb(acc, arm + Vector3(0, -0.1, 0), arm + Vector3(0, -0.16, 0), 0.055, mat(o.armband), "DEF-upper_arm.L")
+	if o.get("headphones", false):
+		var h := at("DEF-head")
+		for side in [-1.0, 1.0]:
+			limb(acc, h + Vector3(side * 0.105, 0.1, 0.0), h + Vector3(side * 0.135, 0.1, 0.0), 0.04, mat(BLACK, 0.3, 0.5), "DEF-head")
+		if o.get("hat", "") in ["", "m35"]:
+			limb(acc, h + Vector3(-0.12, 0.12, 0), h + Vector3(0.12, 0.12, 0), 0.008, mat(GUNMETAL, 0.7, 0.4), "DEF-head")
+	if o.get("frost", false):
+		# Rime on the shoulders and icicles on the brim: the dead of the Ice Crown.
+		var ice := mat(Color(0.75, 0.9, 1.0), 0.0, 0.1, 0.6)
+		for side in ["L", "R"]:
+			var sh := at("DEF-upper_arm." + side)
+			blob(acc, sh + Vector3(0, 0.06, 0), Vector3(0.14, 0.05, 0.14), ice, "DEF-upper_arm." + side)
+		for i in 4:
+			limb(acc, at("DEF-head") + Vector3(-0.09 + i * 0.06, 0.19, 0.12), at("DEF-head") + Vector3(-0.09 + i * 0.06, 0.13, 0.13), 0.01, ice, "DEF-head", 0.0)
+
+
+## Packs built here (others come from gear.gd): a field radio and a medic's bag.
+static func _kit(acc: Acc, o: Dictionary) -> void:
+	var chest := at("DEF-spine.003")
+	match o.kit:
+		"radio_pack":
+			var box := mat(Color(0.3, 0.32, 0.26), 0.3, 0.6) if o.get("skin", SKIN) != BONE else mat(Color(0.12, 0.12, 0.13), 0.6, 0.5)
+			var back := chest + Vector3(0, -0.08, -0.2)
+			cube(acc, back, Vector3(0.24, 0.3, 0.13), box, "DEF-spine.003")
+			for i in 3:
+				blob(acc, back + Vector3(-0.07 + i * 0.07, 0.08, -0.066), Vector3(0.03, 0.03, 0.012), mat(GOLD, 0.7, 0.35), "DEF-spine.003")
+			var glow := SOUL_GLOW if o.get("skin", SKIN) == BONE else AETHER_GLOW
+			blob(acc, back + Vector3(0, -0.04, -0.066), Vector3(0.08, 0.04, 0.012), mat(glow, 0.0, 0.3, 2.0), "DEF-spine.003")
+			limb(acc, back + Vector3(0.09, 0.15, 0), back + Vector3(0.12, 0.85, -0.02), 0.006, mat(GUNMETAL, 0.7, 0.4), "DEF-spine.003", 0.003)
+		"medic_bag":
+			var hips := at("DEF-hips")
+			cube(acc, hips + Vector3(-0.19, -0.04, 0.02), Vector3(0.08, 0.14, 0.16), mat(Color(0.5, 0.46, 0.36), 0.0, 0.85), "DEF-hips")
+			cube(acc, hips + Vector3(-0.235, -0.03, 0.02), Vector3(0.01, 0.06, 0.06), mat(WHITE), "DEF-hips")
+			cube(acc, chest + Vector3(0, -0.08, 0.13), Vector3(0.035, 0.46, 0.012), mat(Color(0.5, 0.46, 0.36), 0.0, 0.85), "DEF-spine.003", Vector3(-0.08, 0, 0.6))
 
 
 ## Hulking monsters: muscle (or stone, or plate) masses bound to the bones so they
@@ -504,7 +629,7 @@ static func _head(acc: Acc, o: Dictionary) -> void:
 		blob(acc, face + Vector3(side * 0.035, 0.035, 0.005), Vector3(0.022, 0.016, 0.01), dark, "DEF-head")
 	if o.get("moustache", false):
 		for side in [-1.0, 1.0]:
-			blob(acc, face + Vector3(side * 0.022, -0.03, 0.012), Vector3(0.05, 0.016, 0.02), mat(Color(0.3, 0.2, 0.12)), "DEF-head", Vector3(0, 0, side * -0.3))
+			blob(acc, face + Vector3(side * 0.022, -0.03, 0.012), Vector3(0.05, 0.016, 0.02), mat(o.get("moustache_color", Color(0.3, 0.2, 0.12))), "DEF-head", Vector3(0, 0, side * -0.3))
 	if o.get("beard", false):
 		blob(acc, face + Vector3(0, -0.06, -0.005), Vector3(0.1, 0.1, 0.06), mat(Color(0.3, 0.24, 0.18)), "DEF-head")
 	if o.has("hair"):
@@ -572,6 +697,69 @@ static func _hat(acc: Acc, o: Dictionary, team: Color) -> void:
 			if o.get("goggles", false):
 				var g := Gear.goggles()
 				tree(acc, g, Transform3D(Basis().scaled(Vector3.ONE * 0.17), top + Vector3(0, -0.05, 0.13)), "DEF-head")
+		"m35", "jump":
+			# The later steel helmet: lower and rounder, a short flared skirt (none for jump
+			# troops), team decal on the side, chin strap.
+			var shell := mat(Color(0.32, 0.34, 0.3), 0.5, 0.55)
+			blob(acc, top + Vector3(0, -0.04, -0.005), Vector3(0.26, 0.18, 0.28), shell, "DEF-head")
+			if o.hat == "m35":
+				limb(acc, top + Vector3(0, -0.085, -0.005), top + Vector3(0, -0.115, -0.015), 0.136, shell, "DEF-head", 0.152)
+			blob(acc, top + Vector3(0.13, -0.05, 0.0), Vector3(0.012, 0.045, 0.045), mat(team), "DEF-head")
+			cube(acc, at("DEF-head") + Vector3(0, 0.02, 0.07), Vector3(0.2, 0.012, 0.012), mat(OILSKIN), "DEF-head", Vector3(0.6, 0, 0))
+		"bergmuetze":
+			# Mountain troops' field cap: soft crown, short peak, an edelweiss on the side.
+			blob(acc, top + Vector3(0, -0.03, -0.005), Vector3(0.22, 0.11, 0.24), mat(o.coat.darkened(0.1)), "DEF-head")
+			cube(acc, top + Vector3(0, -0.06, 0.11), Vector3(0.15, 0.01, 0.06), mat(o.coat.darkened(0.2)), "DEF-head", Vector3(0.25, 0, 0))
+			blob(acc, top + Vector3(-0.11, -0.02, 0.0), Vector3(0.035, 0.035, 0.012), mat(WHITE), "DEF-head", Vector3(0, PI / 2, 0))
+			blob(acc, top + Vector3(-0.115, -0.02, 0.0), Vector3(0.012, 0.012, 0.012), mat(GOLD), "DEF-head")
+		"peaked":
+			# Officer's peaked cap: a crown wider at the top, a team band, a black visor, the eagle.
+			limb(acc, top + Vector3(0, -0.04, 0), top + Vector3(0, 0.04, 0.01), 0.112, mat(o.coat), "DEF-head", 0.14)
+			limb(acc, top + Vector3(0, -0.045, 0), top + Vector3(0, -0.015, 0), 0.114, mat(team), "DEF-head")
+			cube(acc, top + Vector3(0, -0.05, 0.11), Vector3(0.17, 0.01, 0.07), mat(BLACK, 0.3, 0.3), "DEF-head", Vector3(0.3, 0, 0))
+			blob(acc, top + Vector3(0, 0.0, 0.125), Vector3(0.04, 0.03, 0.01), gold, "DEF-head")
+		"fedora", "bowler":
+			var cloth := mat(Color(0.12, 0.11, 0.1) if o.hat == "fedora" else BLACK, 0.0, 0.8)
+			limb(acc, top + Vector3(0, -0.045, 0), top + Vector3(0, -0.035, 0), 0.17 if o.hat == "fedora" else 0.15, cloth, "DEF-head")
+			if o.hat == "fedora":
+				limb(acc, top + Vector3(0, -0.04, 0), top + Vector3(0, 0.07, 0), 0.11, cloth, "DEF-head", 0.095)
+				limb(acc, top + Vector3(0, -0.03, 0), top + Vector3(0, 0.0, 0), 0.112, mat(Color(0.35, 0.08, 0.08)), "DEF-head")
+			else:
+				blob(acc, top + Vector3(0, 0.0, 0), Vector3(0.23, 0.16, 0.24), cloth, "DEF-head")
+		"flight_helmet":
+			var leather := mat(Color(0.35, 0.22, 0.12), 0.0, 0.7)
+			blob(acc, top + Vector3(0, -0.05, -0.01), Vector3(0.25, 0.21, 0.27), leather, "DEF-head")
+			for side in [-1.0, 1.0]:
+				blob(acc, h + Vector3(side * 0.11, 0.08, 0.0), Vector3(0.04, 0.09, 0.07), leather, "DEF-head")
+			var g := Gear.goggles()
+			tree(acc, g, Transform3D(Basis().scaled(Vector3.ONE * 0.17), top + Vector3(0, -0.02, 0.12)), "DEF-head")
+		"tanker":
+			var pad := mat(Color(0.1, 0.1, 0.1), 0.0, 0.8)
+			blob(acc, top + Vector3(0, -0.04, -0.01), Vector3(0.27, 0.19, 0.29), pad, "DEF-head")
+			for x in [-0.06, 0.0, 0.06]:
+				limb(acc, top + Vector3(x, 0.03, -0.12), top + Vector3(x, 0.05, 0.1), 0.018, pad, "DEF-head")
+		"fur_cap":
+			var fur := mat(Color(0.5, 0.42, 0.32), 0.0, 0.95)
+			blob(acc, top + Vector3(0, -0.02, -0.005), Vector3(0.26, 0.17, 0.27), fur, "DEF-head")
+			for side in [-1.0, 1.0]:
+				blob(acc, h + Vector3(side * 0.115, 0.09, 0.0), Vector3(0.05, 0.11, 0.09), fur, "DEF-head")
+		"hardhat":
+			var shell := mat(Color(0.9, 0.7, 0.15), 0.1, 0.45)
+			blob(acc, top + Vector3(0, -0.03, 0), Vector3(0.25, 0.14, 0.27), shell, "DEF-head")
+			limb(acc, top + Vector3(0, -0.075, 0), top + Vector3(0, -0.068, 0), 0.165, shell, "DEF-head")
+		"gas_hood", "rad_hood":
+			# A full rubber hood (or a pale radiation hood) with glowing eyepieces or a visor.
+			var soul: bool = o.get("tanks", "") == "soul"
+			var hood := mat(Color(0.12, 0.12, 0.11) if o.hat == "gas_hood" else Color(0.78, 0.78, 0.72), 0.0, 0.6)
+			var lens := mat(SOUL_GLOW if soul else (Color(1.0, 0.7, 0.3) if o.get("tanks", "") == "fire" else AETHER_GLOW), 0.0, 0.2, 2.2)
+			blob(acc, h + Vector3(0, 0.12, -0.005), Vector3(0.25, 0.29, 0.27), hood, "DEF-head")
+			if o.hat == "gas_hood":
+				for side in [-1.0, 1.0]:
+					blob(acc, h + Vector3(side * 0.045, 0.14, 0.12), Vector3(0.055, 0.055, 0.02), lens, "DEF-head")
+				limb(acc, h + Vector3(0, 0.07, 0.12), h + Vector3(0, 0.02, 0.2), 0.04, mat(GUNMETAL, 0.75, 0.4), "DEF-head", 0.034)
+			else:
+				blob(acc, h + Vector3(0, 0.13, 0.12), Vector3(0.17, 0.09, 0.03), lens, "DEF-head")
+				limb(acc, h + Vector3(0, 0.0, -0.1), h + Vector3(0, -0.12, -0.18), 0.022, mat(RUBBER, 0.0, 0.6), "DEF-head")
 		"bearskin":
 			blob(acc, top + Vector3(0, 0.12, 0), Vector3(0.24, 0.36, 0.25), mat(Color(0.07, 0.06, 0.06), 0.0, 0.95), "DEF-head")
 			cube(acc, top + Vector3(0, 0.02, 0.115), Vector3(0.09, 0.07, 0.01), gold, "DEF-head")
@@ -719,6 +907,58 @@ static func _weapon(acc: Acc, o: Dictionary) -> void:
 			for t in [0.0, 0.05, 0.1]:
 				limb(acc, grip - along * (0.12 + t), grip - along * (0.14 + t), 0.055, mat(Color(0.78, 0.42, 0.25), 0.7, 0.4), "DEF-hand.R")
 			blob(acc, grip + along * 0.06, Vector3(0.06, 0.06, 0.06), mat(Color(0.5, 0.85, 1.0), 0.0, 0.3, 3.0), "DEF-hand.R")
+		"bolt_rifle", "auto_rifle":
+			# Mannlicher bolt-action (or a later automatic rifle with a box magazine).
+			var across := along.cross(up).normalized()
+			limb(acc, grip - along * 0.32, grip + along * 0.2, 0.026, wood if w == "bolt_rifle" else mat(GUNMETAL, 0.6, 0.45), "DEF-hand.R", 0.02)
+			limb(acc, grip - along * 0.02, grip + along * (0.78 if w == "bolt_rifle" else 0.6), 0.011, iron, "DEF-hand.R")
+			limb(acc, grip + along * 0.02, grip + along * 0.03 + across * 0.05, 0.007, iron, "DEF-hand.R")
+			if w == "auto_rifle":
+				cube(acc, grip + along * 0.12 - up * 0.06, Vector3(0.03, 0.1, 0.05), iron, "DEF-hand.R")
+				blob(acc, grip + along * 0.2 + up * 0.035, Vector3(0.03, 0.03, 0.03), mat(AETHER_GLOW, 0.0, 0.3, 2.0), "DEF-hand.R")
+			if o.get("scope", false):
+				limb(acc, grip + along * 0.02 + up * 0.05, grip + along * 0.26 + up * 0.05, 0.016, mat(BLACK, 0.5, 0.4), "DEF-hand.R")
+		"smg":
+			# Submachine gun: receiver, a perforated barrel jacket, a side magazine, wire stock.
+			var across := along.cross(up).normalized()
+			limb(acc, grip - along * 0.05, grip + along * 0.34, 0.021, iron, "DEF-hand.R")
+			limb(acc, grip + along * 0.34, grip + along * 0.46, 0.015, mat(GUNMETAL, 0.75, 0.4), "DEF-hand.R")
+			cube(acc, grip + along * 0.14 + across * 0.06, Vector3(0.12, 0.025, 0.035), iron, "DEF-hand.R")
+			limb(acc, grip - along * 0.28, grip - along * 0.05, 0.008, iron, "DEF-hand.R")
+		"tommy_gun":
+			# The gangster's drum-fed gun: wooden stock and grips, finned barrel, a fat drum.
+			var across := along.cross(up).normalized()
+			limb(acc, grip - along * 0.3, grip - along * 0.04, 0.025, wood, "DEF-hand.R", 0.02)
+			limb(acc, grip - along * 0.05, grip + along * 0.32, 0.024, iron, "DEF-hand.R")
+			limb(acc, grip + along * 0.32, grip + along * 0.5, 0.012, iron, "DEF-hand.R")
+			limb(acc, grip + along * 0.32, grip + along * 0.4, 0.02, mat(GUNMETAL, 0.75, 0.4), "DEF-hand.R")
+			var drum := grip + along * 0.14 - up * 0.07
+			limb(acc, drum - across * 0.025, drum + across * 0.025, 0.065, iron, "DEF-hand.R")
+			blob(acc, grip + along * 0.26 - up * 0.04, Vector3(0.03, 0.06, 0.03), wood, "DEF-hand.R")
+		"lmg":
+			limb(acc, grip - along * 0.3, grip + along * 0.1, 0.026, wood, "DEF-hand.R", 0.022)
+			limb(acc, grip - along * 0.05, grip + along * 0.3, 0.03, iron, "DEF-hand.R")
+			limb(acc, grip + along * 0.3, grip + along * 0.85, 0.013, iron, "DEF-hand.R")
+			cube(acc, grip + along * 0.1 + up * 0.07, Vector3(0.03, 0.1, 0.08), iron, "DEF-hand.R", Vector3(0.3, 0, 0))
+			for side in [-1.0, 1.0]:
+				var across := along.cross(up).normalized()
+				limb(acc, grip + along * 0.7, grip + along * 0.72 - up * 0.2 + across * side * 0.06, 0.006, iron, "DEF-hand.R")
+		"rocket_tube":
+			# Aether rocket tube: an open launcher with a flared back, sights and a warhead.
+			var olive := mat(Color(0.32, 0.34, 0.26), 0.3, 0.6)
+			limb(acc, grip - along * 0.45, grip + along * 0.55, 0.045, olive, "DEF-hand.R")
+			limb(acc, grip - along * 0.5, grip - along * 0.42, 0.06, olive, "DEF-hand.R", 0.045)
+			limb(acc, grip + along * 0.5, grip + along * 0.55, 0.052, mat(GUNMETAL, 0.75, 0.4), "DEF-hand.R")
+			blob(acc, grip + along * 0.62, Vector3(0.07, 0.07, 0.11), mat(AETHER_GLOW, 0.0, 0.3, 1.8), "DEF-hand.R")
+			cube(acc, grip + along * 0.15 + up * 0.06, Vector3(0.012, 0.05, 0.03), mat(GUNMETAL, 0.75, 0.4), "DEF-hand.R")
+		"binoculars":
+			var across := along.cross(up).normalized()
+			for side in [-1.0, 1.0]:
+				limb(acc, grip + along * 0.02 + across * side * 0.03, grip + along * 0.14 + across * side * 0.03, 0.022, mat(BLACK, 0.4, 0.5), "DEF-hand.R")
+		"gas_sprayer":
+			limb(acc, grip - along * 0.15, grip + along * 0.55, 0.035, mat(Color(0.2, 0.2, 0.21), 0.7, 0.45), "DEF-hand.R", 0.03)
+			limb(acc, grip + along * 0.5, grip + along * 0.6, 0.045, mat(Color(0.2, 0.2, 0.21), 0.7, 0.45), "DEF-hand.R")
+			blob(acc, grip + along * 0.64, Vector3(0.05, 0.05, 0.05), mat(SOUL_GLOW, 0.0, 0.4, 3.0), "DEF-hand.R")
 		"pistol":
 			limb(acc, grip - along * 0.02, grip + along * 0.22, 0.014, iron, "DEF-hand.R")
 			cube(acc, grip, Vector3(0.03, 0.08, 0.05), wood, "DEF-hand.R")

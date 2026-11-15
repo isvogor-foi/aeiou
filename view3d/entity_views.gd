@@ -89,6 +89,7 @@ func _create(e) -> Dictionary:
 			r.bar_height = (float(v.get("height", 0.9)) + 0.25) * Models.unit_scale(e.type_id) + r.fly
 			r.animated = _animated_parts(body)
 			r.rumble = float(v.get("rumble", 0.0))
+			r.variant = Models.unit_variant(e.type_id, e.owner)
 			r.bank = v.get("bank", false)
 			r.circle = float(v.get("circle", 0.0))
 			if r.fly > 0.0:
@@ -209,7 +210,10 @@ func _sync_flashes(now: float) -> void:
 func sync(alpha: float, delta: float) -> void:
 	var now := Time.get_ticks_msec() / 1000.0
 	_sync_flashes(now)
-	Models.team_ages = gv.world.players.map(func(p): return p.age)
+	var ages: Array = gv.world.players.map(func(p): return p.age)
+	# An age-up can change what figures wear (era variants): recheck them once.
+	var era_check: bool = ages != Models.team_ages
+	Models.team_ages = ages
 	var seen := {}
 	var cam: Camera3D = gv.camera
 	var anim_step := ANIM_STEP_CROWD if _unit_views >= CROWD else 0.0
@@ -219,7 +223,8 @@ func sync(alpha: float, delta: float) -> void:
 			continue
 		seen[e.id] = true
 		var r = views.get(e.id)
-		if r == null or r.owner != e.owner or r.type_id != e.type_id:
+		if r == null or r.owner != e.owner or r.type_id != e.type_id \
+				or (era_check and r.kind == Entity.UNIT and r.get("variant", "") != Models.unit_variant(e.type_id, e.owner)):
 			if r != null:
 				r.node.queue_free()
 			r = _create(e)
