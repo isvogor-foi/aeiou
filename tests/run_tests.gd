@@ -12,10 +12,28 @@ const Generator = preload("res://mapgen/generator.gd")
 
 var _failures: Array[String] = []
 var _current := ""
+var _checks := 0
+
+
+## Turns script errors raised during a test into failures of that test (a crash
+## would otherwise end the test early and quietly).
+class ErrorCatcher extends Logger:
+	var runner
+
+	func _log_error(function: String, file: String, line: int, code: String, rationale: String, _editor_notify: bool,
+			error_type: int, _script_backtraces: Array[ScriptBacktrace]) -> void:
+		if error_type == ERROR_TYPE_SCRIPT and runner and runner._current != "":
+			runner._failures.append("[%s] script error: %s (%s:%d %s)" % [runner._current, rationale if rationale != "" else code, file.get_file(), line, function])
+
+	func _log_message(_message: String, _error: bool) -> void:
+		pass
 
 
 func _initialize() -> void:
 	DB.ensure_loaded()
+	var catcher := ErrorCatcher.new()
+	catcher.runner = self
+	OS.add_logger(catcher)
 	# Every method named test_*, in the order it appears in this file.
 	var tests: Array[String] = []
 	for m in (get_script() as Script).get_script_method_list():
@@ -24,8 +42,12 @@ func _initialize() -> void:
 	for t in tests:
 		_current = t
 		var before := _failures.size()
+		_checks = 0
 		call(t)
+		if _checks == 0:
+			_failures.append("[%s] ran no checks (did it crash?)" % t)
 		print(("  ok    " if _failures.size() == before else "  FAIL  ") + t)
+	_current = ""
 	print("")
 	if _failures.is_empty():
 		print("All %d tests passed." % tests.size())
@@ -37,6 +59,7 @@ func _initialize() -> void:
 
 
 func check(cond: bool, msg: String) -> void:
+	_checks += 1
 	if not cond:
 		_failures.append("[%s] %s" % [_current, msg])
 
@@ -1518,7 +1541,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1588,6 +1611,27 @@ func test_campaign_chapters() -> void:
 		w.kill(empress)
 	_run(w, 2)
 	check(w.winner == 0, "empress: her fall wins (winner %d)" % w.winner)
+
+
+## Rosabelle, Believe: three parlours bring Houdini's ghost and the march on the
+## counting-house; Szentkirályi appears when it is pressed, then leaves; taking it wins.
+func test_rosabelle() -> void:
+	var w := _scenario_world("m7_rosabelle")
+	check(w.players[0].age == 7 and w.final_age() == 7, "Chapter 7 is played in Age 7")
+	for pt in w.scenario.points:
+		pt.owner = 0
+		w.scenario.flags.code = int(w.scenario.flags.code) + 1
+	_run(w, 2)
+	check(w.scenario.step == 1 and w.type_count(0, "houdini") == 1, "the parlours free Houdini's ghost")
+	var house = w.get_entity(int(w.scenario.flags.house))
+	house.hp = house.max_hp * 0.5
+	_run(w, 2)
+	check(w.type_count(1, "szentkiralyi") == 1, "Szentkirályi steps out")
+	_run(w, 11)
+	check(w.type_count(1, "szentkiralyi") == 0, "and walks away")
+	w.capture_city(house, 0)
+	_run(w, 2)
+	check(w.winner == 0, "taking the counting-house wins (winner %d)" % w.winner)
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.

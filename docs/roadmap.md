@@ -140,13 +140,13 @@ Repeat this checklist for each age, **7 → 12**. Each age ships with its chapte
 
 ## Phase 5: Campaign 2
 
-- [ ] **M** Menu: two campaigns on the Campaign page (Campaign 2 unlocks when Campaign 1 is won); `Scenario.CAMPAIGN` becomes a list per campaign; progress per campaign in `user://campaign.cfg`.
-- [ ] **S** Intro title cards for Campaign 2 (1918–1926, see story.md), and an epilogue.
+- [x] **M** Menu (2026-11-15): two campaigns on the Campaign page (Campaign 2 unlocks when Chapter 6 is won); `Scenario.CAMPAIGNS` describes each (chapters, intro, epilogue, progress key, what unlocks it); chapters are numbered across both (VII–XII); finishing Campaign 1 offers to begin Campaign 2.
+- [x] **S** Intro title cards for Campaign 2 (`INTRO2`, 1918–1926) and its epilogue (`EPILOGUE2`).
 - [ ] **M** Heroes: old Franz Ferdinand (staff car), Hedy Lamarr, Lise Meitner, Schrödinger, Porsche, Tesla (aged), Houdini's ghost. Abilities in `data/abilities.json`.
 - [ ] **M** Bosses: Szentkirályi in each of his forms (1926 shade, 1934 foundry-lord, 1955 necropolis lich), the Concern's machines.
 - [ ] **M** Scenario toolkit additions: weather (the polar night and blizzards for Chapter 9), a player choice with a remembered outcome (the bomb in Chapter 11), market and economy events (Chapter 8), fronts with many capture points (Chapter 10).
 - [ ] Chapters, each built with its age in Phase 4:
-  - [ ] **L** 7 Rosabelle, Believe (Age 7)
+  - [x] **L** 7 Rosabelle, Believe (Age 7): three séance parlours give the words of Houdini's code and free his ghost; then storm the counting-house (guarded, with waves) where Szentkirályi steps out, speaks and leaves; Vienna sends reinforcements with Landpanzers, since rifles can't crack buildings. Bot-played: won with 7 units left.
   - [ ] **L** 8 Black Thursday (Age 8)
   - [ ] **L** 9 The Ice Crown (Age 9)
   - [ ] **L** 10 The Long Winter (Age 10)

@@ -10,6 +10,7 @@ const SaveGame = preload("res://sim/save_game.gd")
 const GameMenu = preload("res://ui/game_menu.gd")
 const AudioManager = preload("res://audio/audio_manager.gd")
 const Scenario = preload("res://scenarios/scenario.gd")
+const Research = preload("res://sim/research.gd")
 const MenuTheme = preload("res://ui/menu_theme.gd")
 const Graphics = preload("res://ui/graphics.gd")
 
@@ -169,7 +170,7 @@ func _show(page: String) -> void:
 			_content.add_child(_skirmish_page)
 			_footer_buttons("Begin Battle", _start)
 		"campaign":
-			_header("Campaign", "1914-1918: six chapters, one for each age. Each victory opens the next.")
+			_header("Campaign", "1914-1955: two campaigns, a chapter for each age. Each victory opens the next.")
 			_fill_campaign()
 			_footer_buttons("", Callable())
 		"load":
@@ -258,14 +259,15 @@ func _fill_main() -> void:
 		var latest: Dictionary = saves[0]
 		first = _entry("Continue", "%s:  %s" % [latest.slot.capitalize(), GameMenu._describe(latest)], _load.bind(latest), true)
 		_content.add_child(first)
-	var open := Scenario.unlocked()
-	var won := 0
-	for sid in Scenario.CAMPAIGN:
-		if Scenario.is_won(sid):
-			won += 1
-	var next: String = Scenario.CAMPAIGN[mini(open, Scenario.CAMPAIGN.size()) - 1]
-	var camp_caption := "1914-1918  -  all six chapters won" if won == Scenario.CAMPAIGN.size() \
-			else "1914-1918  -  next: %s" % Scenario.MISSIONS[next][0].split(". ", true, 1)[-1]
+	# The caption names the next chapter to play, across both campaigns.
+	var camp_caption := "1914-1955  -  every chapter won"
+	for c in Scenario.CAMPAIGNS:
+		var open := Scenario.unlocked(c)
+		var todo: Array = c.chapters.filter(func(sid): return not Scenario.is_won(sid))
+		if open > 0 and not todo.is_empty():
+			var next: String = c.chapters[mini(open, c.chapters.size()) - 1]
+			camp_caption = "%s  -  next: %s" % [c.years, Scenario.MISSIONS[next][0].split(". ", true, 1)[-1]]
+			break
 	var camp := _entry("Campaign", camp_caption, _show.bind("campaign"), first == null)
 	_content.add_child(camp)
 	_content.add_child(_entry("Skirmish", "A single battle against the AI, with your choice of map and rules", _show.bind("skirmish")))
@@ -458,8 +460,7 @@ func _card() -> PanelContainer:
 
 
 func _fill_campaign() -> void:
-	var open := Scenario.unlocked()
-	# Six chapters outgrow the panel on short screens: the list scrolls.
+	# The chapters outgrow the panel on short screens: the list scrolls.
 	var scroll := ScrollContainer.new()
 	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
 	scroll.custom_minimum_size.y = 560
@@ -468,49 +469,61 @@ func _fill_campaign() -> void:
 	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	list.add_theme_constant_override("separation", 10)
 	scroll.add_child(list)
-	for i in Scenario.CAMPAIGN.size():
-		var sid: String = Scenario.CAMPAIGN[i]
-		var info: Array = Scenario.MISSIONS[sid]
-		var locked := i >= open
-		var card := _card()
-		var row := HBoxContainer.new()
-		row.add_theme_constant_override("separation", 18)
-		card.add_child(row)
-		var badge := Label.new()
-		badge.text = ["I", "II", "III", "IV", "V", "VI"][i]
-		badge.custom_minimum_size.x = 44
-		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-		badge.add_theme_font_size_override("font_size", 30)
-		badge.add_theme_color_override("font_color", Flags.GOLD if not locked else MenuTheme.MUTED)
-		row.add_child(badge)
-		var text := VBoxContainer.new()
-		text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		text.add_theme_constant_override("separation", 2)
-		row.add_child(text)
-		var title := Label.new()
-		title.text = info[0].trim_prefix("%d. " % (i + 1))
-		title.add_theme_font_size_override("font_size", 20)
-		if locked:
-			title.add_theme_color_override("font_color", MenuTheme.MUTED)
-		text.add_child(title)
-		text.add_child(MenuTheme.muted(info[1] if not locked else "Win the previous chapter to unlock.", 14))
-		var side := VBoxContainer.new()
-		side.alignment = BoxContainer.ALIGNMENT_CENTER
-		row.add_child(side)
-		var won := Scenario.is_won(sid)
-		var play := _button("Replay" if won else ("Locked" if locked else "Play"), _start_scenario.bind(sid))
-		play.custom_minimum_size.x = 120
-		play.disabled = locked
-		if not locked and not won:
-			MenuTheme.make_primary(play)
-		side.add_child(play)
-		if won:
-			var w := Label.new()
-			w.text = "✔ Won"
-			w.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-			w.add_theme_color_override("font_color", Flags.GOLD)
-			side.add_child(w)
-		list.add_child(card)
+	for camp in Scenario.CAMPAIGNS:
+		var open := Scenario.unlocked(camp)
+		var head := Label.new()
+		head.text = "%s  ·  %s" % [camp.title, camp.years]
+		head.add_theme_font_size_override("font_size", 18)
+		head.add_theme_color_override("font_color", Flags.GOLD if open > 0 else MenuTheme.MUTED)
+		list.add_child(head)
+		if open == 0:
+			list.add_child(MenuTheme.muted("Win %s to begin this campaign." % Scenario.MISSIONS[camp.needs][0].split(". ", true, 1)[-1], 14))
+		for i in camp.chapters.size():
+			list.add_child(_chapter_card(camp.chapters[i], i >= open))
+
+
+func _chapter_card(sid: String, locked: bool) -> PanelContainer:
+	var info: Array = Scenario.MISSIONS[sid]
+	var n := Scenario.chapter_number(sid)
+	var card := _card()
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 18)
+	card.add_child(row)
+	var badge := Label.new()
+	badge.text = Research.roman(n)
+	badge.custom_minimum_size.x = 56
+	badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	badge.add_theme_font_size_override("font_size", 30)
+	badge.add_theme_color_override("font_color", Flags.GOLD if not locked else MenuTheme.MUTED)
+	row.add_child(badge)
+	var text := VBoxContainer.new()
+	text.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	text.add_theme_constant_override("separation", 2)
+	row.add_child(text)
+	var title := Label.new()
+	title.text = info[0].trim_prefix("%d. " % n)
+	title.add_theme_font_size_override("font_size", 20)
+	if locked:
+		title.add_theme_color_override("font_color", MenuTheme.MUTED)
+	text.add_child(title)
+	text.add_child(MenuTheme.muted(info[1] if not locked else "Win the previous chapter to unlock.", 14))
+	var side := VBoxContainer.new()
+	side.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_child(side)
+	var won := Scenario.is_won(sid)
+	var play := _button("Replay" if won else ("Locked" if locked else "Play"), _start_scenario.bind(sid))
+	play.custom_minimum_size.x = 120
+	play.disabled = locked
+	if not locked and not won:
+		MenuTheme.make_primary(play)
+	side.add_child(play)
+	if won:
+		var w := Label.new()
+		w.text = "✔ Won"
+		w.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		w.add_theme_color_override("font_color", Flags.GOLD)
+		side.add_child(w)
+	return card
 
 
 func _fill_load() -> void:

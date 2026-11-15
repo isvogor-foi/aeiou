@@ -14,6 +14,7 @@ func _initialize() -> void:
 	_empress(3)
 	_buda()
 	_vienna()
+	_rosabelle()
 	quit()
 
 
@@ -87,3 +88,25 @@ func _vienna() -> void:
 		t += 5
 	var v = w.get_entity(int(w.scenario.flags.vienna))
 	print("vienna (idle garrison): winner %d after %ds, hofburg hp %d, army left %d" % [w.winner, t, v.hp if v else 0, _army(w).size()])
+
+
+func _rosabelle() -> void:
+	# Each open parlour in turn, then the counting-house.
+	var w := _world("m7_rosabelle")
+	var t := 0
+	while w.winner < 0 and t < 1500:
+		var goal: Vector2 = Vector2.ZERO
+		var open: Array = w.scenario.get("points", []).filter(func(pt): return pt.owner != 0)
+		if not open.is_empty():
+			goal = open[0].pos
+		else:
+			goal = w.get_entity(int(w.scenario.flags.house)).pos
+		# The Emperor stays home, as a careful player would keep him.
+		var army: Array = _army(w).filter(func(i): return w.get_entity(i).type_id != "archduke")
+		w.issue({"type": "attack_move", "player": 0, "ids": army, "pos": goal})
+		for i in 5 * World.TICK_RATE:
+			w.tick()
+		t += 5
+	var house = w.get_entity(int(w.scenario.flags.house))
+	print("rosabelle: winner %d after %ds, step %d, parlours %d, house hp %d, army left %d" % [w.winner, t, w.scenario.step,
+			w.scenario.get("points", []).filter(func(pt): return pt.owner == 0).size(), house.hp if house else 0, _army(w).size()])

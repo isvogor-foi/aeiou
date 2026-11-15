@@ -2355,5 +2355,32 @@
 		"hotkey": "R",
 		"glyph": "S",
 		"accel": 1.5
+	},
+	"szentkiralyi": {
+		"name": "Count Árpád Szentkirályi",
+		"faction": "covenant",
+		"role": "boss",
+		"domain": "ground",
+		"description": "The lich-magnate who owns the Concern: the dead are his employees, the living his debtors. Death Coil and Summon Horde.",
+		"hp": 6000,
+		"armor": "undead",
+		"damage": 34,
+		"dtype": "soul",
+		"range": 6,
+		"cooldown": 1.4,
+		"speed": 2.2,
+		"abilities": [
+			"death_coil",
+			"summon_horde"
+		],
+		"aura": {
+			"radius": 7,
+			"lifesteal": 0.15
+		},
+		"glyph": "S",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
 	}
 }

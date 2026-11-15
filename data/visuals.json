@@ -672,6 +672,11 @@
 			"scale": 1.0,
 			"rumble": 1.0,
 			"turn": 4.0
+		},
+		"szentkiralyi": {
+			"figure": "szentkiralyi",
+			"height": 1.35,
+			"anims": "caster"
 		}
 	},
 	"buildings": {

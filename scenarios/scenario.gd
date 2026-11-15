@@ -16,6 +16,8 @@ const FOE := 1
 
 ## Mission order for the campaign menu (the tutorial stands apart).
 const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
+## Campaign 2, The Undying Century (1926-1955): one chapter per age 7-12, added as built.
+const CAMPAIGN2 := ["m7_rosabelle"]
 
 var id := ""
 var title := ""
@@ -384,6 +386,9 @@ const MISSIONS := {
 	"m6_viribus": ["6. Viribus Unitis", "Bring the five A.E.I.O.U. relics home, then end Rudolf at Buda.",
 			"Vienna and Buda  ·  Autumn 1918",
 			"The five relics of the House are scattered, and Rudolf wants them as badly as we do. Bring them home, and the crown lands will march as one on his seat at Buda. The Iron Emperor insists on coming. Nobody has found a way to refuse him."],
+	"m7_rosabelle": ["7. Rosabelle, Believe", "Shut down the Concern's séance parlours, free Houdini's soul, and storm its counting-house.",
+			"Vienna and Budapest  ·  November 1926",
+			"Harry Houdini died on Halloween. Before he went, he told his wife a code that any honest medium would have to give: ten words that spell \"Rosabelle, believe\". Last night a Viennese medium spoke it. The Concern is keeping his soul in its séance parlours, and charging admission."],
 }
 
 ## Title cards before Chapter 1: the premise, one page at a time.
@@ -397,11 +402,50 @@ const INTRO := [
 const EPILOGUE := "Vienna, 12 November 1918. The Federation is proclaimed from the balcony of the Hofburg, in eleven languages. Franz Joseph lies in the Kapuzinergruft, in a coffin that is not empty. The empire paid dearly, but it stands, united. And for once in its history, it won the war."
 
 
-## How many campaign missions are open (at least the first).
-static func unlocked() -> int:
+## Campaign 2's opening title cards (1918-1926).
+const INTRO2 := [
+	["Vienna, 1918", "The Federation is proclaimed and Rudolf is ended at Buda. The crown lands get their own parliaments, the Danube fills with Aether barges, and for the first time in living memory the empire is solvent."],
+	["The quiet years", "Jazz in the coffeehouses, radio in every parlour, cinemas on the Ring. Emperor Franz Ferdinand, sixty-three and stubborn, still signs every paper himself.\n\nThe dead do not rest. Rudolf's necromancers are scattered and out of work."],
+	["Somebody hires them.", "Count Árpád Szentkirályi rode east in a hearse in 1915. He has come back, after a fashion, with a company: the Szentkirályi Concern. It buys debts, bankrupt cities, and the dead.\n\nThe dead make excellent employees. They never strike, never sleep and never ask for wages."],
+]
+
+const EPILOGUE2 := "Vienna, 15 May 1955. In the Belvedere the Emperor, ninety-two, signs the Treaty of the Living himself. The Concern is dissolved, its dead laid to rest, its ledgers burned. The Federation has outlived the century that should have destroyed it, and Franz Ferdinand, for the first time in forty years, takes a holiday."
+
+## The campaigns in menu order: chapters, cards, where progress is kept, and what
+## unlocks them. Chapters are numbered across campaigns (Campaign 2 opens at 7).
+const CAMPAIGNS := [
+	{"key": "campaign", "title": "Viribus Unitis", "years": "1914-1918", "chapters": CAMPAIGN, "intro": INTRO, "epilogue": EPILOGUE, "needs": ""},
+	{"key": "campaign2", "title": "The Undying Century", "years": "1926-1955", "chapters": CAMPAIGN2, "intro": INTRO2, "epilogue": EPILOGUE2, "needs": "m6_viribus"},
+]
+
+
+## The campaign a chapter belongs to, or {}.
+static func campaign_of(scenario_id: String) -> Dictionary:
+	for c in CAMPAIGNS:
+		if scenario_id in c.chapters:
+			return c
+	return {}
+
+
+## A chapter's number across all campaigns (Sarajevo is 1, Rosabelle 7), or 0.
+static func chapter_number(scenario_id: String) -> int:
+	var n := 0
+	for c in CAMPAIGNS:
+		var i: int = c.chapters.find(scenario_id)
+		if i >= 0:
+			return n + i + 1
+		n += 6
+	return 0
+
+
+## How many chapters of a campaign are open: at least the first once the campaign
+## itself is unlocked (Campaign 2 needs Campaign 1's last chapter won), else 0.
+static func unlocked(camp: Dictionary = CAMPAIGNS[0]) -> int:
+	if camp.needs != "" and not is_won(camp.needs):
+		return 0
 	var cfg := ConfigFile.new()
 	cfg.load(PROGRESS)
-	return int(cfg.get_value("campaign", "unlocked", 1))
+	return int(cfg.get_value(camp.key, "unlocked", 1))
 
 
 static func is_won(scenario_id: String) -> bool:
@@ -414,7 +458,9 @@ static func record_win(scenario_id: String) -> void:
 	var cfg := ConfigFile.new()
 	cfg.load(PROGRESS)
 	cfg.set_value("won", scenario_id, true)
-	var i := CAMPAIGN.find(scenario_id)
-	if i >= 0:
-		cfg.set_value("campaign", "unlocked", maxi(int(cfg.get_value("campaign", "unlocked", 1)), mini(i + 2, CAMPAIGN.size())))
+	var camp := campaign_of(scenario_id)
+	if not camp.is_empty():
+		var i: int = camp.chapters.find(scenario_id)
+		var n: int = camp.chapters.size()
+		cfg.set_value(camp.key, "unlocked", maxi(int(cfg.get_value(camp.key, "unlocked", 1)), mini(i + 2, n)))
 	cfg.save(PROGRESS)
