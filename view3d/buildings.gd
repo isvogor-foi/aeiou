@@ -49,7 +49,6 @@ const STYLES := {
 
 ## `style` is a crown land / pact / "hungary", or "" for the faction's default.
 ## `age` (1-12) dresses it for its era (see _age_palette and _age_dress); 0 = undated.
-## Ages 7-12 still look like Age 6 until their dressing is built (docs/roadmap.md, Phase 3).
 static func build(kind: String, faction: String, team: Color, style := "", age := 0) -> Node3D:
 	var key := "%s/%s/%s/%s/%d" % [kind, faction, style, team.to_html(), age]
 	if not _cache.has(key):
@@ -93,10 +92,24 @@ static func _age_palette(p: Dictionary, age: int) -> void:
 		p.wall = p.wall.lerp(p.wall.darkened(0.12), old)
 	if age <= 1:
 		p.window = p.window.lerp(Color(0.85, 0.5, 0.22), 0.5)
+	elif age >= 11:
+		# Fluorescent tubes behind big panes (soul-light for the Concern).
+		p.window = p.glow.lerp(Color(0.85, 0.95, 1.0), 0.5) if not p.necro else p.glow
+	elif age >= 7:
+		# Electric light: whiter and brighter than gas (the Concern keeps its soul-glow).
+		p.window = Color(1.0, 0.9, 0.68) if not p.necro else p.window.lerp(p.glow, 0.6)
 	elif age >= 6:
 		p.window = p.window.lerp(p.glow, 0.45)
 	elif age >= 5:
 		p.window = p.window.lightened(0.15)
+	if age >= 9:
+		# Concrete and steel creep into the walls and roofs (black iron for the Concern).
+		var k := clampf((age - 8) * 0.12, 0.0, 0.45)
+		if p.necro:
+			p.wall2 = p.wall2.lerp(Color(0.1, 0.1, 0.11), k)
+		else:
+			p.roof = p.roof.lerp(Color(0.36, 0.38, 0.4), k)
+			p.trim = p.trim.lerp(Color(0.62, 0.62, 0.6), k)
 
 
 static func _raw(kind: String, faction: String, team: Color, style: String, age := 0) -> Node3D:
@@ -1007,7 +1020,7 @@ static func _age_dress(r: Node3D, P: Dictionary, age: int) -> void:
 	var iron := m(Color(0.2, 0.2, 0.22), 0.7, 0.45)
 	var brass := m(Color(0.86, 0.66, 0.28), 0.75, 0.35)
 	var bone := m(Color(0.84, 0.81, 0.71), 0.0, 0.6)
-	var light_c: Color = P.glow if necro or age >= 5 else Color(1.0, 0.72, 0.35)
+	var light_c: Color = P.glow if necro or (age >= 5 and age < 7) else (Color(1.0, 0.95, 0.82) if age >= 7 else Color(1.0, 0.72, 0.35))
 	if age <= 2:
 		# Frontier clutter: stacked logs and crates (bones and coffins for the dead).
 		var side := Vector3(c.x + hx + 0.18, 0, c.z + hz * 0.4)
@@ -1038,6 +1051,10 @@ static func _age_dress(r: Node3D, P: Dictionary, age: int) -> void:
 			if necro:
 				Gear.part(r, Gear.sphere(0.06), bone, post + Vector3(0, 0.76, 0))
 				Gear.part(r, Gear.sphere(0.03), glow(light_c, 2.5), post + Vector3(0, 0.76, 0.04))
+			elif age >= 7:
+				# Electric street lamps: a curved arm and a white globe.
+				_lim(r, post + Vector3(0, 0.7, 0), post + Vector3(0, 0.82, 0.08), 0.015, iron)
+				Gear.part(r, Gear.sphere(0.05), glow(light_c, 2.6), post + Vector3(0, 0.78, 0.12))
 			else:
 				_lim(r, post + Vector3(0, 0.68, 0), post + Vector3(0, 0.84, 0), 0.05, glow(light_c, 2.2), 0.04)
 				_lim(r, post + Vector3(0, 0.84, 0), post + Vector3(0, 0.88, 0), 0.06, brass, 0.0)
@@ -1076,15 +1093,144 @@ static func _age_dress(r: Node3D, P: Dictionary, age: int) -> void:
 		var mast := Vector3(seat.get_center().x, seat.end.y, seat.get_center().z)
 		if not seat_found:
 			mast += Vector3(clampf(seat.size.x * 0.3, 0.0, 0.25), -0.02, 0)
-		_lim(r, mast, mast + Vector3(0, 0.75, 0), 0.025, iron)
-		for y in [0.25, 0.45, 0.6]:
-			Gear.part(r, Gear.torus(0.04, 0.07 - y * 0.04), brass if not necro else bone, mast + Vector3(0, y, 0))
-		Gear.part(r, Gear.sphere(0.07), glow(P.glow, 3.0), mast + Vector3(0, 0.82, 0))
+		if age < 10:
+			# (From the Age of Radar a radar dish takes the mast's place.)
+			_lim(r, mast, mast + Vector3(0, 0.75, 0), 0.025, iron)
+			for y in [0.25, 0.45, 0.6]:
+				Gear.part(r, Gear.torus(0.04, 0.07 - y * 0.04), brass if not necro else bone, mast + Vector3(0, y, 0))
+			Gear.part(r, Gear.sphere(0.07), glow(P.glow, 3.0), mast + Vector3(0, 0.82, 0))
 		# A glowing Aether (or soul) conduit along the front of the base, capped in brass.
 		var span := box.size.x * 0.6
 		_lim(r, Vector3(c.x - span * 0.5, 0.06, front + 0.05), Vector3(c.x + span * 0.5, 0.06, front + 0.05), 0.03, glow(P.glow, 1.6))
 		for x in [-1.0, 1.0]:
 			Gear.part(r, Gear.cyl(0.045, 0.07), brass if not necro else iron, Vector3(c.x + x * span * 0.5, 0.06, front + 0.05), Vector3(0, 0, PI / 2))
+		if age >= 7:
+			_modern_dress(r, P, age, parts, box, top, mast)
+
+
+## The modern ages, cumulative like the rest: neon and wires (7), radio aerials and
+## Art Deco pilasters (8), a concrete annex with fuel tanks (9), a turning radar dish,
+## sandbags and a searchlight (10), a reactor dome and hazard stripes (11), a glass
+## front and an antenna mast with a red light (12). The Concern's versions are its
+## corporate necropolis: ledger signs, séance aerials, black iron, bone dishes,
+## crematorium stacks and black glass.
+static func _modern_dress(r: Node3D, P: Dictionary, age: int, parts: Array, box: AABB, top: AABB, roof: Vector3) -> void:
+	var necro: bool = P.necro
+	var c := box.get_center()
+	var hx := box.size.x * 0.5
+	var hz := box.size.z * 0.5
+	var front := box.end.z
+	var h := box.size.y
+	var iron := m(Color(0.2, 0.2, 0.22), 0.7, 0.45)
+	var steel := m(Color(0.5, 0.52, 0.54), 0.7, 0.35)
+	var bone := m(Color(0.84, 0.81, 0.71), 0.0, 0.6)
+	var concrete := m(Color(0.58, 0.58, 0.55), 0.0, 0.9) if not necro else m(Color(0.1, 0.1, 0.11), 0.5, 0.5)
+	# 7: a neon sign over the door in the team colour (a green ledger-and-skull for
+	# the Concern) and electric wires to the lamp posts.
+	var sign_y := minf(h * 0.55, 1.2)
+	var neon := glow(P.team.lightened(0.25) if not necro else P.glow, 2.4)
+	box_(r, Vector3(c.x, sign_y, front + 0.04), Vector3(minf(box.size.x * 0.5, 0.9), 0.14, 0.03), iron)
+	for i in 5:
+		box_(r, Vector3(c.x - 0.24 + i * 0.12, sign_y, front + 0.06), Vector3(0.07, 0.07 if i % 2 == 0 else 0.04, 0.012), neon)
+	if necro:
+		Gear.part(r, Gear.sphere(0.05), bone, Vector3(c.x + minf(box.size.x * 0.25, 0.45) + 0.06, sign_y, front + 0.06))
+	for x in [-1.0, 1.0]:
+		var post_top := Vector3(c.x + x * (hx + 0.12), 0.7, front + 0.12)
+		_lim(r, post_top, Vector3(c.x + x * hx * 0.8, minf(h * 0.7, 1.4), front), 0.005, iron if not necro else m(Color(0.3, 0.3, 0.3), 0.6, 0.5))
+	if age >= 8:
+		# Radio aerials: two thin masts on the roof with a wire between (bone and vials
+		# for the Concern's séance wireless).
+		var a1 := roof + Vector3(-minf(top.size.x * 0.35, 0.3), 0, -0.05)
+		var a2 := roof + Vector3(minf(top.size.x * 0.35, 0.3), 0, -0.05)
+		for a in [a1, a2]:
+			_lim(r, a, a + Vector3(0, 0.45, 0), 0.008, iron if not necro else bone)
+		_lim(r, a1 + Vector3(0, 0.43, 0), a2 + Vector3(0, 0.43, 0), 0.003, iron)
+		if necro:
+			Gear.part(r, Gear.sphere(0.025), glow(P.glow, 2.0), (a1 + a2) * 0.5 + Vector3(0, 0.43, 0))
+	if age >= 9:
+		# A concrete annex at the side with a garage door, and fuel tanks behind it.
+		var ax := c.x + hx + 0.26
+		box_(r, Vector3(ax, 0.22, c.z + hz * 0.2), Vector3(0.48, 0.44, minf(box.size.z * 0.6, 0.9)), concrete)
+		box_(r, Vector3(ax, 0.16, c.z + hz * 0.2 + minf(box.size.z * 0.3, 0.45) + 0.005), Vector3(0.3, 0.3, 0.012), iron)
+		for y in [0.06, 0.12, 0.18, 0.24]:
+			box_(r, Vector3(ax, y, c.z + hz * 0.2 + minf(box.size.z * 0.3, 0.45) + 0.012), Vector3(0.3, 0.01, 0.005), steel)
+		for i in 2:
+			var t := Vector3(ax - 0.1 + i * 0.2, 0, c.z - hz * 0.6)
+			_lim(r, t + Vector3(0, 0.02, 0), t + Vector3(0, 0.34, 0), 0.09, steel if not necro else iron)
+			Gear.part(r, Gear.sphere(0.09, true), steel if not necro else iron, t + Vector3(0, 0.34, 0))
+			_lim(r, t + Vector3(0, 0.16, 0), t + Vector3(0, 0.19, 0), 0.093, m(P.team) if not necro else glow(P.glow, 1.2))
+	if age >= 10:
+		# A radar dish turning on the roof (a bone dish for the Concern), sandbags at the
+		# front corners and a searchlight.
+		var dish := Node3D.new()
+		dish.position = roof
+		dish.set_meta("spin", 0.9)
+		_lim(dish, Vector3.ZERO, Vector3(0, 0.3, 0), 0.025, iron)
+		var face := m(Color(0.78, 0.8, 0.8), 0.5, 0.4) if not necro else bone
+		var plate := Gear.part(dish, Gear.sphere(0.24, true), face, Vector3(0, 0.42, 0.04), Vector3(-1.2, 0, 0), Vector3(1, 0.35, 1))
+		plate.name = "dish"
+		_lim(dish, Vector3(0, 0.42, 0.06), Vector3(0, 0.42, 0.3), 0.01, iron)
+		Gear.part(dish, Gear.sphere(0.025), glow(P.glow if necro else Color(1.0, 0.4, 0.3), 2.0), Vector3(0, 0.42, 0.31))
+		_seal(dish)
+		r.add_child(dish)
+		var sand := m(Color(0.6, 0.54, 0.4), 0.0, 0.95) if not necro else m(Color(0.2, 0.19, 0.18), 0.0, 0.9)
+		for x in [-1.0, 1.0]:
+			for i in 3:
+				Gear.part(r, Gear.sphere(0.07), sand, Vector3(c.x + x * (hx - 0.05) - x * i * 0.12, 0.05, front + 0.25), Vector3.ZERO, Vector3(1, 0.55, 0.7))
+			Gear.part(r, Gear.sphere(0.07), sand, Vector3(c.x + x * (hx - 0.11), 0.12, front + 0.25), Vector3.ZERO, Vector3(1, 0.55, 0.7))
+		var sl := Vector3(c.x - hx - 0.1, 0.0, front - 0.1)
+		_lim(r, sl, sl + Vector3(0, 0.3, 0), 0.02, iron)
+		_lim(r, sl + Vector3(0, 0.3, -0.04), sl + Vector3(0, 0.36, 0.06), 0.06, iron)
+		Gear.part(r, Gear.cyl(0.055, 0.01), glow(Color(1.0, 0.97, 0.85) if not necro else P.glow, 3.0), sl + Vector3(0, 0.36, 0.07), Vector3(PI / 2 - 0.5, 0, 0))
+	if age >= 11:
+		# A reactor dome on the annex and hazard stripes round the base (a crematorium
+		# stack with soul smoke for the Concern).
+		var ax := c.x + hx + 0.26
+		if necro:
+			_lim(r, Vector3(ax, 0.44, c.z), Vector3(ax, 1.5, c.z), 0.09, iron, 0.07)
+			_lim(r, Vector3(ax, 1.3, c.z), Vector3(ax, 1.36, c.z), 0.1, glow(P.glow, 2.0))
+			var chim := Gear.chimney(true)
+			for ch in chim.get_children():
+				if ch is GPUParticles3D:
+					var smoke: GPUParticles3D = ch.duplicate()
+					smoke.position = Vector3(ax, 1.55, c.z)
+					smoke.scale = Vector3.ONE * 0.7
+					r.add_child(smoke)
+			chim.free()
+		else:
+			Gear.part(r, Gear.sphere(0.2, true), m(Color(0.85, 0.86, 0.84), 0.2, 0.4), Vector3(ax, 0.44, c.z + hz * 0.2), Vector3.ZERO, Vector3(1, 0.8, 1))
+			_lim(r, Vector3(ax, 0.6, c.z + hz * 0.2), Vector3(ax, 0.64, c.z + hz * 0.2), 0.08, glow(P.glow, 2.0))
+		var yellow := m(Color(0.9, 0.7, 0.12)) if not necro else glow(P.glow, 1.0)
+		for i in 6:
+			box_(r, Vector3(c.x - hx * 0.9 + i * hx * 0.36, 0.015, front + 0.1), Vector3(hx * 0.18, 0.02, 0.06), yellow)
+	if age >= 12:
+		# The annex becomes a glass-and-steel wing (black glass for the Concern), and a
+		# tall antenna mast with a red light rises from the roof.
+		var glass := m(Color(0.35, 0.5, 0.6), 0.6, 0.1) if not necro else m(Color(0.04, 0.05, 0.06), 0.8, 0.08)
+		var ax := c.x + hx + 0.26
+		var az := c.z + hz * 0.2
+		var depth := minf(box.size.z * 0.6, 0.9)
+		box_(r, Vector3(ax, 0.62, az), Vector3(0.44, 0.36, depth * 0.9), glass)
+		for y in [0.45, 0.62, 0.79]:
+			box_(r, Vector3(ax, y, az), Vector3(0.46, 0.015, depth * 0.92), steel)
+		box_(r, Vector3(ax, 0.81, az), Vector3(0.48, 0.03, depth * 0.95), concrete)
+		var ant := Vector3(top.get_center().x - minf(top.size.x * 0.3, 0.25), top.end.y, top.get_center().z)
+		_lim(r, ant, ant + Vector3(0, 1.0, 0), 0.02, steel if not necro else bone, 0.006)
+		for y in [0.3, 0.6]:
+			_lim(r, ant + Vector3(-0.08, y, 0), ant + Vector3(0.08, y, 0), 0.006, steel if not necro else bone)
+		Gear.part(r, Gear.sphere(0.03), glow(Color(1.0, 0.15, 0.1) if not necro else P.glow, 3.0), ant + Vector3(0, 1.02, 0))
+
+
+## Bakes a moving part's children into one mesh so it stays a single node.
+static func _seal(pivot: Node3D) -> void:
+	var baked: Dictionary = Gear._bake(pivot)
+	for ch in pivot.get_children():
+		pivot.remove_child(ch)
+		ch.free()
+	if baked.mesh:
+		var mi := MeshInstance3D.new()
+		mi.mesh = baked.mesh
+		pivot.add_child(mi)
 
 
 ## Height of the roof under point `p` (x, z): the top of the highest part covering it.

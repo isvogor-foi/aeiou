@@ -75,16 +75,18 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [ ] **S** Existing machines (Landpanzer, Bone Juggernaut, crawlers) could move to the kit so their wheels and turrets come alive too.
 
 ### Buildings that keep evolving (`view3d/buildings.gd`)
-- [ ] **L** `_age_dress` for 7–12, cumulative like Ages 1–6:
-  - 7 Federation: electric street lamps, neon signs, cinema marquees, tram wires.
-  - 8 Zeppelins: mooring masts, radio aerials, Art Deco façades.
-  - 9 Diesel: concrete, steel-frame extensions, fuel tanks, garage doors.
-  - 10 Radar: radar dishes, searchlights, sandbags, flak on roofs (Vienna's real flak towers).
-  - 11 Atom: reactor domes, cooling towers, warning stripes.
-  - 12 Rockets: gantries, glass and steel, antenna masts.
-  - The Concern: a corporate necropolis: office towers of black glass and bone, ledger sigils, crematorium stacks, cold-storage vaults.
+- [x] **L** Ages 7–12 dressing (2026-11-15), cumulative like Ages 1–6 (`_modern_dress` in `view3d/buildings.gd`):
+  - 7 Federation: electric globe street lamps with wires to the building, a neon sign over the door in the team colour; electric-white windows.
+  - 8 Zeppelins: radio aerials on the roof.
+  - 9 Diesel: a concrete side annex with a garage door, fuel tanks in team colours; roofs and trim turn to concrete and steel.
+  - 10 Radar: a turning radar dish replaces the Tesla mast; sandbags, a searchlight.
+  - 11 Atom: a reactor dome on the annex, hazard stripes; fluorescent windows.
+  - 12 Rockets: the annex becomes a glass-and-steel wing; an antenna mast with a red light.
+  - The Concern: a green ledger-and-skull sign, séance aerials with soul vials, black iron annex and tanks, a bone radar dish, a crematorium stack with soul smoke, a black-glass wing and a bone spire.
+  - Not done: Art Deco façades (tried as pilasters; they stood off the façade on buildings with steps and plinths), mooring masts, flak towers.
+  - Known: the side annex sits just outside the building's footprint, so packed buildings can overlap a little at the sides.
 - [ ] **M** City designs per crown land, modern versions (Austria's palace with a radio mast; Galicia's oil city grows refineries; Bohemia's Prague spires with Škoda works).
-- [ ] **S** `tests/building_gallery.gd` renders ages 1–12.
+- [x] **S** `tests/building_gallery.gd` renders ages 1–12 (`-- <out_dir> ages`).
 
 ### City life and ambience (`view3d/ambience.gd`)
 - [ ] **M** Civilian traffic inside your borders from Age 7: cars, trams, buses and pedestrians on the cobbled city ground. Purely visual and culled off screen.
