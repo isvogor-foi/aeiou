@@ -1,10 +1,17 @@
 ; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
 config_version=5
 
 [application]
 
 config/name="Rise of Magic"
-config/description="A wizarding-world real-time strategy game."
+config/description="A steampunk-meets-magic real-time strategy game."
 run/main_scene="res://ui/main_menu.tscn"
 config/features=PackedStringArray("4.7")
 
@@ -17,6 +24,5 @@ window/stretch/aspect="expand"
 
 [rendering]
 
-environment/defaults/default_clear_color=Color(0.04, 0.04, 0.05, 1)
-
 textures/canvas_textures/default_texture_filter=0
+environment/defaults/default_clear_color=Color(0.04, 0.04, 0.05, 1)

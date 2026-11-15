@@ -68,7 +68,7 @@ static func cast(w, caster, id: String, target, pos: Vector2) -> bool:
 		"damage":
 			var dealt := 0.0
 			for t in _targets(w, caster, a, target, at, radius, true):
-				dealt += w.apply_damage(caster, t, float(a.amount), a.get("dtype", "arcane"))
+				dealt += w.apply_damage(caster, t, float(a.amount), a.get("dtype", "aether"))
 				if a.has("slow") and t.alive and t.kind == Entity.UNIT:
 					add_effect(w, t, "slow", float(a.slow), float(a.slow_duration))
 			if a.has("drain") and caster.alive:
@@ -84,7 +84,7 @@ static func cast(w, caster, id: String, target, pos: Vector2) -> bool:
 					target.prev_pos = target.pos
 					target.path = PackedVector2Array()
 					target.path_index = 0
-			w.apply_damage(caster, target, float(a.amount), a.get("dtype", "physical"))
+			w.apply_damage(caster, target, float(a.amount), a.get("dtype", "blade"))
 		"boost":
 			# Full Steam / Soul Furnace: a timed burst of speed and damage (with a
 			# radius it lifts every ally around the caster: Radetzky's charge order).
@@ -98,7 +98,7 @@ static func cast(w, caster, id: String, target, pos: Vector2) -> bool:
 			for i in int(a.get("jumps", 3)) + 1:
 				if cur == null:
 					break
-				w.apply_damage(caster, cur, float(a.amount) * pow(0.8, i), a.get("dtype", "arcane"))
+				w.apply_damage(caster, cur, float(a.amount) * pow(0.8, i), a.get("dtype", "aether"))
 				var next = null
 				var best := float(a.get("jump_range", 3.0)) * TILE
 				for o in w.entities.values():
@@ -121,7 +121,7 @@ static func cast(w, caster, id: String, target, pos: Vector2) -> bool:
 				caster.path_index = 0
 		"cloud":
 			# A lingering poison cloud on the ground (Plague Drop).
-			w.areas.append({"pos": at, "radius": radius, "dps": float(a.dps), "dtype": a.get("dtype", "curse"),
+			w.areas.append({"pos": at, "radius": radius, "dps": float(a.dps), "dtype": a.get("dtype", "soul"),
 					"owner": caster.owner, "until": w.tick_count + roundi(float(a.duration) * w.TICK_RATE)})
 			w.events.append({"type": "cloud", "pos": at, "radius": radius, "duration": float(a.duration)})
 		"grant":

@@ -16,72 +16,11 @@ var _current := ""
 
 func _initialize() -> void:
 	DB.ensure_loaded()
-	var tests := [
-		"test_data_integrity",
-		"test_damage_matrix",
-		"test_mapgen_symmetry_and_connectivity",
-		"test_new_game_setup",
-		"test_workers_gather_gold",
-		"test_workers_gather_timber",
-		"test_train_unit_and_pop",
-		"test_place_and_construct",
-		"test_fast_cheats",
-		"test_formations",
-		"test_city_capture_and_conquest",
-		"test_city_holds_while_defended",
-		"test_territory_and_placement",
-		"test_gather_cap_limits_income",
-		"test_research_and_age_gating",
-		"test_age_up_raises_city_limit",
-		"test_attrition_and_supply",
-		"test_attack_move_engages",
-		"test_crowd_settles_at_shared_target",
-		"test_hungary_rises",
-		"test_herb_garden_is_renewable",
-		"test_spells_heal_ward_drain",
-		"test_fireball_and_summons",
-		"test_auras_cleave_and_charge",
-		"test_hero_unique_and_revive",
-		"test_autocast_heals_allies",
-		"test_water_maps",
-		"test_air_targeting_and_flight",
-		"test_docks_and_fishing",
-		"test_transport_crosses_strait",
-		"test_crown_lands",
-		"test_grenzer_militia",
-		"test_standschuetze_high_ground",
-		"test_war_wagon_fort",
-		"test_viribus_unitis",
-		"test_coal_and_fabrik",
-		"test_siege_setup_and_clouds",
-		"test_air_rifle_magazine",
-		"test_aethership_carries_troops",
-		"test_ram_hook_frost",
-		"test_ghost_ship_stealth",
-		"test_colossus_limit_and_auras",
-		"test_dark_pacts",
-		"test_hero_choice",
-		"test_wonders",
-		"test_territory_and_wonder_victory",
-		"test_aeiou_relic_victory",
-		"test_loyalty_and_revolt",
-		"test_charters_and_tithes",
-		"test_skirmish_options",
-		"test_buildings_expand_borders",
-		"test_relic_to_city",
-		"test_roster_passives",
-		"test_machines_and_boost",
-		"test_military_upgrades_are_scoped",
-		"test_save_load_round_trip",
-		"test_scenarios_run",
-		"test_sarajevo_playthrough",
-		"test_viribus_relics",
-		"test_campaign_chapters",
-		"test_scenario_survives_save",
-		"test_tutorial_walkthrough",
-		"test_ai_builds_up",
-		"test_ai_attacks_passive_player",
-	]
+	# Every method named test_*, in the order it appears in this file.
+	var tests: Array[String] = []
+	for m in (get_script() as Script).get_script_method_list():
+		if String(m.name).begins_with("test_"):
+			tests.append(m.name)
 	for t in tests:
 		_current = t
 		var before := _failures.size()
@@ -164,8 +103,16 @@ func test_damage_matrix() -> void:
 	for t in DB.damage.types:
 		for a in DB.damage.armors:
 			check(DB.damage.matrix[t].has(a), "matrix missing %s vs %s" % [t, a])
-	check(is_equal_approx(DB.damage_mult("arcane", "heavy"), 1.25), "arcane vs heavy")
-	check(DB.damage_mult("physical", "heavy") < 1.0, "physical should be weak vs heavy")
+	for a in DB.damage.armors:
+		for t in DB.damage.types:
+			check(DB.damage.matrix.has(t), "matrix missing row %s" % t)
+	# The rules the matrix is built on (see the comment in damage.json).
+	check(DB.damage_mult("ballistic", "infantry") > 1.0 and DB.damage_mult("ballistic", "cavalry") > 1.0, "rifles shred infantry and cavalry")
+	check(DB.damage_mult("ballistic", "armoured") < 1.0 and DB.damage_mult("ballistic", "machine") < 1.0, "armour and machines shrug off rifles")
+	for a in ["armoured", "machine", "structure"]:
+		check(DB.damage_mult("explosive", a) > 1.0, "explosives crack %s" % a)
+	check(DB.damage_mult("aether", "undead") > 1.0, "Aether purges the dead")
+	check(DB.damage_mult("soul", "infantry") > 1.0 and DB.damage_mult("soul", "undead") < 1.0, "Soul fire withers the living, not the dead")
 
 
 func test_mapgen_symmetry_and_connectivity() -> void:
@@ -571,7 +518,7 @@ func test_spells_heal_ward_drain() -> void:
 	_run(w, 0.5)
 	var before := hurt.hp
 	var foe := w.spawn_unit("reaver", 1, c + Vector2(64, 0))
-	w.apply_damage(foe, hurt, 40.0, "arcane")
+	w.apply_damage(foe, hurt, 40.0, "aether")
 	check(hurt.hp == before, "ward absorbed the hit")
 	var necro := w.spawn_unit("necromancer", 1, c + Vector2(96, 0))
 	necro.hp = 30.0
@@ -609,12 +556,12 @@ func test_auras_cleave_and_charge() -> void:
 	var foe := w.spawn_unit("reaver", 1, c + Vector2(30, 0))
 	w.tick()
 	var hp := guard.hp
-	w.apply_damage(foe, guard, 50.0, "arcane")
+	w.apply_damage(foe, guard, 50.0, "aether")
 	var plain := hp - guard.hp
 	w.spawn_unit("rudolf", 0, c + Vector2(0, 40))
 	w.tick()
 	hp = guard.hp
-	w.apply_damage(foe, guard, 50.0, "arcane")
+	w.apply_damage(foe, guard, 50.0, "aether")
 	check(hp - guard.hp < plain * 0.85, "archmage aura reduces damage (%.1f vs %.1f)" % [hp - guard.hp, plain])
 	# Cleave: a brute's blow also hurts the target's neighbour.
 	var brute := w.spawn_unit("grave_brute", 1, c + Vector2(0, 5 * GameMap.TILE))
@@ -729,7 +676,7 @@ func test_air_targeting_and_flight() -> void:
 	var hp := broom.hp
 	w.deal_damage(bow, broom)
 	var with_bonus := hp - broom.hp
-	var expected := 11.0 * DB.damage_mult("physical", "air") * 1.5
+	var expected := 11.0 * DB.damage_mult(DB.units.bonebow.dtype, "air") * 1.5
 	check(is_equal_approx(with_bonus, expected), "bonebow +50%% vs air (%.1f, expected %.1f)" % [with_bonus, expected])
 	# Flyers cross the strait in a straight line.
 	var far := _city(w, 1).pos
@@ -834,7 +781,7 @@ func test_grenzer_militia() -> void:
 	_run(w, 3)
 	check(foe.hp < foe.max_hp, "idle Grenzer shot an invader")
 	var hp := g2.hp
-	w.apply_damage(foe, g2, 20.0, "arcane")
+	w.apply_damage(foe, g2, 20.0, "aether")
 	check(hp - g2.hp < 20.0, "home guard: less damage inside our borders (%.1f)" % (hp - g2.hp))
 
 
@@ -888,7 +835,7 @@ func test_war_wagon_fort() -> void:
 	check(wagon.pos == pos, "a deployed wagon doesn't move")
 	check(foe.hp <= foe.max_hp - 25.0, "garrison fires out (%.0f dmg)" % (foe.max_hp - foe.hp))
 	var hp := wagon.hp
-	w.apply_damage(foe, wagon, 50.0, "arcane")
+	w.apply_damage(foe, wagon, 50.0, "aether")
 	check(hp - wagon.hp < 50.0 * 1.25 * 0.7, "deployed wagon takes 40%% less")
 	w.issue({"type": "unload", "player": 0, "ids": [wagon.id], "pos": wagon.pos})
 	_run(w, 0.5)
@@ -1538,11 +1485,11 @@ func test_roster_passives() -> void:
 	var gren := w.spawn_unit("grenadier", 0, c)
 	_run(w, 2)
 	var hp0 := gren.hp
-	w.apply_damage(reaver, gren, 20.0, "physical")
+	w.apply_damage(reaver, gren, 20.0, "blade")
 	var braced := hp0 - gren.hp
 	gren.stand = 0.0
 	hp0 = gren.hp
-	w.apply_damage(reaver, gren, 20.0, "physical")
+	w.apply_damage(reaver, gren, 20.0, "blade")
 	check(braced < hp0 - gren.hp, "a standing Grenadier takes less (%.1f vs %.1f)" % [braced, hp0 - gren.hp])
 	# Volley: a lone musketeer vs one of five.
 	var target := w.spawn_unit("grave_brute", 1, c + Vector2(0, 300))
@@ -1582,7 +1529,7 @@ func test_machines_and_boost() -> void:
 	var tank := w.spawn_unit("landpanzer", 0, c)
 	var musk := w.spawn_unit("musketeer", 1, c + Vector2(150, 0))
 	var hp0 := tank.hp
-	w.apply_damage(musk, tank, 20.0, "physical")
+	w.apply_damage(musk, tank, 20.0, "ballistic")
 	check(hp0 - tank.hp < 10.0, "steel shrugs off musket fire (%.1f)" % (hp0 - tank.hp))
 	check(w.issue({"type": "cast", "player": 0, "ids": [tank.id], "ability": "full_steam", "pos": tank.pos}) == "", "Full Steam ordered")
 	_run(w, 1)

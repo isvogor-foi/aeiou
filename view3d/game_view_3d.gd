@@ -183,8 +183,9 @@ func _ready() -> void:
 		world.events.clear()
 		mission_screen.show_briefing(scripted.id, world.scenario.get("objectives", []))
 	else:
-		hud.flash("Seed %d - you lead the %s against a %s opponent" % [seed_value, DB.factions[GameConfig.player_faction].name,
-				DB.ai.difficulties[GameConfig.difficulty].name], 4.0)
+		var level: String = DB.ai.difficulties[GameConfig.difficulty].name
+		hud.flash("Seed %d - you lead the %s against %s %s opponent" % [seed_value, DB.factions[GameConfig.player_faction].name,
+				"an" if level.left(1).to_lower() in ["a", "e", "i", "o", "u"] else "a", level], 4.0)
 
 
 func _build_environment() -> void:
@@ -442,11 +443,11 @@ func _hit_sound(ev: Dictionary) -> String:
 	if not ev.ranged:
 		return "clang"
 	match ev.dtype:
-		"arcane":
+		"aether":
 			return "arcane"
-		"curse":
+		"soul":
 			return "curse"
-		"fire":
+		"explosive":
 			return "fire"
 	return "musket"
 

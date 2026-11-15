@@ -329,7 +329,7 @@ func avalanche(w, at: Vector2, radius_tiles: float, damage: float) -> int:
 	var hit := 0
 	for e in w.entities.values():
 		if e.alive and e.kind == Entity.UNIT and e.owner == FOE and e.pos.distance_to(at) <= radius_tiles * TILE:
-			w.apply_damage(null, e, damage, "physical")
+			w.apply_damage(null, e, damage, "blade")
 			hit += 1
 	w.events.append({"type": "cloud", "pos": at, "radius": radius_tiles * TILE, "duration": 4.0, "color": [0.95, 0.97, 1.0, 0.55]})
 	return hit
