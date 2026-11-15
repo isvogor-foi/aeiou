@@ -155,6 +155,7 @@ const OUTFITS := {
 	"pilot": {"coat": BROWN, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": BROWN, "style": "flight", "hat": "flight_helmet", "weapon": "pistol", "moustache": true},
 	"debt_bound": {"skin": BONE, "coat": Color(0.2, 0.19, 0.18), "trousers": Color(0.17, 0.16, 0.15), "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "bowler", "jaw": true, "weapon": "hammer"},
 	"szentkiralyi": {"skin": Color(0.78, 0.8, 0.76), "coat": BLACK, "trousers": Color(0.16, 0.15, 0.16), "boots": BLACK, "cuffs": SOUL_GLOW, "style": "suit", "hat": "top_hat", "vials": true, "jaw": true, "moustache": true, "moustache_color": Color(0.6, 0.6, 0.58), "sash": true, "weapon": "bone_staff"},
+	"hedy_lamarr": {"coat": Color(0.18, 0.2, 0.28), "trousers": Color(0.18, 0.2, 0.28), "boots": BLACK, "cuffs": WHITE, "style": "dress", "hat": "fedora", "headphones": true, "weapon": "pistol", "hair": Color(0.12, 0.08, 0.06)},
 	"debt_collector": {"skin": BONE, "coat": Color(0.2, 0.19, 0.18), "trousers": Color(0.17, 0.16, 0.15), "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "bowler", "jaw": true, "weapon": "bolt_rifle"},
 	"tommy_ghoul": {"skin": BONE, "coat": NIGHT, "trousers": NIGHT, "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "fedora", "jaw": true, "vials": true, "weapon": "tommy_gun"},
 	"gas_trooper": {"skin": BONE, "coat": Color(0.14, 0.15, 0.13), "trousers": Color(0.14, 0.15, 0.13), "boots": BLACK, "cuffs": Color(0.14, 0.15, 0.13), "style": "overalls", "hat": "gas_hood", "tanks": "soul", "weapon": "gas_sprayer"},

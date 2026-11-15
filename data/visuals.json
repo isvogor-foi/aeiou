@@ -719,6 +719,64 @@
 			"figure": "radio_spotter",
 			"height": 1.2,
 			"anims": "radio"
+		},
+		"heavy_tank": {
+			"procedural": "heavy_tank",
+			"scale": 0.95,
+			"rumble": 1.2,
+			"turn": 3.0,
+			"shot": "shell"
+		},
+		"light_tank": {
+			"procedural": "light_tank",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.5,
+			"shot": "shell"
+		},
+		"halftrack": {
+			"procedural": "halftrack",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0,
+			"shot": "burst",
+			"burst": 4
+		},
+		"undead_panzer": {
+			"procedural": "undead_panzer",
+			"scale": 0.95,
+			"rumble": 1.2,
+			"turn": 3.0,
+			"shot": "shell"
+		},
+		"bone_halftrack": {
+			"procedural": "bone_halftrack",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0,
+			"shot": "burst",
+			"burst": 4
+		},
+		"corpse_truck": {
+			"procedural": "corpse_truck",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0
+		},
+		"frost_dead": {
+			"figure": "frost_dead",
+			"height": 1.25,
+			"anims": "rifleman"
+		},
+		"arctic_trooper": {
+			"figure": "arctic_trooper",
+			"height": 1.2,
+			"anims": "rifleman"
+		},
+		"hedy_lamarr": {
+			"figure": "hedy_lamarr",
+			"height": 1.2,
+			"anims": "officer"
 		}
 	},
 	"buildings": {

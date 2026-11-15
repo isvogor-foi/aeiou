@@ -1253,7 +1253,8 @@
 		},
 		"train_time": 24,
 		"hotkey": "G",
-		"glyph": "R"
+		"glyph": "R",
+		"upgrades_to": "bone_halftrack"
 	},
 	"plague_catapult": {
 		"name": "Corpse Crawler",
@@ -1745,7 +1746,8 @@
 				"radius": 1.0,
 				"share": 0.5
 			}
-		}
+		},
+		"upgrades_to": "heavy_tank"
 	},
 	"bone_juggernaut": {
 		"name": "Bone Juggernaut",
@@ -1779,7 +1781,8 @@
 				"radius": 1.0,
 				"share": 0.5
 			}
-		}
+		},
+		"upgrades_to": "undead_panzer"
 	},
 	"iron_emperor": {
 		"name": "Franz Joseph, the Iron Emperor",
@@ -2189,7 +2192,8 @@
 		"train_time": 32,
 		"hotkey": "T",
 		"glyph": "K",
-		"accel": 1.2
+		"accel": 1.2,
+		"upgrades_to": "light_tank"
 	},
 	"motorcycle": {
 		"name": "Motorcycle Scout",
@@ -2243,7 +2247,8 @@
 		"train_time": 20,
 		"hotkey": "R",
 		"glyph": "S",
-		"accel": 1.5
+		"accel": 1.5,
+		"upgrades_to": "halftrack"
 	},
 	"tommy_ghoul": {
 		"name": "Tommy-gun Ghoul",
@@ -2333,7 +2338,8 @@
 		"glyph": "B",
 		"bonus_vs": {
 			"air": 0.5
-		}
+		},
+		"upgrades_to": "frost_dead"
 	},
 	"hearse": {
 		"name": "Hearse",
@@ -2360,7 +2366,8 @@
 		"train_time": 20,
 		"hotkey": "R",
 		"glyph": "S",
-		"accel": 1.5
+		"accel": 1.5,
+		"upgrades_to": "corpse_truck"
 	},
 	"szentkiralyi": {
 		"name": "Count Árpád Szentkirályi",
@@ -2614,5 +2621,268 @@
 		"train_time": 26,
 		"hotkey": "R",
 		"glyph": "S"
+	},
+	"heavy_tank": {
+		"name": "Porsche Heavy Tank",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"hp": 1400,
+		"armor": "machine",
+		"damage": 40,
+		"dtype": "explosive",
+		"range": 6,
+		"cooldown": 2.6,
+		"speed": 1.8,
+		"sight": 7,
+		"pop": 3,
+		"age": 9,
+		"cost": {
+			"gold": 360,
+			"timber": 120,
+			"coal": 160
+		},
+		"train_time": 48,
+		"hotkey": "R",
+		"glyph": "T",
+		"description": "Ferdinand Porsche's heavy tank: thick steel, a long gun whose shells splash. Full Steam (D): +60% speed and +40% damage for 6s.",
+		"abilities": [
+			"full_steam"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.0,
+				"share": 0.5
+			}
+		},
+		"accel": 2.5
+	},
+	"light_tank": {
+		"name": "Light Tank",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "A fast tracked tank with a small turret gun: the Federation's cavalry in steel.",
+		"hp": 620,
+		"armor": "machine",
+		"damage": 18,
+		"dtype": "explosive",
+		"range": 5,
+		"cooldown": 1.6,
+		"speed": 3.0,
+		"sight": 8,
+		"pop": 2,
+		"age": 9,
+		"cost": {
+			"gold": 160,
+			"timber": 50,
+			"coal": 80
+		},
+		"train_time": 34,
+		"hotkey": "T",
+		"glyph": "K",
+		"accel": 1.5
+	},
+	"halftrack": {
+		"name": "Halftrack",
+		"faction": "monarchy",
+		"role": "support",
+		"domain": "ground",
+		"description": "A supply halftrack that also carries 6 troops: no attrition in enemy territory nearby. Board it like a transport; select it and use Unload. Its machine gun covers the infantry.",
+		"hp": 420,
+		"armor": "machine",
+		"damage": 6,
+		"dtype": "ballistic",
+		"range": 4,
+		"cooldown": 0.5,
+		"speed": 3.2,
+		"sight": 6,
+		"pop": 1,
+		"supply_radius": 7,
+		"age": 9,
+		"cost": {
+			"timber": 70,
+			"gold": 70,
+			"coal": 40
+		},
+		"train_time": 24,
+		"hotkey": "R",
+		"glyph": "S",
+		"accel": 1.5,
+		"capacity": 6
+	},
+	"undead_panzer": {
+		"name": "Undead Panzer",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"hp": 1350,
+		"armor": "machine",
+		"damage": 36,
+		"dtype": "soul",
+		"range": 5,
+		"cooldown": 2.4,
+		"speed": 1.8,
+		"sight": 7,
+		"pop": 3,
+		"age": 9,
+		"cost": {
+			"gold": 340,
+			"timber": 120,
+			"coal": 160
+		},
+		"train_time": 48,
+		"hotkey": "R",
+		"glyph": "J",
+		"description": "Black iron plated in bone, a skull ram and a soul-gun turret. Soul Furnace (D): +60% speed and +40% damage for 6s.",
+		"abilities": [
+			"soul_furnace"
+		],
+		"passives": {
+			"cleave": {
+				"radius": 1.3,
+				"share": 0.5
+			}
+		},
+		"accel": 2.5
+	},
+	"bone_halftrack": {
+		"name": "Bone Halftrack",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "A bone-linked halftrack full of the dead, with a soul-gun on a swivel. Fast and hard to pin down.",
+		"hp": 400,
+		"armor": "machine",
+		"damage": 7,
+		"dtype": "soul",
+		"range": 4,
+		"cooldown": 0.5,
+		"speed": 3.4,
+		"sight": 8,
+		"pop": 2,
+		"age": 9,
+		"cost": {
+			"herbs": 60,
+			"gold": 100,
+			"coal": 50
+		},
+		"train_time": 28,
+		"hotkey": "G",
+		"glyph": "R",
+		"accel": 1.5
+	},
+	"corpse_truck": {
+		"name": "Corpse-Truck",
+		"faction": "covenant",
+		"role": "support",
+		"domain": "ground",
+		"description": "A caged truck of the bound dead. Keeps the Concern's troops supplied: no attrition in enemy territory nearby.",
+		"hp": 380,
+		"armor": "machine",
+		"damage": 0,
+		"dtype": "ballistic",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 3.2,
+		"sight": 6,
+		"pop": 1,
+		"supply_radius": 7,
+		"age": 9,
+		"cost": {
+			"timber": 70,
+			"gold": 60,
+			"coal": 30
+		},
+		"train_time": 22,
+		"hotkey": "R",
+		"glyph": "S",
+		"accel": 1.5
+	},
+	"frost_dead": {
+		"name": "Frost Dead",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "The Concern's dead from the ice, rimed and silent. Rifles that never freeze; they slow what they hit.",
+		"hp": 110,
+		"armor": "undead",
+		"damage": 16,
+		"dtype": "ballistic",
+		"range": 7,
+		"cooldown": 1.6,
+		"speed": 2.5,
+		"sight": 9,
+		"pop": 1,
+		"age": 10,
+		"cost": {
+			"herbs": 60,
+			"gold": 55,
+			"timber": 25
+		},
+		"train_time": 24,
+		"hotkey": "Q",
+		"glyph": "B",
+		"bonus_vs": {
+			"air": 0.5
+		},
+		"passives": {
+			"wither": {
+				"slow": 0.2,
+				"duration": 3.0
+			}
+		}
+	},
+	"arctic_trooper": {
+		"name": "Arctic Trooper",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Federation polar infantry in a white parka with a bolt-action rifle; fights well in cold and far from supply (half attrition).",
+		"hp": 110,
+		"armor": "infantry",
+		"damage": 15,
+		"dtype": "ballistic",
+		"range": 7,
+		"cooldown": 1.5,
+		"speed": 2.4,
+		"sight": 9,
+		"pop": 1,
+		"age": 9,
+		"cost": {
+			"herbs": 60,
+			"gold": 50,
+			"timber": 20
+		},
+		"train_time": 24,
+		"hotkey": "A",
+		"glyph": "A",
+		"passives": {
+			"hardy": 0.5
+		}
+	},
+	"hedy_lamarr": {
+		"name": "Hedy Lamarr",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "Film star and inventor from Vienna. Frequency Hopping (D) jams the Concern's wireless and slows every enemy near her; Great Escape (F) and she is somewhere else.",
+		"hp": 800,
+		"armor": "infantry",
+		"damage": 18,
+		"dtype": "ballistic",
+		"range": 5,
+		"cooldown": 1.2,
+		"speed": 2.8,
+		"abilities": [
+			"jamming",
+			"escape_f"
+		],
+		"hero": true,
+		"glyph": "H",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 11
 	}
 }

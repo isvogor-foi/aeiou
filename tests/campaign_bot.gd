@@ -16,6 +16,7 @@ func _initialize() -> void:
 	_vienna()
 	_rosabelle()
 	_black_thursday()
+	_ice_crown()
 	quit()
 
 
@@ -140,3 +141,24 @@ func _black_thursday() -> void:
 		if c == null or c.owner != 0:
 			lost += 1
 	print("black thursday: winner %d after %ds, crown lands lost %d, army left %d" % [w.winner, t, lost, _army(w).size()])
+
+
+func _ice_crown() -> void:
+	# Hold the camp through the night; at dawn march on the foundry (Hedy stays home).
+	var w := _world("m9_ice_crown")
+	var camp = w.get_entity(int(w.scenario.flags.camp))
+	var t := 0
+	while w.winner < 0 and t < 1200:
+		var army: Array = _army(w).filter(func(i): return w.get_entity(i).type_id != "hedy_lamarr")
+		# Hold the line between the camp and the foundry.
+		var foundry = w.get_entity(int(w.scenario.flags.foundry))
+		var goal: Vector2 = camp.pos + (foundry.pos - camp.pos).normalized() * 3.0 * 32 if foundry else camp.pos
+		if w.scenario.step == 2:
+			var b = w.get_entity(int(w.scenario.get("boss", -1)))
+			goal = b.pos if b and b.alive else w.get_entity(int(w.scenario.flags.foundry)).pos
+		w.issue({"type": "attack_move", "player": 0, "ids": army, "pos": goal})
+		for i in 5 * World.TICK_RATE:
+			w.tick()
+		t += 5
+	var f = w.get_entity(int(w.scenario.flags.foundry))
+	print("ice crown: winner %d after %ds, step %d, foundry hp %d, army left %d" % [w.winner, t, w.scenario.step, f.hp if f and f.alive else 0, _army(w).size()])

@@ -232,6 +232,7 @@ func _build_environment() -> void:
 	env.glow_intensity = 0.6
 	env.glow_bloom = 0.04
 	env.glow_hdr_threshold = 1.1
+	_env = env
 	var we := WorldEnvironment.new()
 	we.environment = env
 	add_child(we)
@@ -244,6 +245,7 @@ func _build_environment() -> void:
 	sun.directional_shadow_max_distance = 70.0
 	sun.directional_shadow_mode = DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS
 	add_child(sun)
+	_sun = sun
 	# A cool rim from the opposite side keeps silhouettes readable in the gloom.
 	var rim := DirectionalLight3D.new()
 	rim.rotation_degrees = Vector3(-30, 150, 0)
@@ -251,6 +253,26 @@ func _build_environment() -> void:
 	rim.light_color = Color(0.5, 0.6, 1.0)
 	add_child(rim)
 	Graphics.apply(env, sun, get_viewport())
+	_day = {"sun": sun.light_energy, "ambient": env.ambient_light_energy, "ambient_color": env.ambient_light_color}
+
+
+var _env: Environment
+var _sun: DirectionalLight3D
+var _day := {}
+var _night := 0.0
+
+
+## Scenario weather: "night" (0-1, eased) dims the sun and cools the ambient light.
+func _sync_weather(delta: float) -> void:
+	if _sun == null or _day.is_empty():
+		return
+	var want := float(world.scenario.get("weather", {}).get("night", 0.0))
+	if is_equal_approx(want, _night):
+		return
+	_night = move_toward(_night, want, delta * 0.15)
+	_sun.light_energy = _day.sun * (1.0 - 0.8 * _night)
+	_env.ambient_light_energy = _day.ambient * (1.0 - 0.45 * _night)
+	_env.ambient_light_color = Color(_day.ambient_color).lerp(Color(0.2, 0.26, 0.45), _night)
 
 
 ## Per-section milliseconds of the last frames (filled only when frame_profiling).
@@ -297,6 +319,7 @@ func _process(delta: float) -> void:
 	fog_pass.visible = not reveal_all
 	fog_pass.sync()
 	_fp("terrain_fog")
+	_sync_weather(delta)
 	entity_views.sync(alpha, delta)
 	_fp("entity_views")
 	_update_ghost()

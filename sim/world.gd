@@ -927,7 +927,9 @@ func _attrition_and_healing() -> void:
 				if regen > 0.0:
 					e.hp = minf(e.max_hp, e.hp + regen)
 			elif land >= 0 and not is_supplied(e):
-				e.hp -= e.max_hp * (float(rules.attrition) + players[land].mod("attrition"))
+				# "hardy" troops (polar infantry) suffer only part of it.
+				var hardy: float = float(e.def.get("passives", {}).get("hardy", 1.0))
+				e.hp -= e.max_hp * (float(rules.attrition) + players[land].mod("attrition")) * hardy
 				if e.hp <= 0.0:
 					kill(e)
 

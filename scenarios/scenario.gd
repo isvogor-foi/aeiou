@@ -17,7 +17,7 @@ const FOE := 1
 ## Mission order for the campaign menu (the tutorial stands apart).
 const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
 ## Campaign 2, The Undying Century (1926-1955): one chapter per age 7-12, added as built.
-const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday"]
+const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown"]
 
 var id := ""
 var title := ""
@@ -392,6 +392,9 @@ const MISSIONS := {
 	"m8_black_thursday": ["8. Black Thursday", "The crash: keep the crown lands loyal while the Concern buys their debts.",
 			"The crown lands  ·  October 1929",
 			"Wall Street has crashed, and every bank in the crown lands is calling in its loans. Someone is buying the debts, city by city, and paying in cash: the Szentkirályi Concern. Where its collectors walk, loyalty bleeds away. Hold the Federation together until the markets reopen."],
+	"m9_ice_crown": ["9. The Ice Crown", "Build a camp on the ice, hold through the polar night, then destroy the Concern's foundry under the glacier.",
+			"Franz Josef Land  ·  February 1934",
+			"In 1873 an Austro-Hungarian expedition discovered an archipelago in the Arctic and named it for the Emperor. Now there is smoke under its glacier: the Concern has built a foundry where no one would look. An airship expedition is on its way, with Hedy Lamarr on the radio. There are a few hours of daylight left."],
 }
 
 ## Title cards before Chapter 1: the premise, one page at a time.

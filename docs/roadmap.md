@@ -122,6 +122,9 @@ Tiers: Grenadier → Sturmtrupp, Musketeer → Rifleman, Field Alchemist → San
 ### Age 8, Zeppelins: roster and chapter done 2026-11-15 (still "wip" until the balance pass lands)
 Tiers: Kress Gyrocopter → Biplane, Lohner Aethership → Aether Zeppelin, Jäger → Gebirgsjäger; new Radio Spotter (Laboratorium; long sight, Bombardment). Concern: Plague Balloon → Corpse-Zeppelin, Bone Drake → Bat-Plane, Necromancer → Wireless Medium. Chapter 8 shipped with it.
 
+### Age 9, Diesel: roster and chapter done 2026-11-15 (still "wip" until the balance pass lands)
+Tiers: Landpanzer → Porsche Heavy Tank, Armoured Car → Light Tank, Supply Lorry → Halftrack (supply and a 6-troop transport); new Arctic Trooper (Kaserne; "hardy": half attrition). Concern: Bone Juggernaut → Undead Panzer, Ghoul Rider → Bone Halftrack, Hearse → Corpse-Truck; Debt Collector → Frost Dead (Age 10, defined early for Chapter 9). Hero: Hedy Lamarr (Frequency Hopping jams and slows enemies; Great Escape). Scenario weather: snow and a polar night (dims the sun). Chapter 9 shipped with it.
+
 ### Roster sketch (to refine age by age)
 
 | Age | Monarchy | The Concern |
@@ -150,11 +153,11 @@ Tiers: Kress Gyrocopter → Biplane, Lohner Aethership → Aether Zeppelin, Jäg
 - [x] **S** Intro title cards for Campaign 2 (`INTRO2`, 1918–1926) and its epilogue (`EPILOGUE2`).
 - [ ] **M** Heroes: old Franz Ferdinand (staff car), Hedy Lamarr, Lise Meitner, Schrödinger, Porsche, Tesla (aged), Houdini's ghost. Abilities in `data/abilities.json`.
 - [ ] **M** Bosses: Szentkirályi in each of his forms (1926 shade, 1934 foundry-lord, 1955 necropolis lich), the Concern's machines.
-- [ ] **M** Scenario toolkit additions: weather (the polar night and blizzards for Chapter 9), a player choice with a remembered outcome (the bomb in Chapter 11), market and economy events (Chapter 8), fronts with many capture points (Chapter 10).
+- [ ] **M** Scenario toolkit additions: ~~weather~~ (done: `scenario.weather` = {"snow", "night"}), a player choice with a remembered outcome (the bomb in Chapter 11), ~~market events~~ (Chapter 8 does them in script), fronts with many capture points (Chapter 10).
 - [ ] Chapters, each built with its age in Phase 4:
   - [x] **L** 7 Rosabelle, Believe (Age 7): three séance parlours give the words of Houdini's code and free his ghost; then storm the counting-house (guarded, with waves) where Szentkirályi steps out, speaks and leaves; Vienna sends reinforcements with Landpanzers, since rifles can't crack buildings. Bot-played: won with 7 units left.
   - [x] **L** 8 Black Thursday (Age 8): Vienna and four crown-land cities; every 70s the Concern "buys" a city's debt and its collectors loiter inside the borders out of the guns' reach, draining loyalty (~24s to a revolt if nobody answers); Federal Charters hold a city at half; corpse-zeppelins raid the supply lorries; reinforcements every third buy-out. Hold 12 minutes; three lands lost loses. Bot (charters two cities, answers every buy-out): won with nothing lost.
-  - [ ] **L** 9 The Ice Crown (Age 9)
+  - [x] **L** 9 The Ice Crown (Age 9): snow; build a Kaserne before the light goes (3 min), hold Camp Tegetthoff through the polar night (5 min of Frost Dead waves; a supply zeppelin midway), sunrise freezes the attackers near the camp, then destroy the foundry under the glacier (it collapses at 1 HP) guarded by the Ice Engine. Hedy Lamarr must survive. The Concern runs no AI here: an outpost, scripted. Bot: won with 3 units left.
   - [ ] **L** 10 The Long Winter (Age 10)
   - [ ] **L** 11 The Aether Bomb (Age 11)
   - [ ] **L** 12 The Treaty of the Living (Age 12)

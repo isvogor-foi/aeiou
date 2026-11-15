@@ -1541,7 +1541,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1670,6 +1670,31 @@ func test_black_thursday() -> void:
 
 
 const Scenario_HOLD := 720.0
+
+
+## The Ice Crown: snow from the start; the polar night falls after the camp phase;
+## dawn brings the Ice Engine; the foundry's fall wins; losing Hedy loses.
+func test_ice_crown() -> void:
+	var w := _scenario_world("m9_ice_crown")
+	w.ais.clear()
+	check(w.scenario.weather.snow, "it snows on Franz Josef Land")
+	_run(w, 182)
+	check(w.scenario.step == 1 and float(w.scenario.weather.night) == 1.0, "the polar night falls")
+	for e in w.entities.values():
+		if e.alive and e.owner == 1 and e.kind == Entity.UNIT:
+			w.kill(e)
+	w.scenario.flags.night = w.tick_count - 301 * World.TICK_RATE
+	_run(w, 2)
+	check(w.scenario.step == 2 and w.get_entity(int(w.scenario.get("boss", -1))) != null, "dawn brings the Ice Engine")
+	w.kill(w.get_entity(int(w.scenario.flags.foundry)))
+	_run(w, 2)
+	check(w.winner == 0, "the foundry's fall wins (winner %d)" % w.winner)
+	w = _scenario_world("m9_ice_crown")
+	for e in w.entities.values():
+		if e.alive and e.type_id == "hedy_lamarr":
+			w.kill(e)
+	_run(w, 2)
+	check(w.winner == 1, "losing Hedy Lamarr loses")
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.

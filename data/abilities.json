@@ -485,5 +485,34 @@
 		"vfx": "mass_shield",
 		"description": "Heals every undead ally within 7 tiles for 200.",
 		"autocast": false
+	},
+	"jamming": {
+		"name": "Frequency Hopping",
+		"hotkey": "D",
+		"mana": 30,
+		"cooldown": 18.0,
+		"range": 0,
+		"target": "self",
+		"effect": "damage",
+		"amount": 15,
+		"dtype": "aether",
+		"radius": 6.0,
+		"slow": 0.5,
+		"slow_duration": 8,
+		"autocast": false,
+		"vfx": "mass_shield",
+		"description": "Jams the Concern's séance-wireless: 15 damage and 50% slower for 8s for every enemy within 6 tiles."
+	},
+	"escape_f": {
+		"name": "Great Escape",
+		"hotkey": "F",
+		"mana": 10,
+		"cooldown": 14.0,
+		"range": 7,
+		"target": "ground",
+		"effect": "blink",
+		"vfx": "",
+		"description": "Houdini vanishes and reappears up to 7 tiles away.",
+		"autocast": false
 	}
 }

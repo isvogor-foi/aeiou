@@ -9,6 +9,8 @@ var camera
 var gv
 var _motes: GPUParticles3D
 var _ash: GPUParticles3D
+## Snowfall for scenarios that ask for it (scenario "weather": {"snow": true}).
+var _snow: GPUParticles3D
 
 
 func _ready() -> void:
@@ -20,8 +22,12 @@ func _ready() -> void:
 	# Room for twice the soot of the early ages; amount_ratio dials it in by age.
 	_ash = _make(520 if many else 240, 0.045, Color(0.16, 0.15, 0.15), 0.0, Vector3(0.15, -0.35, 0.05), 10.0)
 	_ash.amount_ratio = 0.5
+	_snow = _make(500 if many else 260, 0.06, Color(0.95, 0.97, 1.0), 0.6, Vector3(0.2, -0.7, 0.08), 8.0)
+	_snow.emitting = false
+	_snow.visible = false
 	add_child(_motes)
 	add_child(_ash)
+	add_child(_snow)
 
 
 ## `glow` > 0 makes the particle emissive (picked up by bloom).
@@ -80,3 +86,7 @@ func _process(_delta: float) -> void:
 		# Half the room until the Age of the Federation, then up to all of it by Age 12.
 		var age: int = gv.world.players[gv.me].age
 		_ash.amount_ratio = 0.5 + 0.5 * clampf((age - 6) / 6.0, 0.0, 1.0)
+		var snow: bool = gv.world.scenario.get("weather", {}).get("snow", false)
+		if snow != _snow.emitting:
+			_snow.emitting = snow
+			_snow.visible = snow
