@@ -19,10 +19,14 @@ func _run():
 	var c1 = Vector2(74, 64) * 32
 	var a = []; var b = []
 	var per_side = int(OS.get_environment("N")) if OS.has_environment("N") else 200
+	# MODERN=1: an Age 10-12 battle (tanks, halftracks, gunners) instead of the classic mix.
+	var modern := OS.has_environment("MODERN")
+	var mix_a: Array = ["atom_trooper", "rifleman", "light_tank", "heavy_tank"] if modern else ["grenadier", "musketeer", "kuerassier", "jaeger"]
+	var mix_b: Array = ["reactor_ghoul", "frost_dead", "undead_panzer", "bone_halftrack"] if modern else ["reaver", "hexcaster", "thrall", "bonebow"]
 	for i in per_side:
 		var off = Vector2((i % 15) * 20, (i / 15) * 20)
-		a.append(w.spawn_unit(["grenadier","musketeer","kuerassier","jaeger"][i % 4], 0, w.map.tile_center(w.map.nearest_walkable(w.map.to_tile(c0 + off)))).id)
-		b.append(w.spawn_unit(["reaver","hexcaster","thrall","bonebow"][i % 4], 1, w.map.tile_center(w.map.nearest_walkable(w.map.to_tile(c1 + off)))).id)
+		a.append(w.spawn_unit(mix_a[i % 4], 0, w.map.tile_center(w.map.nearest_walkable(w.map.to_tile(c0 + off)))).id)
+		b.append(w.spawn_unit(mix_b[i % 4], 1, w.map.tile_center(w.map.nearest_walkable(w.map.to_tile(c1 + off)))).id)
 	w.issue({"type":"attack_move","player":0,"ids":a,"pos":c1})
 	w.issue({"type":"attack_move","player":1,"ids":b,"pos":c0})
 	gv.reveal_all = true
