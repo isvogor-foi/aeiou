@@ -24,7 +24,9 @@ func _initialize() -> void:
 func _play(seed_value: int, difficulty: String, max_minutes: float, map_type: String) -> Dictionary:
 	var sides := ["monarchy", "covenant"] if seed_value % 2 == 0 else ["covenant", "monarchy"]
 	var w := World.new()
-	w.new_game(seed_value, sides, -1, difficulty, map_type)
+	# START_AGE=7 plays the modern ladder (Ages 7-12) instead of the classic one.
+	var start := int(OS.get_environment("START_AGE")) if OS.has_environment("START_AGE") else 1
+	w.new_game(seed_value, sides, -1, difficulty, map_type, {"start_age": start})
 	var ages := {}
 	var reason := "timeout"
 	var peak_units := [0, 0]

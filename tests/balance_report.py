@@ -26,7 +26,7 @@ print("by map:", {k: dict(v) for k, v in by_map.items()})
 side = Counter((g["p0"], g["winner"] == g["p0"]) for g in games if g["winner"])
 print("player-0 side wins:", {f"{k[0]} as p0 {'won' if k[1] else 'lost'}": v for k, v in side.items()})
 for fac in ["monarchy", "covenant"]:
-    for age in ["2", "3", "4", "5", "6"]:
+    for age in [str(a) for a in range(2, 13)]:
         ts = [g["ages"].get(fac, {}).get(age) for g in games]
         ts = [t for t in ts if t is not None]
         if ts:
