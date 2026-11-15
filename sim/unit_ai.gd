@@ -30,7 +30,7 @@ static func update(w, e) -> void:
 	if e.reload_left > 0.0:
 		e.reload_left -= DT
 		if e.reload_left <= 0.0:
-			e.ammo = int(e.def.passives.magazine.shots)
+			e.ammo = int(e.def.get("passives", {}).get("magazine", {}).get("shots", -1))
 	_update_charge(e)
 	if not e.autocast.is_empty() and (w.tick_count + e.id) % SCAN_INTERVAL == 0:
 		Abilities.try_autocast(w, e)
@@ -291,7 +291,7 @@ static func _speed(e) -> float:
 			e.throttle = ACCEL_FROM
 		e.throttle = minf(1.0, e.throttle + DT * (1.0 - ACCEL_FROM) / maxf(0.05, float(e.def.accel)))
 		s *= e.throttle
-	if e.charge_ready:
+	if e.charge_ready and e.def.get("passives", {}).has("charge"):
 		s *= float(e.def.passives.charge.speed_mult)
 	for fx in e.effects:
 		if fx.type == "slow":

@@ -1362,6 +1362,13 @@ func _refit(e: Entity, to: String) -> void:
 	e.hp = maxf(1.0, e.max_hp * share)
 	e.ammo = -1
 	e.reload_left = 0.0
+	# State that belonged to the old type's passives (a cavalry charge, a mortar's
+	# set-up) doesn't carry over to the new one.
+	e.charge_ready = false
+	e.moved = 0.0
+	e.setup = 0.0
+	e.deployed = false
+	e.throttle = 1.0
 	for id in e.def.get("abilities", []):
 		if not e.autocast.has(id):
 			e.autocast[id] = Abilities.def(id).get("autocast", false) or not players[e.owner].is_human

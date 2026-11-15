@@ -749,6 +749,23 @@ func test_age10_radar() -> void:
 	check(foe.alive and radar.alive, "units survive the check")
 
 
+## A Kürassier with its charge ready, refitted into an Armoured Car, moves on
+## without errors (the old charge doesn't carry over).
+func test_refit_clears_charge() -> void:
+	var w := _world()
+	var c := _city(w, 0).pos + Vector2(0, 6 * GameMap.TILE)
+	var k := w.spawn_unit("kuerassier", 0, c)
+	k.charge_ready = true
+	k.reload_left = 0.5
+	w.players[0].age = 7
+	w.refit_units(0)
+	check(k.type_id == "armoured_car" and not k.charge_ready, "refitted, charge cleared")
+	w.issue({"type": "move", "player": 0, "ids": [k.id], "pos": c + Vector2(8, 0) * GameMap.TILE})
+	var start: Vector2 = k.pos
+	_run(w, 3)
+	check(k.pos.distance_to(start) > GameMap.TILE, "the armoured car drives on")
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)
