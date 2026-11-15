@@ -70,6 +70,8 @@ var reload_left := 0.0
 var still := 0.0
 ## Movement multiplier set by the world each second (Semmering Railway).
 var speed_mult := 1.0
+## Vehicles with "accel" (seconds to full speed) build up speed from a standstill.
+var throttle := 1.0
 ## Relics: carried by a unit, or stored in a relic holder (also kept in `inside`, which hides it).
 var relic := -1
 var carried_by := -1

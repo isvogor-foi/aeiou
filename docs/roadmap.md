@@ -71,7 +71,7 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [x] **M** Tanks: light tank, Porsche heavy tank, Aether rocket truck (walker refits come with their ages).
 - [x] **M** Aircraft: biplane, Aether zeppelin, monoplane fighter, jet. Propellers spin (with a blur disc), jets leave contrails that stay behind in the world; planes bank into turns and, with `"circle"` in visuals.json, orbit slowly while idle. (The Lohner Aethership keeps its own model.)
 - [x] **M** Concern machines: hearse, corpse-truck, undead panzer, bone halftrack, corpse-zeppelin, bat-plane (flapping membrane wings), wraith jet (soul-green trail).
-- [ ] **S** Movement feel: vehicles turn wide, accelerate and brake; tracks rotate in place. Check the formation and separation code copes with long, fast units.
+- [x] **S** Movement feel (2026-11-15): `"accel"` in units.json (seconds to full speed) makes a vehicle pull away at a quarter speed after every stop (simulation, saved); `"turn"` in visuals.json slows how fast the hull swings round (view only; given to the existing wagons, tanks and crawlers). Wide turning circles in the pathfinder were left out: too costly for what they add. Phase 4 vehicles should set both.
 - [ ] **S** Existing machines (Landpanzer, Bone Juggernaut, crawlers) could move to the kit so their wheels and turrets come alive too.
 
 ### Buildings that keep evolving (`view3d/buildings.gd`)
@@ -99,8 +99,8 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [ ] **S** Music: find public-domain recordings for the 1920s–50s (early jazz and dance band recordings, and military marches). Check each licence in `assets/CREDITS.md`.
 
 ### HUD
-- [ ] **S** Icons for the new units, buildings and research (`ui/hud_icons.gd`), and for Oil if it's added.
-- [ ] **S** The age chip and age-up dialog show 12 ages.
+- [x] **S** Icons: units and buildings render their own icons from the 3D models (`ui/icon_factory.gd`), so the new vehicles and outfits need nothing; research levels reuse their branch icon. Only a new resource (Oil) would need a drawn icon.
+- [x] **S** The age chip and age-up dialog show 12 ages (they read the names from ages.json; checked at Age 9).
 
 ## Phase 4: Content, one age at a time
 

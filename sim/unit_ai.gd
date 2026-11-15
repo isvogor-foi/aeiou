@@ -278,8 +278,19 @@ static func _update_charge(e) -> void:
 		e.charge_ready = true
 
 
+## Vehicles with "accel" in units.json (seconds from a standstill to full speed)
+## pull away at this share of their top speed.
+const ACCEL_FROM := 0.25
+
+
 static func _speed(e) -> float:
 	var s: float = float(e.def.speed) * TILE * DT * e.speed_mult
+	if e.def.has("accel"):
+		# Stopped (even for a moment): start again from a crawl.
+		if e.still > 0.0:
+			e.throttle = ACCEL_FROM
+		e.throttle = minf(1.0, e.throttle + DT * (1.0 - ACCEL_FROM) / maxf(0.05, float(e.def.accel)))
+		s *= e.throttle
 	if e.charge_ready:
 		s *= float(e.def.passives.charge.speed_mult)
 	for fx in e.effects:

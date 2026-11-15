@@ -615,6 +615,31 @@ func test_modern_sounds() -> void:
 		check(wav != null and wav.data.size() > 2000, "%s has audio (%d bytes)" % [name, wav.data.size() if wav else 0])
 
 
+## Vehicles with "accel" pull away slowly and reach full speed after that many
+## seconds; units without it move at full speed at once.
+func test_vehicle_acceleration() -> void:
+	var w := _world()
+	var c := _city(w, 0).pos + Vector2(0, 6 * GameMap.TILE)
+	var tank := w.spawn_unit("landpanzer", 0, c)
+	var gren := w.spawn_unit("grenadier", 0, c + Vector2(0, 2 * GameMap.TILE))
+	tank.def = tank.def.duplicate()
+	tank.def.accel = 2.0
+	var far := c + Vector2(20, 0) * GameMap.TILE
+	w.issue({"type": "move", "player": 0, "ids": [tank.id], "pos": far})
+	w.issue({"type": "move", "player": 0, "ids": [gren.id], "pos": far + Vector2(0, 2 * GameMap.TILE)})
+	_run(w, 0.2)
+	var t0: Vector2 = tank.pos
+	_run(w, 0.5)
+	var early: float = tank.pos.distance_to(t0) / 0.5
+	_run(w, 2.5)
+	var t1: Vector2 = tank.pos
+	_run(w, 0.5)
+	var late: float = tank.pos.distance_to(t1) / 0.5
+	check(early < late * 0.8, "a vehicle pulls away slowly (%.0f px/s, then %.0f)" % [early, late])
+	check(late > float(tank.def.speed) * GameMap.TILE * 0.85, "and reaches full speed (%.0f px/s)" % late)
+	check(gren.throttle == 1.0, "infantry has no throttle")
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

@@ -40,7 +40,8 @@
 		},
 		"tross_wagon": {
 			"procedural": "supply_tractor",
-			"scale": 1.0
+			"scale": 1.0,
+			"turn": 4.0
 		},
 		"thrall": {
 			"figure": "thrall",
@@ -76,7 +77,8 @@
 		},
 		"bone_cart": {
 			"procedural": "bone_wagon",
-			"scale": 1.0
+			"scale": 1.0,
+			"turn": 4.0
 		},
 		"jaeger": {
 			"figure": "jaeger",
@@ -231,7 +233,8 @@
 		},
 		"war_wagon": {
 			"procedural": "war_wagon",
-			"scale": 1.0
+			"scale": 1.0,
+			"turn": 4.0
 		},
 		"prince_eugene": {
 			"figure": "prince_eugene",
@@ -280,11 +283,13 @@
 		},
 		"skoda_mortar": {
 			"procedural": "siege_crawler",
-			"scale": 0.9
+			"scale": 0.9,
+			"turn": 4.0
 		},
 		"plague_catapult": {
 			"procedural": "corpse_crawler",
-			"scale": 0.9
+			"scale": 0.9,
+			"turn": 4.0
 		},
 		"hussar": {
 			"figure": "hussar",
@@ -438,11 +443,13 @@
 		},
 		"landpanzer": {
 			"procedural": "landpanzer",
-			"scale": 0.95
+			"scale": 0.95,
+			"turn": 4.0
 		},
 		"bone_juggernaut": {
 			"procedural": "juggernaut",
-			"scale": 0.95
+			"scale": 0.95,
+			"turn": 4.0
 		},
 		"iron_emperor": {
 			"figure": "iron_emperor",
@@ -533,7 +540,8 @@
 		},
 		"aether_train": {
 			"procedural": "aether_train",
-			"scale": 1.3
+			"scale": 1.3,
+			"turn": 4.0
 		},
 		"grave_engine": {
 			"procedural": "juggernaut",

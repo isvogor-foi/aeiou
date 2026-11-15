@@ -89,6 +89,8 @@ func _create(e) -> Dictionary:
 			r.bar_height = (float(v.get("height", 0.9)) + 0.25) * Models.unit_scale(e.type_id) + r.fly
 			r.animated = _animated_parts(body)
 			r.rumble = float(v.get("rumble", 0.0))
+			# Heavy vehicles swing round slowly ("turn" in visuals.json, default as for infantry).
+			r.turn = float(v.get("turn", TURN_SPEED))
 			r.variant = Models.unit_variant(e.type_id, e.owner)
 			r.bank = v.get("bank", false)
 			r.circle = float(v.get("circle", 0.0))
@@ -290,7 +292,7 @@ func _sync_unit(e, r: Dictionary, alpha: float, delta: float, now: float) -> voi
 	var moving: bool = e.pos.distance_squared_to(e.prev_pos) > 0.04
 	var target_yaw := atan2(e.facing.x, e.facing.y)
 	var was_yaw: float = r.yaw
-	r.yaw = lerp_angle(r.yaw, target_yaw, minf(1.0, delta * TURN_SPEED))
+	r.yaw = lerp_angle(r.yaw, target_yaw, minf(1.0, delta * float(r.get("turn", TURN_SPEED))))
 	r.node.rotation.y = r.yaw
 	if r.naval:
 		r.node.position.y = terrain.WATER_LEVEL
