@@ -69,7 +69,7 @@ var _formation_buttons := {}
 var _cursor_hint: Label
 var _cheat_menu: PopupMenu
 ## One small tile per selected unit when several are selected.
-var _group_box: HFlowContainer
+var _group_box: GridContainer
 var _group_key := ""
 var _group_tiles: Array = []
 var _card: GridContainer
@@ -562,10 +562,12 @@ func _build_bottom_left() -> void:
 	_queue_box = HBoxContainer.new()
 	_queue_box.add_theme_constant_override("separation", 4)
 	info.add_child(_queue_box)
-	_group_box = HFlowContainer.new()
-	_group_box.add_theme_constant_override("h_separation", 4)
-	_group_box.add_theme_constant_override("v_separation", 4)
-	_group_box.custom_minimum_size.x = INFO_WIDTH
+	# A fixed grid (two rows at most), so a big selection never grows the panel
+	# up into the battlefield.
+	_group_box = GridContainer.new()
+	_group_box.columns = GROUP_COLUMNS
+	_group_box.add_theme_constant_override("h_separation", 3)
+	_group_box.add_theme_constant_override("v_separation", 3)
 	info.add_child(_group_box)
 
 	_hint = _floating_label(12)
@@ -803,13 +805,16 @@ func _refresh_info() -> void:
 
 ## Small tiles for a multi-selection: picture and health bar per unit.
 ## Click one to select just it; Shift-click to drop it from the selection.
-const GROUP_TILE := Vector2(42, 42)
-const GROUP_MAX := 32
+const GROUP_TILE := Vector2(34, 34)
+const GROUP_COLUMNS := 9
+## Two rows: the last tile becomes "+N" when more are selected.
+const GROUP_MAX := 18
 
 
 func _refresh_group(sel: Array) -> void:
-	var shown := sel.slice(0, GROUP_MAX)
-	var key := ",".join(shown.map(func(e): return str(e.id)))
+	var more: int = sel.size() - GROUP_MAX
+	var shown := sel.slice(0, GROUP_MAX - 1 if more > 0 else GROUP_MAX)
+	var key := ",".join(shown.map(func(e): return str(e.id))) + ("+%d" % (more + 1) if more > 0 else "")
 	if key != _group_key:
 		_group_key = key
 		for c in _group_box.get_children():
@@ -847,6 +852,16 @@ func _refresh_group(sel: Array) -> void:
 			b.pressed.connect(_on_group_tile.bind(e.id))
 			_group_box.add_child(b)
 			_group_tiles.append([b, bar, e.id])
+		if more > 0:
+			var rest := Label.new()
+			rest.text = "+%d" % (more + 1)
+			rest.custom_minimum_size = GROUP_TILE
+			rest.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+			rest.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+			rest.add_theme_color_override("font_color", Flags.GOLD)
+			rest.tooltip_text = "%d more selected" % (more + 1)
+			rest.mouse_filter = Control.MOUSE_FILTER_PASS
+			_group_box.add_child(rest)
 	for t in _group_tiles:
 		var e = gv.world.get_entity(t[2])
 		if e == null:

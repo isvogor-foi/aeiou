@@ -82,7 +82,7 @@ func show_entity(e) -> void:
 				if c is Node3D and v.has("fly_height"):
 					c.position.y = 0.0
 			var ap := Models.anim_player(_model)
-			var idle: String = v.get("anims", {}).get("idle", "")
+			var idle: String = Models.anims_of(v).get("idle", "")
 			if ap and idle != "" and ap.has_animation(idle):
 				ap.play(idle)
 			if v.has("procedural") or not ap:

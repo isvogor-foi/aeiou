@@ -517,6 +517,21 @@ func _shadow() -> MeshInstance3D:
 	return mi
 
 
+## Where a unit is drawn, for picking: its body's position (a flyer's includes its
+## height, its idle circle and its bob), or null if it has no view yet.
+func pick_point(id: int):
+	var r = views.get(id)
+	if r == null or not r.has("body") or r.body == null:
+		return null
+	return r.body.global_position + Vector3(0, 0.3 if r.fly > 0.0 else 0.4, 0)
+
+
+## True for units that are hard to hit with a small pick circle (aircraft).
+func is_flyer(id: int) -> bool:
+	var r = views.get(id)
+	return r != null and r.fly > 0.0
+
+
 func pick_height(id: int) -> float:
 	var r = views.get(id)
 	return (r.fly + 0.4) if r else 0.4

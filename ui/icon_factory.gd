@@ -73,7 +73,7 @@ func _render(job: Array) -> void:
 	model.rotation.y = -0.5
 	var ap := Models.anim_player(model)
 	var v: Dictionary = DB.visuals.units.get(job[2], {}) if job[1] == "unit" else {}
-	var idle: String = v.get("anims", {}).get("idle", "")
+	var idle: String = Models.anims_of(v).get("idle", "")
 	if ap and idle != "" and ap.has_animation(idle):
 		# A natural pose instead of the rest (T) pose.
 		ap.play(idle)

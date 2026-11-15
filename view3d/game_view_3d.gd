@@ -577,10 +577,15 @@ func entity_at_mouse():
 	for e in world.entities.values():
 		if not e.alive or e.kind != Entity.UNIT or not is_shown(e):
 			continue
-		var p3 := entity_point(e) + Vector3(0, entity_views.pick_height(e.id), 0)
+		# Test where the unit is drawn (a circling plane is not over its ground spot).
+		var drawn = entity_views.pick_point(e.id)
+		var p3: Vector3 = drawn if drawn != null else entity_point(e) + Vector3(0, entity_views.pick_height(e.id), 0)
 		if camera.is_position_behind(p3):
 			continue
 		var d := camera.unproject_position(p3).distance_to(m)
+		# Aircraft are bigger targets than a soldier: give them a wider circle.
+		if entity_views.is_flyer(e.id):
+			d *= 0.55
 		if d < best_d:
 			best_d = d
 			best = e
@@ -777,10 +782,11 @@ func _box_select(r: Rect2, add: bool, drop_workers := true) -> void:
 	for e in world.entities.values():
 		if not e.alive or e.owner != me:
 			continue
-		var p3 := entity_point(e)
+		var drawn = entity_views.pick_point(e.id) if e.kind == Entity.UNIT else null
+		var p3: Vector3 = drawn if drawn != null else entity_point(e) + Vector3(0, 0.3, 0)
 		if camera.is_position_behind(p3):
 			continue
-		if r.has_point(camera.unproject_position(p3 + Vector3(0, 0.3, 0))):
+		if r.has_point(camera.unproject_position(p3)):
 			if e.kind == Entity.UNIT:
 				units.append(e.id)
 			elif e.kind == Entity.BUILDING:
