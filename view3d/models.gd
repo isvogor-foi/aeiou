@@ -148,7 +148,7 @@ static func make_unit(type_id: String, owner: int) -> Node3D:
 		root.add_child(x)
 	if v.has("tint"):
 		tint(model, DB.color_of(v.tint))
-	_prepare_anims(model, v.get("anims", {}))
+	_prepare_anims(model, anims_of(v))
 	return root
 
 
@@ -186,6 +186,14 @@ static func retexture(n: Node, path: String) -> void:
 static func _find_skeleton(n: Node) -> Skeleton3D:
 	var found := n.find_children("*", "Skeleton3D", true, false)
 	return found[0] if not found.is_empty() else null
+
+
+## A unit's animation set: its own "anims", or the preset it names (visuals.json "anim_presets").
+static func anims_of(v: Dictionary) -> Dictionary:
+	var a = v.get("anims", {})
+	if a is String:
+		return DB.visuals.get("anim_presets", {}).get(a, {})
+	return a
 
 
 static func _prepare_anims(model: Node, anims: Dictionary) -> void:

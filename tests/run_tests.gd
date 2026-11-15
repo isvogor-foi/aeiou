@@ -640,6 +640,27 @@ func test_vehicle_acceleration() -> void:
 	check(gren.throttle == 1.0, "infantry has no throttle")
 
 
+## Every animation a unit (or preset) names exists in the figure library.
+func test_animation_names() -> void:
+	const Models = preload("res://view3d/models.gd")
+	var f := FileAccess.open("res://assets/quaternius/ual/AnimationLibrary_Godot_Standard.gltf", FileAccess.READ)
+	var gltf: Dictionary = JSON.parse_string(f.get_as_text())
+	var clips := {}
+	for a in gltf.animations:
+		clips[String(a.name).trim_suffix("_Loop")] = true
+	for id in DB.visuals.units:
+		var v: Dictionary = DB.visuals.units[id]
+		if not v.has("figure"):
+			continue
+		for key in Models.anims_of(v):
+			check(clips.has(Models.anims_of(v)[key]), "%s %s: no clip %s" % [id, key, Models.anims_of(v)[key]])
+	for preset in DB.visuals.anim_presets:
+		if preset.begins_with("_"):
+			continue
+		for key in DB.visuals.anim_presets[preset]:
+			check(clips.has(DB.visuals.anim_presets[preset][key]), "preset %s %s: no clip %s" % [preset, key, DB.visuals.anim_presets[preset][key]])
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

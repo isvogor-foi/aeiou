@@ -956,5 +956,55 @@
 		]
 	},
 	"_comment_air": "fly_height: flyers hover this high (tiles). naval: sits on the water surface. procedural: a model from view3d/procedural.gd; props: procedural extras (e.g. the Kress glider).",
-	"_comment_flags": "Every building flies its faction's flag (factions/*.json 'flag'); cities also fly their crown land's flag. tint/faction_tint give Monarchy buildings their Schönbrunn yellow."
+	"_comment_flags": "Every building flies its faction's flag (factions/*.json 'flag'); cities also fly their crown land's flag. tint/faction_tint give Monarchy buildings their Schönbrunn yellow.",
+	"anim_presets": {
+		"_comment": "Animation sets for figure units: a unit's \"anims\" may name one of these instead of listing its own. Names are clips of the Quaternius library without the _Loop suffix.",
+		"gunner": {
+			"idle": "Pistol_Idle",
+			"walk": "Walk",
+			"attack": "Pistol_Shoot",
+			"death": "Death01"
+		},
+		"rifleman": {
+			"idle": "Idle",
+			"walk": "Walk",
+			"attack": "Pistol_Shoot",
+			"death": "Death01"
+		},
+		"medic": {
+			"idle": "Idle",
+			"walk": "Walk",
+			"attack": "Pistol_Shoot",
+			"cast": "Fixing_Kneeling",
+			"death": "Death01"
+		},
+		"radio": {
+			"idle": "Idle_Talking",
+			"walk": "Walk",
+			"attack": "Pistol_Shoot",
+			"cast": "Interact",
+			"death": "Death01"
+		},
+		"worker": {
+			"idle": "Idle",
+			"walk": "Walk",
+			"attack": "Punch_Jab",
+			"work": "Fixing_Kneeling",
+			"death": "Death01"
+		},
+		"caster": {
+			"idle": "Spell_Simple_Idle",
+			"walk": "Walk",
+			"attack": "Spell_Simple_Shoot",
+			"cast": "Spell_Simple_Shoot",
+			"death": "Death01"
+		},
+		"officer": {
+			"idle": "Idle",
+			"walk": "Walk_Formal",
+			"attack": "Pistol_Shoot",
+			"cast": "Interact",
+			"death": "Death01"
+		}
+	}
 }

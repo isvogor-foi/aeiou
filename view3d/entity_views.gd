@@ -83,7 +83,7 @@ func _create(e) -> Dictionary:
 				# Advanced by hand in sync(): only on screen, and less often in big battles.
 				r.ap.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 			r.anim_acc = 0.0
-			r.anims = v.get("anims", {})
+			r.anims = Models.anims_of(v)
 			r.fly = float(v.get("fly_height", 0.0))
 			r.naval = v.get("naval", false)
 			r.bar_height = (float(v.get("height", 0.9)) + 0.25) * Models.unit_scale(e.type_id) + r.fly

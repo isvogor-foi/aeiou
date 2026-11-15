@@ -40,7 +40,9 @@ func _run() -> void:
 		d.name = id.capitalize()
 		d.faction = "covenant" if id in CONCERN else "monarchy"
 		DB.units[d.id] = d
-		DB.visuals.units[d.id] = {"figure": id, "height": 1.2, "anims": DB.visuals.units.musketeer.anims}
+		var preset: String = {"sanitaeter": "medic", "radio_spotter": "radio", "wireless_medium": "radio", "debt_bound": "worker",
+				"tank_crew": "officer", "pilot": "officer", "gebirgsjaeger": "rifleman", "rifleman": "rifleman", "arctic_trooper": "rifleman"}.get(id, "gunner")
+		DB.visuals.units[d.id] = {"figure": id, "height": 1.2, "anims": preset}
 	GameConfig.map_seed = 4242
 	var gv = load("res://view3d/game3d.tscn").instantiate()
 	gv.edge_scroll = false
