@@ -274,6 +274,8 @@ Performance is finished:
   - On an Intel Iris Xe laptop at Medium: about 29 fps in a 150-unit battle, 13 fps in the 400-unit stress test.
 - **Tools:** `tests/profile_sim.gd`, `tests/bench_battle.gd -- <per_side>`, `N=75 tools/godot --path . -s tests/bench_fps.gd`.
 
+The plan for Ages 7–12 and Campaign 2 is in [roadmap.md](roadmap.md).
+
 **To do (Phase 8, paused):**
 1. **Baseline batch.** Run `tests/run_balance.sh <out_dir> 3 6 normal 60` (18 AI-vs-AI games, both sides, all maps), then summarise with `tests/balance_report.py`.
 2. **Pacing to 25–35 minutes:**

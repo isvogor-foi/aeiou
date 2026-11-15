@@ -66,4 +66,5 @@ Saves and campaign progress are kept in Godot's user folder. On Linux that's `~/
 
 - [The story](docs/story.md) and [the Aetheric Monarchy](docs/aetheric_monarchy.md): setting and design notes.
 - [Technical notes](docs/technical.md): tests, tools, code layout and development history.
+- [Roadmap](docs/roadmap.md): Ages 7–12 and the second campaign, 1926–1955.
 - [Credits](assets/CREDITS.md): all third-party art is CC0 and the music is public domain.

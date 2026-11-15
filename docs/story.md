@@ -82,5 +82,65 @@ Each chapter then opens with a short briefing card (date, place, a two- or three
 | 5 | `m5_empress.gd` | Capture 3 ritual circles within 8 minutes; the Pale Empress rises at 45/60/80/100% health for 0/1/2/3 circles left burning. Rudolf leaves for Buda. |
 | 6 | `m6_viribus.gd` | Hold the five relics, then storm Buda: Rudolf boss, the Iron Emperor and all crown lands join. Franz Joseph dies when Rudolf falls. |
 
+## Campaign 2: The Undying Century (1926–1955), draft
+
+Decided with the user on 2026-11-15. Six more chapters, one per new age (7–12). Nothing is built yet.
+
+### Decisions
+- **Villain: Count Árpád Szentkirályi.** He fled east in a hearse at the end of Chapter 3 and comes back undead: a lich-magnate who rebuilds the Covenant as a business, the **Szentkirályi Concern**. It buys debts, bankrupt cities and the dead, then turns them into an industrial army.
+- **Protagonist: Franz Ferdinand, all the way to 1955.** He's kept going by Aether medicine (and stubbornness), from 63 to 92. Running wink: like Franz Joseph before him, he still signs every paper himself.
+- **No real-world fascism or WWII.** The surviving federation prevented the war we know. The great war of this century is against the dead. No real dictators are shown; at most a dry aside.
+- **Six new ages, 7–12,** with new rosters for both sides; skirmish can play the whole ladder.
+
+### Ages 7–12 (working names)
+| Age | Name | Years | Monarchy flavour | Covenant flavour |
+|---|---|---|---|---|
+| 7 | Age of the Federation | 1920s | Jazz-age Vienna; submachine guns, armoured cars | The Concern's debt-bound dead, gas troops |
+| 8 | Age of Zeppelins | early 1930s | Aether zeppelins, radio, biplanes | Corpse-zeppelins, wireless séances |
+| 9 | Age of Diesel | late 1930s | Porsche heavy tanks, dieselpunk walkers | Undead panzers, biomechanical horrors |
+| 10 | Age of Radar | 1940s | Radar, frequency hopping (Hedy Lamarr), rocket artillery | Liches in bunkers, frost engines |
+| 11 | Age of the Atom | late 1940s | Jets, Aether reactors (Lise Meitner) | Soul reactors, abominations in plate |
+| 12 | Age of Rockets | 1950s | Rockets, the Aether bomb's long shadow | The Concern's final machine-necropolis |
+
+### Between the campaigns (1918–1926)
+- Rudolf is ended at Buda, but Szentkirályi was never there. He rode east in a hearse in 1915 (Chapter 3) and spent the war somewhere colder, learning what Rudolf knew.
+- The Federation's peace years: crown lands with their own parliaments, the Danube a highway of Aether barges, Vienna a city of jazz, coffeehouses, cinema and radio. The empire is not loved by everyone, but it is, for once, solvent.
+- The dead do not rest. Rudolf's necromancers are scattered and unemployed. Szentkirályi hires them.
+
+### The villain: Count Árpád Szentkirályi
+- In 1915 a living Hungarian magnate and ringleader of the secession. By 1926 he is a **lich-magnate**, and he has learned that the dead make excellent employees: they never strike, never sleep and never ask for wages.
+- His power is the **Szentkirályi Concern**, a necro-industrial company. It buys debts, bankrupt cities and the bodies of the poor, and it pays dividends in undeath. Its sigil is a ledger with a skull.
+- His arc rises one chapter at a time: a whisper (1926), a market (1929), a foundry in the ice (1934), an army (1941), a reactor (1945), a necropolis (1955).
+- He is everything Franz Ferdinand is not: an empire of owners instead of an empire of equals.
+
+### Franz Ferdinand, 1926–1955
+- 63 when the campaign opens, 92 at its end. Kept going by Aether medicine from the Golden Lane, a temper, and the conviction that nobody else will read the paperwork.
+- Running wink: like Franz Joseph before him, he still signs every paper himself. By 1955 the papers are typed, mimeographed and sent by radio, and he still signs them.
+- He never fights in steam armour; that was his uncle's way. He leads from a staff car, then an armoured train, then a jet.
+
+### Chapters
+| # | Age | Chapter | Place and date | Play | New on the field |
+|---|---|---|---|---|---|
+| 7 | Federation | **Rosabelle, Believe** | Vienna and Budapest, Oct–Nov 1926 | Houdini dies on Halloween. At a séance his widow's code ("Rosabelle, believe") comes through: the Concern holds his soul in a medium's cabinet. Stealth and raid: shut down the séance parlours across the city, then storm the Concern's first counting-house. The first sight of Szentkirályi, who walks away. | SMG assault troops, riflemen, armoured cars; the Concern's tommy-gun ghouls and gas troops |
+| 8 | Zeppelins | **Black Thursday** | The crown lands, Oct 1929 | The crash. The Concern buys bankrupt cities, and their loyalty collapses. Hold the federation together: charters, garrisons and an economy under siege, while corpse-zeppelins raid the supply lines. Defeat: three crown lands sold to the dead. | Aether zeppelins, biplanes, radio spotters; corpse-zeppelins, séance towers |
+| 9 | Diesel | **The Ice Crown** | Franz Josef Land, 1934 | An airship expedition to the Arctic archipelago Austria-Hungary discovered in 1873. Land, build a camp on the ice, hold through the polar night, and destroy the Concern's foundry under the glacier. Pulp adventure: Indiana Jones in a snowstorm, with Hedy Lamarr on the radio. | Porsche heavy tanks, halftracks, mountain troops; undead panzers, frost-bound horrors |
+| 10 | Radar | **The Long Winter** | The Carpathians, winter 1941 | Szentkirályi's dead march on the federation. A great front battle: hold the passes, then break through. Tesla, 85, gives the empire his last invention (radar against the séance-fog); he dies before the war ends, in January 1943, as he did in our history. | Radar, Aether rocket batteries, paratroopers; liches in bunkers, frost engines |
+| 11 | Atom | **The Aether Bomb** | Vienna and the Pannonian plain, 1945 | Lise Meitner splits Aether. The Concern has built a soul reactor that will raise every grave from Pressburg to Belgrade. Raid it. At the end, a choice: drop the Aether bomb (win at once, at a real and lasting cost to the land) or fight in on foot (harder, nothing lost). The choice is remembered in Chapter 12. | Jets, Aether reactors, the bomb; soul reactors, armoured abominations |
+| 12 | Rockets | **The Treaty of the Living** | The Concern's necropolis and Vienna, 1955 | The finale. Storm the machine-necropolis and destroy Szentkirályi. Then end the war the Austrian way, with a treaty, signed in the Belvedere in the real State Treaty year, and perhaps a wedding (*tu felix Austria nube*). Franz Ferdinand, 92, signs it himself. | Rockets, the Viribus mech; the necropolis titan |
+
+### Ending
+Triumph again, smaller in its cost but heavier in its meaning: the Federation outlives the century that should have destroyed it. If the Aether bomb was used, a scar on the Pannonian plain glows at night for a hundred years. Franz Ferdinand signs the treaty, puts down the pen, and for the first time in forty years takes a holiday.
+
+### Cast additions
+| Who | Role |
+|---|---|
+| **Hedy Lamarr** (b. Vienna 1914) | Film star and inventor. Radio, frequency hopping: jams the Concern's séance-wireless. Hero from Chapter 9. |
+| **Lise Meitner** (b. Vienna 1878) | Physicist. Splits Aether in Chapter 11 and carries the moral weight of the bomb. |
+| **Erwin Schrödinger** (b. Vienna 1887) | Proves the dead are both. Comic relief with a box. |
+| **Sigmund Freud** (Vienna) | Reads the dreams of the dead; briefings and hints. |
+| **Ferdinand Porsche** (b. Bohemia 1875) | Builds the tanks of the Diesel age. |
+| **Nikola Tesla** | Until his death in January 1943 (Chapter 10). |
+| **Harry Houdini** | Dies in 1926; his freed soul may return once, as a ghost hero, in Chapter 12. |
+
 ## Open questions
 1. **Hungary in skirmish games.** In the story it's Rudolf's ally; in skirmish it's currently a third side hostile to everyone. Keep that, or ally it with the Covenant?
