@@ -15,7 +15,7 @@ const ME := 0
 const FOE := 1
 
 ## Mission order for the campaign menu (the tutorial stands apart).
-const CAMPAIGN := ["m1_sarajevo", "m2_vienna", "m3_viribus"]
+const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
 
 var id := ""
 var title := ""
@@ -142,6 +142,12 @@ func spawn_group(w, type_id: String, pid: int, at: Vector2, count: int) -> Array
 	return ids
 
 
+## Pulls a point (pixels) inside the map, a few tiles in from the edge.
+func on_map(w, spot: Vector2, margin := 4) -> Vector2:
+	return Vector2(clampf(spot.x, margin * TILE, (w.map.width - margin) * TILE),
+			clampf(spot.y, margin * TILE, (w.map.height - margin) * TILE))
+
+
 func _walkable(w, spot: Vector2) -> Vector2:
 	var t := GameMap.to_tile(spot)
 	for r in 6:
@@ -178,11 +184,14 @@ func soldiers(w, pid: int) -> int:
 # All state lives in w.scenario so it saves with the match; the view reads
 # "boss", "sentries", "markers", "rail" from it to draw bars, cones, flags and rails.
 
-## Spawns a boss and shows its health bar at the top of the screen.
-func spawn_boss(w, type_id: String, at: Vector2) -> int:
+## Spawns a boss and shows its health bar at the top of the screen. `hp_share`
+## starts it wounded (the bar shows it); its phases count from that starting health.
+func spawn_boss(w, type_id: String, at: Vector2, hp_share := 1.0) -> int:
 	var b: Entity = w.spawn_unit(type_id, FOE, _walkable(w, at))
+	b.hp = b.max_hp * hp_share
 	w.scenario.boss = b.id
 	w.scenario.flags.boss_phase = 0
+	w.scenario.flags.boss_start = b.hp
 	return b.id
 
 
@@ -192,13 +201,14 @@ func boss(w):
 
 
 ## The next phase number (1, 2, ...) the first time the boss falls below each of
-## `thresholds` (fractions of max HP, descending), else 0.
+## `thresholds` (fractions of its starting health, descending), else 0.
 func boss_phase(w, thresholds: Array) -> int:
 	var b = boss(w)
 	if b == null:
 		return 0
 	var done: int = int(w.scenario.flags.get("boss_phase", 0))
-	if done < thresholds.size() and b.hp <= b.max_hp * float(thresholds[done]):
+	var start: float = float(w.scenario.flags.get("boss_start", b.max_hp))
+	if done < thresholds.size() and b.hp <= start * float(thresholds[done]):
 		w.scenario.flags.boss_phase = done + 1
 		return done + 1
 	return 0
@@ -347,12 +357,38 @@ func alive(w, uid) -> bool:
 # --- Campaign progress (user://campaign.cfg) -------------------------------------
 
 const PROGRESS := "user://campaign.cfg"
+## id: [menu title, one-line summary, dateline, briefing card text].
 const MISSIONS := {
-	"tutorial": ["Tutorial: The Margrave's First Day", "Learn to gather, build, train, advance and capture a city."],
-	"m1_sarajevo": ["1. The Shot That Missed", "Sarajevo, 28 June 1914. Escort Archduke Franz Ferdinand through Covenant ambushes to the Town Hall."],
-	"m2_vienna": ["2. The Siege of Vienna", "The dead are at the gates. Hold the Hofburg for ten minutes until the relief army arrives."],
-	"m3_viribus": ["3. Viribus Unitis", "Unite the crown lands and bring the five A.E.I.O.U. relics home to proclaim the Federation."],
+	"tutorial": ["Tutorial: The Margrave's First Day", "Learn to gather, build, train, advance and capture a city.", "", ""],
+	"m1_sarajevo": ["1. The Shot That Missed", "Escort Archduke Franz Ferdinand through Covenant ambushes to the Sarajevo Town Hall.",
+			"Sarajevo  ·  28 June 1914",
+			"The heir to the throne is visiting Bosnia, against all advice and in an open motor car. The crowds are cheering. Some of the crowd, your scouts report, are not breathing."],
+	"m2_tomb": ["2. The Empty Tomb", "Houdini follows the assassins' sigils to Rudolf's coffin and to Mayerling. Get him out alive.",
+			"Vienna and Mayerling  ·  October 1914",
+			"The assassins carried sigils. The Archduke has hired the one man alive who can tell real necromancy from parlour tricks: Harry Houdini of Budapest. He has examined them and, to his great annoyance, they are genuine. The trail leads to a coffin in the Kapuzinergruft, and to a hunting lodge where a Crown Prince died in 1889."],
+	"m3_federation": ["3. The Federation", "Proclaim three crown lands, then answer Hungary's secession by taking its stronghold.",
+			"Vienna  ·  Spring 1915",
+			"Franz Joseph has abdicated: \"I have signed everything else; I may as well sign this.\" Emperor Franz Ferdinand will proclaim an empire of equals. In Budapest, Count Árpád Szentkirályi and the magnates have other plans, and a dead prince to crown. On a happier note, Mr. Tesla has cabled from New York. He is coming home."],
+	"m4_vienna": ["4. The Siege of Vienna", "The dead and the Honvéd are at the gates. Hold the Hofburg for ten minutes.",
+			"Vienna  ·  November 1916",
+			"Rudolf's dead and Szentkirályi's regiments stand before the walls. Vienna has been besieged before, and it is tradition that the relief arrives at the last possible moment. In the Hofburg the old Emperor is dying. Tesla has asked for his measurements, and will not say why."],
+	"m5_empress": ["5. The Empress Rises", "Break the ritual circles at Gödöllő before Rudolf raises his mother, then face her.",
+			"Gödöllő, Hungary  ·  September 1917",
+			"Elisabeth was murdered in Geneva in 1898. Her son means to mend that. At Gödöllő, the palace she loved, three ritual circles are burning. Every circle we break before the rite is done leaves her weaker. Houdini assures us he has seen worse séances. He did not say where."],
+	"m6_viribus": ["6. Viribus Unitis", "Bring the five A.E.I.O.U. relics home, then end Rudolf at Buda.",
+			"Vienna and Buda  ·  Autumn 1918",
+			"The five relics of the House are scattered, and Rudolf wants them as badly as we do. Bring them home, and the crown lands will march as one on his seat at Buda. The Iron Emperor insists on coming. Nobody has found a way to refuse him."],
 }
+
+## Title cards before Chapter 1: the premise, one page at a time.
+const INTRO := [
+	["Vienna, 1914", "For three centuries the Habsburgs have ruled by the light of Aether, the alchemists' fire first kindled in Rudolf II's Prague. Airships cross the Danube; Tesla coils hum in the Hofburg; and the old Emperor Franz Joseph, eighty-four years old, still signs every paper himself."],
+	["A tired empire", "Its peoples want a voice, its wars are lost more often than won, and in Budapest the magnates whisper that Vienna's day is done.\n\nOn the 28th of June, in Sarajevo, a young man steps from the crowd and fires at the heir, Archduke Franz Ferdinand."],
+	["He misses.", "The Archduke lives to keep his promise: an empire of equals, every crown land free under one crown. Viribus Unitis.\n\nSome do not want it. And some of them, it turns out, were never meant to be alive at all."],
+]
+
+## Shown on the last victory card.
+const EPILOGUE := "Vienna, 12 November 1918. The Federation is proclaimed from the balcony of the Hofburg, in eleven languages. Franz Joseph lies in the Kapuzinergruft, in a coffin that is not empty. The empire paid dearly, but it stands, united. And for once in its history, it won the war."
 
 
 ## How many campaign missions are open (at least the first).

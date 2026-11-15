@@ -32,7 +32,7 @@ A **dark epic played with pulp energy and a knowing wink** (think *Hellboy*, *In
 - **Franz Ferdinand.** The protagonist: the survivor of Sarajevo and the reformer.
 - **Franz Joseph.** 84 in 1914. He abdicates to Franz Ferdinand early in the campaign. Dying in 1916, he is kept alive by **Tesla's steam armour** and returns as the **Iron Emperor** for a last battle. This is our own take on the armoured old Kaiser.
 - **Rudolf, the Umbral Sovereign.** The hidden heir and the main villain. His motive is to undo his mother's death and claim the throne.
-- **Empress Elisabeth (Sisi).** Murdered in 1898. In 1917 Rudolf **raises her as the Undead Empress** at **Gödöllő**, the Hungarian palace she loved, and her return binds Hungary to him. She replaces the unit "The Dead Queen"; her new name is still to be decided.
+- **Empress Elisabeth (Sisi).** Murdered in 1898. In 1917 Rudolf **raises her as the Pale Empress** at **Gödöllő**, the Hungarian palace she loved, and her return binds Hungary to him. She is **Elisabeth, the Pale Empress** (replacing the unit "The Dead Queen").
 - **Nikola Tesla.** Born in the Habsburg Military Frontier. He comes home from America to build the Aether war machines and the Iron Emperor's armour.
 - **Harry Houdini.** Born in Budapest. As the great debunker of fake mediums, he is the one man who can tell real necromancy from tricks, and **he unmasks the conspiracy**.
 
@@ -66,9 +66,21 @@ The player must learn the premise **before the first mission**: the campaign ope
 
 Each chapter then opens with a short briefing card (date, place, a two- or three-line situation) in the same voice.
 
+## Settled (2026-11-14)
+- **The Undead Empress** is *Elisabeth, the Pale Empress*.
+- **The conspirators' face** is a fictional magnate, **Count Árpád Szentkirályi**, so no real politician is tied to undead pacts.
+- **Heroes from the wrong century** become namesakes: *Colonel Radetzky the Younger* (the Field Marshal's great-grandson) and *Ban Jelačić the Younger* (grand-nephew of the Ban of 1848). Prince Eugene's siege lines go to Field Marshal Boroević.
+- **The introduction** is three title cards on the mission screen before Chapter 1 (skippable), then a dated briefing card per chapter. The text lives in `scenarios/scenario.gd` (`INTRO`, `MISSIONS`, `EPILOGUE`).
+
+## The chapters as built
+| # | Script | Play |
+|---|---|---|
+| 1 | `m1_sarajevo.gd` | Escort the Archduke past four ambushes. |
+| 2 | `m2_tomb.gd` | Stealth: Houdini past watcher cones into the crypt (being seen sends a squad). Then the column destroys the half-built Grave Engine at Mayerling. |
+| 3 | `m3_federation.gd` | Base-building: proclaim 3 crown lands. At 2 lands (or 9 minutes) Hungary secedes, Franz Joseph abdicates, Tesla arrives. Take Szentkirályi's stronghold. |
+| 4 | `m4_vienna.gd` | Hold 10 minutes; Hungarian flank attacks from wave 2; the Iron Emperor marches out at 4:30. |
+| 5 | `m5_empress.gd` | Capture 3 ritual circles within 8 minutes; the Pale Empress rises at 45/60/80/100% health for 0/1/2/3 circles left burning. Rudolf leaves for Buda. |
+| 6 | `m6_viribus.gd` | Hold the five relics, then storm Buda: Rudolf boss, the Iron Emperor and all crown lands join. Franz Joseph dies when Rudolf falls. |
+
 ## Open questions
-1. **The Undead Empress's name**, replacing "The Dead Queen". Ideas: *the Pale Empress*, *the Empress of Gödöllő*, *Erzsébet the Undying*.
-2. **Hungary in skirmish games.** In the story it's Rudolf's ally; in skirmish it's currently a third side hostile to everyone. Keep that, or ally it with the Covenant?
-3. **The conspirators' faces.** A real politician such as Tisza as the villain, or fictional magnates? A fictional ringleader avoids pinning undead pacts on a real person.
-4. **Heroes from the wrong century.** Jelačić and Radetzky (19th century) don't fit 1914–18. Recast them as heirs or namesakes, or keep them as recruitable legends?
-5. **The introduction's form.** Narrated title cards over art, an in-engine camera flight over Vienna, or a text briefing screen?
+1. **Hungary in skirmish games.** In the story it's Rudolf's ally; in skirmish it's currently a third side hostile to everyone. Keep that, or ally it with the Covenant?

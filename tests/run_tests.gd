@@ -76,6 +76,7 @@ func _initialize() -> void:
 		"test_scenarios_run",
 		"test_sarajevo_playthrough",
 		"test_viribus_relics",
+		"test_campaign_chapters",
 		"test_scenario_survives_save",
 		"test_tutorial_walkthrough",
 		"test_ai_builds_up",
@@ -1294,7 +1295,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_vienna", "m3_viribus"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1303,10 +1304,11 @@ func test_scenarios_run() -> void:
 			check(w.winner < 0, "%s: still undecided after 2 minutes" % id)
 
 
-## Viribus Unitis: the Covenant can't win by hoarding relics, the player can.
+## Viribus Unitis: the Covenant can't win by hoarding relics; the player holding
+## them all opens the storm on Buda, and Rudolf's fall wins the campaign.
 func test_viribus_relics() -> void:
 	for owner in [1, 0]:
-		var w := _scenario_world("m3_viribus")
+		var w := _scenario_world("m6_viribus")
 		w.ais.clear()
 		var city = w.get_entity(w.players[owner].capital_id)
 		for e in w.entities.values():
@@ -1316,7 +1318,53 @@ func test_viribus_relics() -> void:
 		if owner == 1:
 			check(w.winner < 0, "viribus: foe hoarding all relics must not win")
 		else:
-			check(w.winner == 0, "viribus: holding all five relics wins (winner %d)" % w.winner)
+			check(w.winner < 0 and w.scenario.step == 1, "viribus: holding all five relics opens the storm on Buda")
+			var rudolf = w.get_entity(int(w.scenario.get("boss", -1)))
+			check(rudolf != null and rudolf.alive, "viribus: Rudolf takes the field")
+			if rudolf:
+				w.kill(rudolf)
+			_run(w, 2)
+			check(w.winner == 0, "viribus: Rudolf's fall wins (winner %d)" % w.winner)
+
+
+## The new chapters move through their stages when their goals are met.
+func test_campaign_chapters() -> void:
+	# 2. The Empty Tomb: Houdini at the crypt brings the column and the Grave Engine.
+	var w := _scenario_world("m2_tomb")
+	w.get_entity(int(w.scenario.flags.houdini)).pos = w.scenario.flags.crypt
+	_run(w, 2)
+	check(w.scenario.step == 1 and w.get_entity(int(w.scenario.get("boss", -1))) != null, "tomb: the crypt reveals the Grave Engine")
+	w.kill(w.get_entity(int(w.scenario.boss)))
+	_run(w, 2)
+	check(w.winner == 0, "tomb: the Grave Engine's fall wins (winner %d)" % w.winner)
+	# 3. The Federation: Hungary secedes on a timer; Tesla joins.
+	w = _scenario_world("m3_federation")
+	w.ais.clear()
+	_run(w, 545)
+	check(w.hungary_risen and w.scenario.flags.has("stronghold"), "federation: Hungary secedes")
+	check(w.type_count(0, "tesla") == 1, "federation: Tesla comes home")
+	check(w.winner < 0, "federation: not won without crown lands")
+	# 4. Vienna: the Iron Emperor marches out and the Hungarians join the waves.
+	w = _scenario_world("m4_vienna")
+	_run(w, 150)
+	var hungarians := 0
+	for e in w.entities.values():
+		if e.alive and e.owner == w.rebels and e.kind == Entity.UNIT:
+			hungarians += 1
+	check(hungarians > 0, "vienna: Hungarians attack from the flank with the second wave")
+	_run(w, 130)
+	check(w.type_count(0, "iron_emperor") == 1, "vienna: the Iron Emperor marches out")
+	# 5. The Empress: breaking circles weakens her; her fall wins.
+	w = _scenario_world("m5_empress")
+	for pt in w.scenario.points:
+		pt.owner = 0
+	_run(w, 2)
+	var empress = w.get_entity(int(w.scenario.get("boss", -1)))
+	check(empress != null and empress.hp < empress.max_hp * 0.6, "empress: rises weakened with every circle broken")
+	if empress:
+		w.kill(empress)
+	_run(w, 2)
+	check(w.winner == 0, "empress: her fall wins (winner %d)" % w.winner)
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.
@@ -1355,9 +1403,9 @@ func test_sarajevo_playthrough() -> void:
 func test_scenario_survives_save() -> void:
 	const SaveGame = preload("res://sim/save_game.gd")
 	const Scenario = preload("res://scenarios/scenario.gd")
-	var w := _scenario_world("m2_vienna")
+	var w := _scenario_world("m4_vienna")
 	_run(w, 100)
-	SaveGame.save(w, {"me": 0, "scenario": "m2_vienna"}, "test_sc")
+	SaveGame.save(w, {"me": 0, "scenario": "m4_vienna"}, "test_sc")
 	var w2 := World.new()
 	SaveGame.load_into(w2, SaveGame.slot_path("test_sc"))
 	w2.scenario_logic = Scenario.create(w2.scenario.id)

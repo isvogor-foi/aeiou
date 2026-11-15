@@ -1850,11 +1850,11 @@
 		"sight": 10
 	},
 	"radetzky": {
-		"name": "Field Marshal Radetzky",
+		"name": "Colonel Radetzky the Younger",
 		"faction": "monarchy",
 		"role": "hero",
 		"domain": "ground",
-		"description": "Kept alive by Golden Lane elixirs for 150 years. Allies near him hit 15% harder; the Radetzky March (F) speeds and strengthens the whole army.",
+		"description": "The old Field Marshal's great-grandson, with the family moustache and the family march. Allies near him hit 15% harder; the Radetzky March (F) speeds and strengthens the whole army.",
 		"hp": 1200,
 		"armor": "armoured",
 		"damage": 26,
@@ -1877,11 +1877,11 @@
 		"sight": 10
 	},
 	"jelacic": {
-		"name": "Ban Josip Jelačić",
+		"name": "Ban Jelačić the Younger",
 		"faction": "monarchy",
 		"role": "hero",
 		"domain": "ground",
-		"description": "The Ban of Croatia, Aether-preserved since 1848. Charges on horseback; Call the Frontier (D) summons 4 Grenzer.",
+		"description": "Grand-nephew of the Ban of 1848, and Ban of Croatia in his turn. Charges on horseback; Call the Frontier (D) summons 4 Grenzer.",
 		"hp": 1100,
 		"armor": "cavalry",
 		"damage": 24,
@@ -2031,8 +2031,8 @@
 		"train_time": 1,
 		"sight": 10
 	},
-	"dead_queen": {
-		"name": "The Dead Queen",
+	"pale_empress": {
+		"name": "Elisabeth, the Pale Empress",
 		"faction": "covenant",
 		"role": "boss",
 		"domain": "ground",
@@ -2046,7 +2046,7 @@
 		"speed": 2.4,
 		"abilities": [
 			"crimson_lance",
-			"dead_queens_call"
+			"pale_empress_call"
 		],
 		"passives": {
 			"lifesteal": 0.3

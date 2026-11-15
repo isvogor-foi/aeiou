@@ -203,10 +203,14 @@ Rules of thumb:
   - Music is public domain (see `assets/CREDITS.md`): Haydn's *Kaiserhymne* in the menu, the *Blue Danube* in peacetime and the *Radetzky March* when your troops are fighting.
   - Volumes are in Settings.
 - **Tutorial:** gather, build a Kaserne, train soldiers, advance an age, capture a city.
-- **Campaign, "Sarajevo 1914: the shot that missed"** (each mission unlocks the next):
-  1. *The Shot That Missed:* escort Archduke Franz Ferdinand past four ambushes to the Sarajevo Town Hall.
-  2. *The Siege of Vienna:* hold the Hofburg for ten minutes against growing Covenant waves.
-  3. *Viribus Unitis:* start in the Age of the Congress, proclaim the crown lands and win by the A.E.I.O.U. relics.
+- **Campaign, "Viribus Unitis" (1914-1918)**: six chapters, one per age, told in `docs/story.md`. Title cards give the premise before Chapter 1, and every chapter opens with a dated briefing card. Each victory unlocks the next chapter.
+  1. *The Shot That Missed* (Margraves): escort Archduke Franz Ferdinand past four ambushes to the Sarajevo Town Hall.
+  2. *The Empty Tomb* (AEIOU): sneak Houdini past Covenant watchers (vision cones) into the Kapuzinergruft, then march the column on Mayerling and destroy the Grave Engine.
+  3. *The Federation* (Golden Lane): proclaim three crown lands; Hungary secedes (the third side rises), Franz Joseph abdicates and Tesla arrives; take Szentkirályi's stronghold.
+  4. *The Siege of Vienna* (Reform): hold the Hofburg for ten minutes against Covenant waves and Hungarian flank attacks; the Iron Emperor marches out halfway.
+  5. *The Empress Rises* (Congress): break three ritual circles at Gödöllő before the rite ends (each one left burning makes her stronger), then defeat Elisabeth, the Pale Empress.
+  6. *Viribus Unitis* (Aether Monarchy): bring the five A.E.I.O.U. relics home and hold them, then storm Buda and destroy Rudolf, the Umbral Sovereign.
+- `tests/campaign_bot.gd` charges each boss fight with the chapter's starting army and prints the outcome (a quick balance check).
 - Scenarios are small scripts in `scenarios/` (`setup()` plus a once-a-second `update()`), with their state kept in the world so it saves with the match.
 
 **After Phase 7 (playtest feedback):**
@@ -295,5 +299,5 @@ Performance is finished:
    - Relics: longer hold, and capturing a city should take its relics.
    - Wonders: costs and hold time against the new pace.
    - The military upgrades (+10% per level) against the pace.
-5. **Missions:** re-verify Mission 2 (Vienna) after pacing changes, and play Mission 3 (Viribus Unitis) to the end with a bot.
+5. **Missions:** playtest the six chapters; re-verify Chapter 4 (Vienna) after pacing changes (an idle garrison falls at about 8:20 of 10:00, so the player must build).
 6. **Performance, optional:** in big crowds, unit separation (about 3.5 ms) and per-unit view sync (about 20 µs per unit) are the next costs.

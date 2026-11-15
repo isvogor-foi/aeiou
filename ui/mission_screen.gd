@@ -45,12 +45,39 @@ func is_open() -> bool:
 # --- Briefing --------------------------------------------------------------------
 
 func show_briefing(scenario_id: String, objectives: Array) -> void:
-	var info: Array = Scenario.MISSIONS.get(scenario_id, [scenario_id.capitalize(), ""])
+	# The campaign opens with title cards that tell the premise.
+	if scenario_id == Scenario.CAMPAIGN[0]:
+		_intro_page(0, scenario_id, objectives)
+	else:
+		_briefing_card(scenario_id, objectives)
+
+
+func _intro_page(i: int, scenario_id: String, objectives: Array) -> void:
+	var page: Array = Scenario.INTRO[i]
+	_clear()
+	_kicker("Viribus Unitis  ·  %d / %d" % [i + 1, Scenario.INTRO.size()])
+	_title(page[0], Flags.GOLD)
+	_text(page[1])
+	var next := _button("Continue", _intro_page.bind(i + 1, scenario_id, objectives) if i + 1 < Scenario.INTRO.size()
+			else _briefing_card.bind(scenario_id, objectives))
+	MenuTheme.make_primary(next)
+	if i == 0:
+		_button("Skip the introduction", _briefing_card.bind(scenario_id, objectives))
+	_open()
+	next.grab_focus.call_deferred()
+
+
+func _briefing_card(scenario_id: String, objectives: Array) -> void:
+	var info: Array = Scenario.MISSIONS.get(scenario_id, [scenario_id.capitalize(), "", "", ""])
 	_clear()
 	var i := Scenario.CAMPAIGN.find(scenario_id)
-	_kicker("Campaign  ·  Mission %d of %d" % [i + 1, Scenario.CAMPAIGN.size()] if i >= 0 else "Training")
+	_kicker("Campaign  ·  Chapter %d of %d" % [i + 1, Scenario.CAMPAIGN.size()] if i >= 0 else "Training")
 	_title(_strip_number(info[0]), Flags.GOLD)
-	_text(info[1])
+	if info.size() > 3 and info[3] != "":
+		_text(info[2], MenuTheme.MUTED, 13)
+		_text(info[3])
+	else:
+		_text(info[1])
 	if not objectives.is_empty():
 		_kicker("Objectives")
 		for o in objectives:
@@ -107,10 +134,11 @@ func _build_result(won: bool, reason: String) -> void:
 	var menu_offered := false
 	if won and i >= 0 and i + 1 < Scenario.CAMPAIGN.size():
 		var next: String = Scenario.CAMPAIGN[i + 1]
-		_text("Mission complete. Next: " + _strip_number(Scenario.MISSIONS[next][0]), Flags.GOLD, 15)
-		MenuTheme.make_primary(_button("Continue to the next mission", _start.bind(next)))
+		_text("Chapter complete. Next: " + _strip_number(Scenario.MISSIONS[next][0]), Flags.GOLD, 15)
+		MenuTheme.make_primary(_button("Continue to the next chapter", _start.bind(next)))
 		_button("Replay this mission", _start.bind(sid))
 	elif won and i >= 0:
+		_text(Scenario.EPILOGUE, MenuTheme.TEXT, 15)
 		_text("The campaign is complete. Viribus Unitis!", Flags.GOLD, 15)
 		MenuTheme.make_primary(_button("Return to the main menu", _to_menu))
 		menu_offered = true

@@ -106,7 +106,7 @@ const OUTFITS := {
 	"radetzky": {"coat": GREATCOAT, "trousers": RED, "boots": BLACK, "cuffs": GOLD, "style": "great", "hat": "plumed", "plates": true, "weapon": "sabre", "moustache": true, "sash": true, "skin": Color(0.88, 0.76, 0.66)},
 	"jelacic": {"coat": Color(0.45, 0.12, 0.1), "trousers": FIELD_DARK, "boots": BLACK, "cuffs": GOLD, "style": "short", "hat": "kalpak", "braid": true, "plates": true, "goggles": true, "weapon": "sabre", "moustache": true},
 	"rudolf_sovereign": {"skin": Color(0.78, 0.76, 0.74), "coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": SOUL_GLOW, "style": "long", "hat": "crown_dark", "vials": true, "struts": true, "weapon": "bone_staff", "moustache": true, "hair": Color(0.25, 0.18, 0.12), "sash": true},
-	"dead_queen": {"skin": Color(0.84, 0.86, 0.9), "coat": Color(0.92, 0.94, 0.96), "trousers": Color(0.92, 0.94, 0.96), "boots": WHITE, "cuffs": SOUL_GLOW, "style": "dress", "hat": "stars", "vials": true, "weapon": "", "hair": Color(0.32, 0.2, 0.12)},
+	"pale_empress": {"skin": Color(0.84, 0.86, 0.9), "coat": Color(0.92, 0.94, 0.96), "trousers": Color(0.92, 0.94, 0.96), "boots": WHITE, "cuffs": SOUL_GLOW, "style": "dress", "hat": "stars", "vials": true, "weapon": "", "hair": Color(0.32, 0.2, 0.12)},
 	"lich_general": {"skin": BONE, "coat": Color(0.18, 0.14, 0.24), "trousers": NIGHT, "boots": NIGHT, "cuffs": GOLD, "style": "robe", "hat": "crown_dark", "cuirass": true, "plates": true, "vials": true, "jaw": true, "weapon": "bone_staff"},
 	# Crown-land troops.
 	"bombardier": {"coat": OILSKIN, "trousers": BLACK, "boots": BROWN, "cuffs": Color(0.75, 0.78, 0.82), "style": "great", "hat": "stahlhelm", "gasmask": true, "plates": true, "tanks": "fire", "weapon": "flamethrower"},

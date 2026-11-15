@@ -497,8 +497,8 @@
 				"death": "Death01"
 			}
 		},
-		"dead_queen": {
-			"figure": "dead_queen",
+		"pale_empress": {
+			"figure": "pale_empress",
 			"height": 2.0,
 			"anims": {
 				"idle": "Idle",

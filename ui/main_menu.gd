@@ -169,7 +169,7 @@ func _show(page: String) -> void:
 			_content.add_child(_skirmish_page)
 			_footer_buttons("Begin Battle", _start)
 		"campaign":
-			_header("Campaign", "Sarajevo 1914: the shot that missed. Each victory opens the next mission.")
+			_header("Campaign", "1914-1918: six chapters, one for each age. Each victory opens the next.")
 			_fill_campaign()
 			_footer_buttons("", Callable())
 		"load":
@@ -264,8 +264,8 @@ func _fill_main() -> void:
 		if Scenario.is_won(sid):
 			won += 1
 	var next: String = Scenario.CAMPAIGN[mini(open, Scenario.CAMPAIGN.size()) - 1]
-	var camp_caption := "Sarajevo 1914  -  all three missions won" if won == Scenario.CAMPAIGN.size() \
-			else "Sarajevo 1914  -  next: %s" % Scenario.MISSIONS[next][0].split(". ", true, 1)[-1]
+	var camp_caption := "1914-1918  -  all six chapters won" if won == Scenario.CAMPAIGN.size() \
+			else "1914-1918  -  next: %s" % Scenario.MISSIONS[next][0].split(". ", true, 1)[-1]
 	var camp := _entry("Campaign", camp_caption, _show.bind("campaign"), first == null)
 	_content.add_child(camp)
 	_content.add_child(_entry("Skirmish", "A single battle against the AI, with your choice of map and rules", _show.bind("skirmish")))
@@ -450,6 +450,15 @@ func _card() -> PanelContainer:
 
 func _fill_campaign() -> void:
 	var open := Scenario.unlocked()
+	# Six chapters outgrow the panel on short screens: the list scrolls.
+	var scroll := ScrollContainer.new()
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.custom_minimum_size.y = 560
+	_content.add_child(scroll)
+	var list := VBoxContainer.new()
+	list.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	list.add_theme_constant_override("separation", 10)
+	scroll.add_child(list)
 	for i in Scenario.CAMPAIGN.size():
 		var sid: String = Scenario.CAMPAIGN[i]
 		var info: Array = Scenario.MISSIONS[sid]
@@ -459,7 +468,7 @@ func _fill_campaign() -> void:
 		row.add_theme_constant_override("separation", 18)
 		card.add_child(row)
 		var badge := Label.new()
-		badge.text = ["I", "II", "III"][i]
+		badge.text = ["I", "II", "III", "IV", "V", "VI"][i]
 		badge.custom_minimum_size.x = 44
 		badge.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 		badge.add_theme_font_size_override("font_size", 30)
@@ -475,7 +484,7 @@ func _fill_campaign() -> void:
 		if locked:
 			title.add_theme_color_override("font_color", MenuTheme.MUTED)
 		text.add_child(title)
-		text.add_child(MenuTheme.muted(info[1] if not locked else "Win the previous mission to unlock.", 14))
+		text.add_child(MenuTheme.muted(info[1] if not locked else "Win the previous chapter to unlock.", 14))
 		var side := VBoxContainer.new()
 		side.alignment = BoxContainer.ALIGNMENT_CENTER
 		row.add_child(side)
@@ -492,7 +501,7 @@ func _fill_campaign() -> void:
 			w.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 			w.add_theme_color_override("font_color", Flags.GOLD)
 			side.add_child(w)
-		_content.add_child(card)
+		list.add_child(card)
 
 
 func _fill_load() -> void:

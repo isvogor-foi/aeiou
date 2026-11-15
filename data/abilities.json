@@ -472,8 +472,8 @@
 		"description": "Raises 6 Risen to fight for 40s.",
 		"autocast": false
 	},
-	"dead_queens_call": {
-		"name": "The Dead Queen's Call",
+	"pale_empress_call": {
+		"name": "The Pale Empress's Call",
 		"hotkey": "F",
 		"mana": 0,
 		"cooldown": 25.0,
