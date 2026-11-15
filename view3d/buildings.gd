@@ -1219,6 +1219,85 @@ static func _modern_dress(r: Node3D, P: Dictionary, age: int, parts: Array, box:
 		for y in [0.3, 0.6]:
 			_lim(r, ant + Vector3(-0.08, y, 0), ant + Vector3(0.08, y, 0), 0.006, steel if not necro else bone)
 		Gear.part(r, Gear.sphere(0.03), glow(Color(1.0, 0.15, 0.1) if not necro else P.glow, 3.0), ant + Vector3(0, 1.02, 0))
+	if not necro and P.style in LAND_LANDMARKS:
+		_land_landmark(r, P, age, box)
+
+
+## Each crown land's city gains a landmark of its own in the modern ages (from the
+## age listed): Radio Vienna's mast, a Croatian coastal bunker, Idrija's concrete
+## headframe, the Škoda works, a Galician refinery, a Transylvanian floodlight tower.
+const LAND_LANDMARKS := {"austria": 7, "croatia": 8, "carniola": 9, "bohemia": 9, "galicia": 8, "transylvania": 9}
+
+
+static func _land_landmark(r: Node3D, P: Dictionary, age: int, box: AABB) -> void:
+	if age < int(LAND_LANDMARKS[P.style]):
+		return
+	var steel := m(Color(0.5, 0.52, 0.54), 0.7, 0.35)
+	var concrete := m(Color(0.58, 0.58, 0.55), 0.0, 0.9)
+	var brick := m(Color(0.5, 0.26, 0.2), 0.0, 0.85)
+	# The back-left corner of the city.
+	var at := Vector3(box.position.x + 0.35, 0.0, box.position.z + 0.35)
+	match P.style:
+		"austria":
+			# A lattice radio mast: four legs tapering to a point, cross-braced, red light.
+			var hgt := 3.0
+			for i in 4:
+				var leg := Vector3(0.22 if i % 2 == 0 else -0.22, 0, 0.22 if i < 2 else -0.22)
+				_lim(r, at + leg, at + Vector3(0, hgt, 0), 0.02, steel, 0.008)
+			for k in 5:
+				var y := 0.3 + k * 0.5
+				var w := 0.22 * (1.0 - y / hgt)
+				for e in [[Vector3(-w, y, -w), Vector3(w, y, w)], [Vector3(w, y, -w), Vector3(-w, y, w)]]:
+					_lim(r, at + e[0], at + e[1], 0.008, steel)
+			Gear.part(r, Gear.sphere(0.05), glow(Color(1.0, 0.15, 0.1), 3.0), at + Vector3(0, hgt + 0.03, 0))
+		"croatia":
+			# A low concrete casemate with a long gun and a slit.
+			Gear.part(r, Gear.sphere(0.4, true), concrete, at, Vector3.ZERO, Vector3(1.2, 0.7, 1.0))
+			box_(r, at + Vector3(0, 0.12, 0.38), Vector3(0.3, 0.05, 0.05), m(Color(0.05, 0.05, 0.05)))
+			_lim(r, at + Vector3(0, 0.14, 0.3), at + Vector3(0, 0.18, 0.95), 0.035, iron(P))
+		"carniola":
+			# A concrete headframe tower with a winding wheel (turning) and work lights.
+			box_(r, at + Vector3(0, 0.9, 0), Vector3(0.36, 1.8, 0.36), concrete)
+			for y in [0.5, 1.0, 1.5]:
+				box_(r, at + Vector3(0, y, 0.185), Vector3(0.22, 0.12, 0.01), glow(Color(1.0, 0.95, 0.8), 1.8))
+			var wheel := Node3D.new()
+			wheel.position = at + Vector3(0, 1.95, 0)
+			wheel.set_meta("spin_z", 1.2)
+			Gear.part(wheel, Gear.torus(0.18, 0.24), steel, Vector3.ZERO, Vector3(PI / 2, 0, 0))
+			for k in 4:
+				Gear.part(wheel, Gear.box(Vector3(0.44, 0.03, 0.03)), steel, Vector3.ZERO, Vector3(0, 0, k * PI / 4))
+			_seal(wheel)
+			r.add_child(wheel)
+		"bohemia":
+			# The Škoda works: a sawtooth-roofed hall and a tall brick chimney.
+			box_(r, at + Vector3(0.2, 0.3, 0.1), Vector3(0.9, 0.6, 0.7), brick)
+			for k in 3:
+				box_(r, at + Vector3(-0.15 + k * 0.3, 0.68, 0.1), Vector3(0.28, 0.02, 0.72), m(Color(0.25, 0.27, 0.3), 0.4, 0.4))
+				box_(r, at + Vector3(-0.02 + k * 0.3, 0.7, 0.1), Vector3(0.02, 0.16, 0.7), glow(Color(1.0, 0.9, 0.65), 1.5))
+			_lim(r, at + Vector3(-0.35, 0, -0.25), at + Vector3(-0.35, 2.4, -0.25), 0.11, brick, 0.08)
+			var chim := Gear.chimney(false)
+			for ch in chim.get_children():
+				if ch is GPUParticles3D:
+					var smoke: GPUParticles3D = ch.duplicate()
+					smoke.position = at + Vector3(-0.35, 2.45, -0.25)
+					r.add_child(smoke)
+			chim.free()
+		"galicia":
+			# An oil refinery: a ringed cracking tower with a flare, and a storage sphere.
+			_lim(r, at, at + Vector3(0, 2.0, 0), 0.12, steel)
+			for y in [0.5, 1.0, 1.5]:
+				Gear.part(r, Gear.torus(0.12, 0.17), m(Color(0.3, 0.3, 0.32), 0.7, 0.4), at + Vector3(0, y, 0))
+			_lim(r, at + Vector3(0.2, 0, 0.0), at + Vector3(0.2, 2.3, 0.0), 0.02, steel)
+			Gear.part(r, Gear.sphere(0.07), glow(Color(1.0, 0.55, 0.15), 3.5), at + Vector3(0.2, 2.36, 0))
+			Gear.part(r, Gear.sphere(0.3), m(Color(0.85, 0.85, 0.82), 0.4, 0.4), at + Vector3(0.55, 0.45, 0.45))
+			for k in 4:
+				_lim(r, at + Vector3(0.55 + (0.2 if k % 2 == 0 else -0.2), 0, 0.45 + (0.2 if k < 2 else -0.2)), at + Vector3(0.55, 0.35, 0.45), 0.02, steel)
+		"transylvania":
+			# A floodlight tower of silver lamps against the dead.
+			_lim(r, at, at + Vector3(0, 2.2, 0), 0.05, steel, 0.035)
+			box_(r, at + Vector3(0, 2.25, 0), Vector3(0.5, 0.06, 0.2), steel)
+			for k in 4:
+				Gear.part(r, Gear.cyl(0.05, 0.04), glow(Color(0.9, 0.95, 1.0), 3.5), at + Vector3(-0.18 + k * 0.12, 2.32, 0.06), Vector3(PI / 2 - 0.6, 0, 0))
 
 
 ## Bakes a moving part's children into one mesh so it stays a single node.

@@ -85,7 +85,7 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
   - The Concern: a green ledger-and-skull sign, séance aerials with soul vials, black iron annex and tanks, a bone radar dish, a crematorium stack with soul smoke, a black-glass wing and a bone spire.
   - Not done: Art Deco façades (tried as pilasters; they stood off the façade on buildings with steps and plinths), mooring masts, flak towers.
   - Known: the side annex sits just outside the building's footprint, so packed buildings can overlap a little at the sides.
-- [ ] **M** City designs per crown land, modern versions (Austria's palace with a radio mast; Galicia's oil city grows refineries; Bohemia's Prague spires with Škoda works).
+- [x] **M** City designs per crown land, modern (2026-11-15): each crown-land city adds a landmark at a back corner from its age: Austria a lattice radio mast (7), Croatia a coastal-artillery bunker (8), Galicia an oil refinery with a flare (8), Carniola a concrete headframe with a turning wheel (9), Bohemia the Škoda works with a chimney (9), Transylvania a floodlight tower (9). The Concern's pact citadels keep only the generic layers.
 - [x] **S** `tests/building_gallery.gd` renders ages 1–12 (`-- <out_dir> ages`).
 
 ### City life and ambience (`view3d/traffic.gd`, `view3d/ambience.gd`)
