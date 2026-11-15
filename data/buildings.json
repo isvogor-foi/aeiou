@@ -310,7 +310,8 @@
 		"sight": 6,
 		"trains": [
 			"field_alchemist",
-			"radio_spotter"
+			"radio_spotter",
+			"flame_trooper"
 		],
 		"age": 2,
 		"cost": {

@@ -18,6 +18,7 @@ func _initialize() -> void:
 	_black_thursday()
 	_ice_crown()
 	_long_winter()
+	_aether_bomb()
 	quit()
 
 
@@ -189,3 +190,25 @@ func _long_winter() -> void:
 		t += 5
 	var held: int = w.scenario.points.filter(func(p): return p.owner == 0).size()
 	print("long winter: winner %d after %ds, step %d, passes held %d, army left %d" % [w.winner, t, w.scenario.step, held, _army(w).size()])
+
+
+func _aether_bomb() -> void:
+	# The pylons, then the hard way: on foot against the reactor (Lise stays back).
+	var w := _world("m11_aether_bomb")
+	var t := 0
+	while w.winner < 0 and t < 1500:
+		if w.scenario.step == 1 and not w.scenario.flags.has("choice_bomb"):
+			w.scenario.flags["choice_bomb"] = "foot"
+		var army: Array = _army(w).filter(func(i): return w.get_entity(i).type_id != "lise_meitner")
+		var goal: Vector2
+		var open: Array = w.scenario.get("points", []).filter(func(pt): return pt.owner != 0)
+		if w.scenario.step == 0 and not open.is_empty():
+			goal = open[0].pos
+		else:
+			var b = w.get_entity(int(w.scenario.get("boss", -1)))
+			goal = b.pos if b and b.alive else w.get_entity(int(w.scenario.flags.reactor)).pos
+		w.issue({"type": "attack_move", "player": 0, "ids": army, "pos": goal})
+		for i in 5 * World.TICK_RATE:
+			w.tick()
+		t += 5
+	print("aether bomb (on foot): winner %d after %ds, step %d, army left %d" % [w.winner, t, w.scenario.step, _army(w).size()])

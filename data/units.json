@@ -2109,7 +2109,8 @@
 				"reload": 3.0
 			}
 		},
-		"age": 7
+		"age": 7,
+		"upgrades_to": "atom_trooper"
 	},
 	"rifleman": {
 		"name": "Rifleman",
@@ -2283,7 +2284,8 @@
 				"damage": 0.3
 			}
 		},
-		"age": 7
+		"age": 7,
+		"upgrades_to": "reactor_ghoul"
 	},
 	"gas_trooper": {
 		"name": "Gas Trooper",
@@ -2430,7 +2432,8 @@
 		],
 		"bonus_vs": {
 			"air": 0.5
-		}
+		},
+		"upgrades_to": "jet"
 	},
 	"zeppelin": {
 		"name": "Aether Zeppelin",
@@ -2567,7 +2570,8 @@
 		},
 		"train_time": 30,
 		"hotkey": "W",
-		"glyph": "D"
+		"glyph": "D",
+		"upgrades_to": "wraith_jet"
 	},
 	"wireless_medium": {
 		"name": "Wireless Medium",
@@ -3070,5 +3074,188 @@
 		"train_time": 26,
 		"hotkey": "T",
 		"glyph": "B"
+	},
+	"atom_trooper": {
+		"name": "Atom Trooper",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Assault infantry of the atomic age: a radiation hood, armour plates and an Aether-charged automatic rifle. Fires 10 quick shots, then reloads for 3s.",
+		"hp": 190,
+		"armor": "armoured",
+		"damage": 9,
+		"dtype": "aether",
+		"range": 4,
+		"cooldown": 0.4,
+		"speed": 2.5,
+		"sight": 7,
+		"pop": 1,
+		"cost": {
+			"herbs": 80,
+			"gold": 70,
+			"coal": 20,
+			"mana": 10
+		},
+		"train_time": 26,
+		"hotkey": "W",
+		"glyph": "W",
+		"passives": {
+			"magazine": {
+				"shots": 10,
+				"reload": 3.0
+			}
+		},
+		"age": 11
+	},
+	"jet": {
+		"name": "Jet Fighter",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A swept-wing Aether jet: the fastest thing in the sky, deadly to other flyers (+50% vs air). Keeps the Aether Bomb (D).",
+		"hp": 320,
+		"armor": "air",
+		"damage": 11,
+		"dtype": "ballistic",
+		"range": 4,
+		"cooldown": 0.4,
+		"speed": 7.0,
+		"sight": 10,
+		"pop": 1,
+		"age": 11,
+		"cost": {
+			"herbs": 60,
+			"gold": 130,
+			"mana": 30,
+			"coal": 40
+		},
+		"train_time": 30,
+		"hotkey": "Q",
+		"glyph": "b",
+		"abilities": [
+			"aether_bomb"
+		],
+		"bonus_vs": {
+			"air": 0.5
+		}
+	},
+	"wraith_jet": {
+		"name": "Wraith Jet",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A black dart with a soul-green core and a ghostly trail. Its soul-fire scorches around its target.",
+		"hp": 340,
+		"armor": "air",
+		"damage": 14,
+		"dtype": "soul",
+		"range": 4,
+		"cooldown": 0.9,
+		"speed": 6.6,
+		"sight": 9,
+		"pop": 2,
+		"age": 11,
+		"passives": {
+			"cleave": {
+				"radius": 1.4,
+				"share": 0.6
+			}
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 130,
+			"mana": 40,
+			"coal": 30
+		},
+		"train_time": 30,
+		"hotkey": "W",
+		"glyph": "D"
+	},
+	"reactor_ghoul": {
+		"name": "Reactor Ghoul",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "The Concern's enforcer with a soul-reactor pack: automatic soul-fire that withers the living. Frenzy still drives it.",
+		"hp": 170,
+		"armor": "undead",
+		"damage": 8,
+		"dtype": "soul",
+		"range": 4,
+		"cooldown": 0.4,
+		"speed": 2.9,
+		"sight": 7,
+		"pop": 1,
+		"cost": {
+			"herbs": 70,
+			"gold": 55,
+			"coal": 20,
+			"mana": 10
+		},
+		"train_time": 22,
+		"hotkey": "W",
+		"glyph": "R",
+		"passives": {
+			"frenzy": {
+				"below": 0.5,
+				"damage": 0.3
+			}
+		},
+		"age": 11
+	},
+	"flame_trooper": {
+		"name": "Flame Trooper",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "In an asbestos suit and a gas hood, with a flamethrower: short range, burns through infantry and the dead alike.",
+		"hp": 160,
+		"armor": "armoured",
+		"damage": 14,
+		"dtype": "explosive",
+		"range": 2.5,
+		"cooldown": 0.8,
+		"speed": 2.3,
+		"sight": 7,
+		"pop": 1,
+		"age": 11,
+		"passives": {
+			"cleave": {
+				"radius": 1.2,
+				"share": 0.6
+			}
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 70,
+			"coal": 30
+		},
+		"train_time": 26,
+		"hotkey": "F",
+		"glyph": "F"
+	},
+	"lise_meitner": {
+		"name": "Lise Meitner",
+		"faction": "monarchy",
+		"role": "hero",
+		"domain": "ground",
+		"description": "The physicist who split Aether. Aether Arc (D) leaps between enemies; Field Dressing (F) mends the wounded around her.",
+		"hp": 620,
+		"armor": "infantry",
+		"damage": 16,
+		"dtype": "aether",
+		"range": 5,
+		"cooldown": 1.4,
+		"speed": 2.5,
+		"abilities": [
+			"chain_lightning",
+			"rally"
+		],
+		"hero": true,
+		"glyph": "L",
+		"pop": 0,
+		"cost": {},
+		"train_time": 1,
+		"sight": 10
 	}
 }

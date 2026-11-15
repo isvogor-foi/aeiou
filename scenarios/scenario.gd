@@ -17,7 +17,7 @@ const FOE := 1
 ## Mission order for the campaign menu (the tutorial stands apart).
 const CAMPAIGN := ["m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus"]
 ## Campaign 2, The Undying Century (1926-1955): one chapter per age 7-12, added as built.
-const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter"]
+const CAMPAIGN2 := ["m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter", "m11_aether_bomb"]
 
 var id := ""
 var title := ""
@@ -53,6 +53,31 @@ func start(w, seed_value: int, map_type: String, options: Dictionary, keep_ai :=
 		w.ais.clear()
 	w.scenario = {"id": id, "step": 0, "objectives": [], "flags": {}, "started": w.tick_count}
 	w.scenario_logic = self
+
+
+## Asks the player to choose (the mission screen shows a card and pauses the game).
+## The answer lands in w.scenario.flags["choice_" + key] as the picked option's id,
+## and is remembered for later chapters (choice()). `options` is [[id, label], ...].
+func ask(w, key: String, title: String, text: String, options: Array) -> void:
+	w.events.append({"type": "choice", "key": key, "title": title, "text": text, "options": options})
+
+
+func answered(w, key: String) -> String:
+	return String(w.scenario.flags.get("choice_" + key, ""))
+
+
+## A choice made in an earlier chapter ("" if never made).
+static func choice(key: String) -> String:
+	var cfg := ConfigFile.new()
+	cfg.load(PROGRESS)
+	return String(cfg.get_value("choices", key, ""))
+
+
+static func record_choice(key: String, value: String) -> void:
+	var cfg := ConfigFile.new()
+	cfg.load(PROGRESS)
+	cfg.set_value("choices", key, value)
+	cfg.save(PROGRESS)
 
 
 ## A line of story in the message box.
@@ -422,6 +447,9 @@ const MISSIONS := {
 	"m8_black_thursday": ["8. Black Thursday", "The crash: keep the crown lands loyal while the Concern buys their debts.",
 			"The crown lands  ·  October 1929",
 			"Wall Street has crashed, and every bank in the crown lands is calling in its loans. Someone is buying the debts, city by city, and paying in cash: the Szentkirályi Concern. Where its collectors walk, loyalty bleeds away. Hold the Federation together until the markets reopen."],
+	"m11_aether_bomb": ["11. The Aether Bomb", "Find the Concern's soul reactor, then decide: drop the Aether bomb, or go in on foot.",
+			"The Pannonian plain  ·  Spring 1945",
+			"Lise Meitner has split Aether. What she built can end a war in a single flash. The Concern has built a reactor that runs on souls; at full power it will raise every grave from Pressburg to Belgrade. Find it. Then decide."],
 	"m10_long_winter": ["10. The Long Winter", "Hold three Carpathian passes against the Concern's winter offensive, then break through.",
 			"The Carpathians  ·  Winter 1941",
 			"Szentkirályi's dead are marching on the Federation through the Carpathian passes, under a séance-fog no scout can see through. Nikola Tesla, eighty-five, has one more invention for the empire. Hold the passes until it is ready, then take the war to the Concern."],

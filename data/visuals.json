@@ -823,6 +823,47 @@
 			"height": 1.2,
 			"anims": "gunner",
 			"shot": "rocket"
+		},
+		"atom_trooper": {
+			"figure": "atom_trooper",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "burst",
+			"burst": 5
+		},
+		"jet": {
+			"procedural": "jet",
+			"scale": 1.0,
+			"fly_height": 2.4,
+			"bank": true,
+			"circle": 1.0,
+			"shot": "burst",
+			"burst": 5
+		},
+		"wraith_jet": {
+			"procedural": "wraith_jet",
+			"scale": 1.0,
+			"fly_height": 2.4,
+			"bank": true,
+			"circle": 1.0
+		},
+		"reactor_ghoul": {
+			"figure": "reactor_ghoul",
+			"height": 1.25,
+			"anims": "gunner",
+			"shot": "burst",
+			"burst": 5
+		},
+		"flame_trooper": {
+			"figure": "flame_trooper",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "flame"
+		},
+		"lise_meitner": {
+			"figure": "lise_meitner",
+			"height": 1.15,
+			"anims": "caster"
 		}
 	},
 	"buildings": {

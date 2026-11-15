@@ -138,6 +138,9 @@ Tiers: Landpanzer → Porsche Heavy Tank, Armoured Car → Light Tank, Supply Lo
 ### Age 10, Radar: roster done 2026-11-15 (still "wip")
 Tiers: Škoda Siege Crawler → Aether Rocket Battery, Kaiserjäger → Paratrooper, Double Eagle → Monoplane Fighter; new Radar Truck (Fabrik; sight 16, `"detector": 9` exposes stealth from 9 tiles) and Rocket Trooper (Schießstand; anti-machine rockets). Concern: Debt Collector → Frost Dead, Abomination → Plated Abomination.
 
+### Age 11, the Atom: roster and chapter done 2026-11-15 (still "wip")
+Tiers: Sturmtrupp → Atom Trooper (Aether automatic rifle), Biplane → Jet Fighter; new Flame Trooper (Laboratorium). Concern: Bat-Plane → Wraith Jet, Tommy-gun Ghoul → Reactor Ghoul. Hero: Lise Meitner (Aether Arc, Field Dressing). Chapter 11 shipped with it, with the scenario choice cards.
+
 ### Roster sketch (to refine age by age)
 
 | Age | Monarchy | The Concern |
@@ -166,13 +169,13 @@ Tiers: Škoda Siege Crawler → Aether Rocket Battery, Kaiserjäger → Paratroo
 - [x] **S** Intro title cards for Campaign 2 (`INTRO2`, 1918–1926) and its epilogue (`EPILOGUE2`).
 - [ ] **M** Heroes: old Franz Ferdinand (staff car), Hedy Lamarr, Lise Meitner, Schrödinger, Porsche, Tesla (aged), Houdini's ghost. Abilities in `data/abilities.json`.
 - [ ] **M** Bosses: Szentkirályi in each of his forms (1926 shade, 1934 foundry-lord, 1955 necropolis lich), the Concern's machines.
-- [ ] **M** Scenario toolkit additions: ~~weather~~ (done: `scenario.weather` = {"snow", "night"}), a player choice with a remembered outcome (the bomb in Chapter 11), ~~market events~~ (Chapter 8 does them in script), ~~fronts with many capture points~~ (done: `update_front`, Chapter 10).
+- [ ] **M** Scenario toolkit additions: ~~weather~~ (done: `scenario.weather` = {"snow", "night"}), ~~a player choice with a remembered outcome~~ (done: `ask()`/`answered()` and `Scenario.choice()`, a choice card on the mission screen), ~~market events~~ (Chapter 8 does them in script), ~~fronts with many capture points~~ (done: `update_front`, Chapter 10).
 - [ ] Chapters, each built with its age in Phase 4:
   - [x] **L** 7 Rosabelle, Believe (Age 7): three séance parlours give the words of Houdini's code and free his ghost; then storm the counting-house (guarded, with waves) where Szentkirályi steps out, speaks and leaves; Vienna sends reinforcements with Landpanzers, since rifles can't crack buildings. Bot-played: won with 7 units left.
   - [x] **L** 8 Black Thursday (Age 8): Vienna and four crown-land cities; every 70s the Concern "buys" a city's debt and its collectors loiter inside the borders out of the guns' reach, draining loyalty (~24s to a revolt if nobody answers); Federal Charters hold a city at half; corpse-zeppelins raid the supply lorries; reinforcements every third buy-out. Hold 12 minutes; three lands lost loses. Bot (charters two cities, answers every buy-out): won with nothing lost.
   - [x] **L** 9 The Ice Crown (Age 9): snow; build a Kaserne before the light goes (3 min), hold Camp Tegetthoff through the polar night (5 min of Frost Dead waves; a supply zeppelin midway), sunrise freezes the attackers near the camp, then destroy the foundry under the glacier (it collapses at 1 HP) guarded by the Ice Engine. Hedy Lamarr must survive. The Concern runs no AI here: an outpost, scripted. Bot: won with 3 units left.
   - [x] **L** 10 The Long Winter (Age 10): snow and half-night; three Carpathian passes start ours and the Concern's scripted offensive strikes them in turn every 50s (front points: `update_front`, either side can take them); all three lost loses; at 4:00 Tesla's radar comes online (a Radar Truck, the whole map revealed, reinforcements); after 8:00 break through to the winter headquarters (collapses at 1 HP). Tesla must survive. Bot: won, all passes held.
-  - [ ] **L** 11 The Aether Bomb (Age 11)
+  - [x] **L** 11 The Aether Bomb (Age 11): take two relay pylons to find the soul reactor, then a choice card: drop the bomb (flash, mushroom cloud, a glowing scar; wins at once) or go in on foot against the garrison and the Reactor Lich (break or capture the reactor). The choice is remembered for Chapter 12 (`Scenario.choice("bomb")`). Lise Meitner must survive. Bot, on foot: won with 5 units left.
   - [ ] **L** 12 The Treaty of the Living (Age 12)
 - [ ] **S** Extend `tests/campaign_bot.gd` and the chapter tests to every new chapter.
 

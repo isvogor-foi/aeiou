@@ -1561,7 +1561,7 @@ func _scenario_world(id: String) -> World:
 
 ## Every scenario builds its world and runs two minutes without errors, posting objectives.
 func test_scenarios_run() -> void:
-	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter"]:
+	for id in ["tutorial", "m1_sarajevo", "m2_tomb", "m3_federation", "m4_vienna", "m5_empress", "m6_viribus", "m7_rosabelle", "m8_black_thursday", "m9_ice_crown", "m10_long_winter", "m11_aether_bomb"]:
 		var w := _scenario_world(id)
 		_run(w, 120)
 		check(w.scenario.get("id", "") == id, "%s: state recorded" % id)
@@ -1741,6 +1741,32 @@ func test_long_winter() -> void:
 	w.kill(w.get_entity(int(w.scenario.flags.hq)))
 	_run(w, 2)
 	check(w.winner == 0, "the headquarters' fall wins (winner %d)" % w.winner)
+
+
+## The Aether Bomb: both pylons bring the choice; dropping the bomb wins at once
+## (and the bomb event fires); going in on foot brings the Reactor Lich.
+func test_aether_bomb() -> void:
+	for pick in ["drop", "foot"]:
+		var w := _scenario_world("m11_aether_bomb")
+		for pt in w.scenario.points:
+			pt.owner = 0
+		var asked := false
+		for i in 2 * World.TICK_RATE:
+			w.tick()
+			asked = asked or w.events.any(func(ev): return ev.type == "choice" and ev.key == "bomb")
+		check(asked and w.scenario.step == 1, "%s: the pylons bring the choice" % pick)
+		w.scenario.flags["choice_bomb"] = pick
+		var bombed := false
+		for i in 2 * World.TICK_RATE:
+			w.tick()
+			bombed = bombed or w.events.any(func(ev): return ev.type == "bomb")
+		if pick == "drop":
+			check(bombed and w.winner == 0, "the bomb ends it at once (winner %d)" % w.winner)
+		else:
+			check(not bombed and w.scenario.step == 2 and w.get_entity(int(w.scenario.get("boss", -1))) != null, "on foot: the Reactor Lich")
+			w.kill(w.get_entity(int(w.scenario.flags.reactor)))
+			_run(w, 2)
+			check(w.winner == 0, "breaking the reactor wins (winner %d)" % w.winner)
 
 
 ## The convoy marches to the Town Hall; the mission must end one way or the other.

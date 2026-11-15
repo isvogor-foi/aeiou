@@ -431,6 +431,8 @@ func _consume_events() -> void:
 				# From the Age of Zeppelins, reports come in over the wireless.
 				if world.players[me].age >= 8:
 					audio.play("radio", null, 0.5)
+			"choice":
+				mission_screen.show_choice(ev)
 			"objective":
 				hud.flash("New objective: " + ev.text, 4.0)
 				audio.play("click")

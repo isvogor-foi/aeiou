@@ -92,6 +92,31 @@ func _briefing_card(scenario_id: String, objectives: Array) -> void:
 	go.grab_focus.call_deferred()
 
 
+# --- A choice ----------------------------------------------------------------------
+
+## A decision the scenario asks for (scenario.ask): one button per option. The pick
+## goes into the match's scenario flags and into campaign progress.
+func show_choice(ev: Dictionary) -> void:
+	_clear()
+	_kicker("A decision")
+	_title(ev.title, Flags.GOLD)
+	_text(ev.text)
+	var first: Button = null
+	for opt in ev.options:
+		var b := _button(opt[1], _pick.bind(ev.key, opt[0]))
+		if first == null:
+			first = b
+			MenuTheme.make_primary(b)
+	_open()
+	first.grab_focus.call_deferred()
+
+
+func _pick(key: String, id: String) -> void:
+	gv.world.scenario.flags["choice_" + key] = id
+	Scenario.record_choice(key, id)
+	_close()
+
+
 # --- Result ----------------------------------------------------------------------
 
 ## Queues the result card; it appears after a short beat so the last blow and
