@@ -17,6 +17,8 @@ static var ai: Dictionary = {}
 static var abilities: Dictionary = {}
 static var crown_lands: Dictionary = {}
 static var _loaded := false
+## Upgrade lines: unit id -> the unit it upgrades from (built on first use).
+static var _upgraded_from := {}
 
 
 static func ensure_loaded() -> void:
@@ -79,6 +81,55 @@ static func last_age(all_ages := false) -> int:
 			break
 		n += 1
 	return maxi(1, n)
+
+
+# --- Unit upgrade lines ---------------------------------------------------------------
+# A unit names its successor with "upgrades_to"; the successor's own "age" is when the
+# line moves up (e.g. musketeer -> rifleman at Age 7). Buildings list a line by any
+# of its units (normally the first); the simulation always trains the current tier.
+
+## The first unit of `type_id`'s upgrade line (itself if it has no predecessor).
+static func line_root(type_id: String) -> String:
+	if _upgraded_from.is_empty():
+		for id in units:
+			var next: String = units[id].get("upgrades_to", "")
+			if next != "":
+				_upgraded_from[next] = id
+		_upgraded_from["_built"] = ""
+	var t := type_id
+	for i in 32:
+		if not _upgraded_from.has(t):
+			break
+		t = _upgraded_from[t]
+	return t
+
+
+## The unit of `type_id`'s line a player in `age` gets: follows "upgrades_to" while
+## the next tier's age has been reached.
+static func tier(type_id: String, age: int) -> String:
+	var t := type_id
+	for i in 32:
+		var next: String = units.get(t, {}).get("upgrades_to", "")
+		if next == "" or int(units[next].get("age", 1)) > age:
+			break
+		t = next
+	return t
+
+
+## Every unit of the line, first to last.
+static func line_of(type_id: String) -> Array:
+	var out: Array = [line_root(type_id)]
+	for i in 32:
+		var next: String = units[out[-1]].get("upgrades_to", "")
+		if next == "":
+			break
+		out.append(next)
+	return out
+
+
+## Forget the cached lines (after unit data changes, e.g. in tests).
+static func reset_lines() -> void:
+	_upgraded_from.clear()
 
 
 static func damage_mult(dtype: String, armor: String) -> float:

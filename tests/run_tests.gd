@@ -477,6 +477,94 @@ func test_age_ladder() -> void:
 	check(w.issue({"type": "advance_age", "player": 0, "building": city.id}) != "", "the twelfth age is the last")
 
 
+## Upgrade lines in the data: each step exists, stays in the faction and domain,
+## comes in a later age, and never loops back.
+func test_upgrade_line_data() -> void:
+	DB.reset_lines()
+	for id in DB.units:
+		var next: String = DB.units[id].get("upgrades_to", "")
+		if next == "":
+			continue
+		check(DB.units.has(next), "%s upgrades to unknown %s" % [id, next])
+		if not DB.units.has(next):
+			continue
+		var a: Dictionary = DB.units[id]
+		var b: Dictionary = DB.units[next]
+		check(a.get("faction", "any") == b.get("faction", "any"), "%s -> %s changes faction" % [id, next])
+		check(a.get("domain", "ground") == b.get("domain", "ground"), "%s -> %s changes domain" % [id, next])
+		check(int(b.get("age", 1)) > int(a.get("age", 1)), "%s -> %s must come in a later age" % [id, next])
+		check(not a.get("hero", false) and not b.get("hero", false), "heroes don't upgrade (%s)" % id)
+		check(DB.line_of(id).size() < 32, "%s's line loops" % id)
+		check(DB.visuals.units.has(next), "%s has no visuals" % next)
+
+
+## A temporary line Musketeer -> Test Rifleman (Age 2): training gives the current
+## tier, an age-up refits the soldiers in place, and queues, limits and scoped
+## research follow the line.
+func test_upgrade_lines() -> void:
+	var rifle: Dictionary = DB.units.musketeer.duplicate(true)
+	rifle.id = "test_rifleman"
+	rifle.name = "Test Rifleman"
+	rifle.age = 2
+	rifle.hp = 90
+	rifle.cost = {"gold": 70, "herbs": 40}
+	DB.units["test_rifleman"] = rifle
+	DB.visuals.units["test_rifleman"] = DB.visuals.units.musketeer
+	DB.units.musketeer["upgrades_to"] = "test_rifleman"
+	DB.reset_lines()
+	check(DB.line_root("test_rifleman") == "musketeer", "line root")
+	check(DB.tier("musketeer", 1) == "musketeer" and DB.tier("musketeer", 2) == "test_rifleman", "tier by age")
+	check(DB.line_of("musketeer") == ["musketeer", "test_rifleman"], "line_of")
+	check(Research.trainer_of("test_rifleman") == "kaserne", "later tiers keep their trainer's upgrades")
+
+	var w := _world()
+	var p = w.players[0]
+	p.res = {"gold": 1e5, "timber": 1e5, "herbs": 1e5, "mana": 1e5, "coal": 1e5}
+	var kaserne := _barracks(w)
+	var city := _city(w, 0)
+	var musk := w.spawn_unit("musketeer", 0, city.pos + Vector2(0, 5 * GameMap.TILE))
+	musk.hp = musk.max_hp * 0.5
+	var goal := city.pos + Vector2(6, 6) * GameMap.TILE
+	w.issue({"type": "move", "player": 0, "ids": [musk.id], "pos": goal})
+	check(w.issue({"type": "train", "player": 0, "building": kaserne, "unit": "test_rifleman"}) == "", "asking for a later tier is fine")
+	check(w.get_entity(kaserne).queue[-1].type == "musketeer", "...but Age 1 trains the Musketeer")
+	# Advance while a Musketeer is still in training.
+	check(w.issue({"type": "advance_age", "player": 0, "building": city.id}) == "", "age up")
+	# Tick until the age arrives, catching the refit event and the health share around it.
+	var refit_event := {}
+	var share_before := 0.0
+	for i in int((float(DB.ages[1].time) + 1.0) * World.TICK_RATE):
+		share_before = musk.hp / musk.max_hp
+		w.tick()
+		for ev in w.events:
+			if ev.type == "refit" and ev.player == 0:
+				refit_event = ev
+		if p.age == 2:
+			break
+	check(p.age == 2, "reached Age 2")
+	check(musk.alive and musk.type_id == "test_rifleman", "the Musketeer was refitted in place (%s)" % musk.type_id)
+	check(absf(musk.hp / musk.max_hp - share_before) < 0.02, "health share kept (%.2f -> %.2f)" % [share_before, musk.hp / musk.max_hp])
+	check(is_equal_approx(musk.max_hp, w._max_hp_for(musk)) and musk.max_hp > DB.units.musketeer.hp, "max HP from the new type")
+	check(int(refit_event.get("units", {}).get("test_rifleman", 0)) >= 1, "a refit event names the new tier")
+	_run(w, 2)
+	var trained := _units(w, 0, "musketeer")
+	check(trained.is_empty(), "no Musketeers left after the age-up (%d)" % trained.size())
+	check(_units(w, 0, "test_rifleman").size() >= 2, "the queued Musketeer came out a Test Rifleman")
+	var gold: float = p.res.gold
+	check(w.issue({"type": "train", "player": 0, "building": kaserne, "unit": "musketeer"}) == "", "the Musketeer button still works")
+	check(w.get_entity(kaserne).queue[-1].type == "test_rifleman", "...and trains the new tier")
+	check(is_equal_approx(gold - p.res.gold, 70.0), "at the new tier's price (%.0f)" % (gold - p.res.gold))
+	# Limits count the whole line.
+	DB.units.test_rifleman["limit"] = 1
+	check(w.line_count(0, "musketeer") >= 3, "line_count counts every tier")
+	check(w.issue({"type": "train", "player": 0, "building": kaserne, "unit": "musketeer"}) != "", "limit applies to the line")
+
+	DB.units.erase("test_rifleman")
+	DB.visuals.units.erase("test_rifleman")
+	DB.units.musketeer.erase("upgrades_to")
+	DB.reset_lines()
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

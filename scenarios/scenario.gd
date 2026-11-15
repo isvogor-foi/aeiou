@@ -159,6 +159,12 @@ func _walkable(w, spot: Vector2) -> Vector2:
 	return spot
 
 
+## The unit of `type_id`'s upgrade line that player `pid` fields in its current age
+## (spawn this rather than a fixed tier, so a chapter stays right if the lines change).
+func tier(w, type_id: String, pid := ME) -> String:
+	return DB.tier(type_id, w.players[pid].age)
+
+
 func attack_move(w, pid: int, ids: Array, to: Vector2) -> void:
 	w.issue({"type": "attack_move", "player": pid, "ids": ids, "pos": to})
 

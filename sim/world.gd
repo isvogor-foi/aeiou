@@ -125,6 +125,9 @@ func new_game(seed_value: int, faction_ids: Array, human_index := 0, difficulty 
 			var ai := AIPlayer.new()
 			ai.setup(self, p.index, difficulty)
 			ais.append(ai)
+	for p in players:
+		refit_units(p.index)
+	events = events.filter(func(ev): return ev.type != "refit")
 	_update_territory()
 	_update_pop()
 	update_fog()
@@ -771,7 +774,8 @@ func _update_building(b: Entity) -> void:
 	_release_item(b.owner, item)
 	match item.kind:
 		"unit":
-			var u := _spawn_from(b, item.type)
+			# An age reached during training delivers the new tier.
+			var u := _spawn_from(b, DB.tier(item.type, players[b.owner].age) if b.owner >= 0 else item.type)
 			_apply_rally(b, u)
 			events.append({"type": "trained", "id": u.id, "owner": u.owner})
 		"tech":
@@ -795,6 +799,7 @@ func _complete_research(p, branch_id: String) -> void:
 
 func _complete_age(p) -> void:
 	p.age = mini(p.age + 1, final_age())
+	refit_units(p.index)
 	if p.age >= int(rules.get("victory", {}).get("relics_spawn_age", 99)) and not relics_spawned:
 		_spawn_relics()
 	events.append({"type": "age_up", "player": p.index, "age": p.age, "name": DB.ages[p.age - 1].name})
@@ -1313,6 +1318,53 @@ func type_count(player: int, type_id: String) -> int:
 	return n
 
 
+## Units of `type_id`'s whole upgrade line, alive or in training (for "limit").
+func line_count(player: int, type_id: String) -> int:
+	var root := DB.line_root(type_id)
+	var n := 0
+	for e in entities.values():
+		if not e.alive or e.owner != player:
+			continue
+		if e.kind == Entity.UNIT and DB.line_root(e.type_id) == root:
+			n += 1
+		elif e.kind == Entity.BUILDING:
+			for item in e.queue:
+				if item.kind == "unit" and DB.line_root(item.type) == root:
+					n += 1
+	return n
+
+
+## Refits every soldier of `pid` whose line has a tier for the player's age (Rise of
+## Nations style: free and at once). Keeps the unit's id, orders, health share,
+## cooldowns and cargo; the view rebuilds its model from the new type.
+func refit_units(pid: int) -> void:
+	var age: int = players[pid].age
+	var done := {}
+	for e in entities.values():
+		if not e.alive or e.owner != pid or e.kind != Entity.UNIT or e.is_hero():
+			continue
+		var to := DB.tier(e.type_id, age)
+		if to != e.type_id:
+			_refit(e, to)
+			done[to] = int(done.get(to, 0)) + 1
+	if not done.is_empty():
+		events.append({"type": "refit", "player": pid, "units": done})
+
+
+func _refit(e: Entity, to: String) -> void:
+	var share := e.hp / maxf(1.0, e.max_hp)
+	e.type_id = to
+	e.def = DB.units[to]
+	e._domain = ""
+	e.max_hp = _max_hp_for(e)
+	e.hp = maxf(1.0, e.max_hp * share)
+	e.ammo = -1
+	e.reload_left = 0.0
+	for id in e.def.get("abilities", []):
+		if not e.autocast.has(id):
+			e.autocast[id] = Abilities.def(id).get("autocast", false) or not players[e.owner].is_human
+
+
 ## Heroes alive or in training for `player`.
 func hero_count(player: int) -> int:
 	var n := 0
@@ -1819,19 +1871,23 @@ func _queue_check(pid: int, b: Entity, cost: Dictionary) -> String:
 func _train(pid: int, cmd: Dictionary) -> String:
 	var b := get_entity(cmd.building)
 	var type_id: String = cmd.unit
-	if b == null or b.owner != pid or b.constructing or not type_id in b.def.get("trains", []):
+	if b == null or b.owner != pid or b.constructing or not DB.units.has(type_id) \
+			or not (type_id in b.def.get("trains", []) or DB.line_root(type_id) in b.def.get("trains", [])):
 		return "Cannot train that here"
-	var udef: Dictionary = DB.units[type_id]
 	var p = players[pid]
-	if int(udef.get("age", 1)) > p.age:
-		return "Requires " + DB.ages[int(udef.age) - 1].name
+	# A building trains the current tier of the line, whichever tier was asked for.
+	var first: Dictionary = DB.units[DB.line_root(type_id)]
+	if int(first.get("age", 1)) > p.age:
+		return "Requires " + DB.ages[int(first.age) - 1].name
+	type_id = DB.tier(DB.line_root(type_id), p.age)
+	var udef: Dictionary = DB.units[type_id]
 	if udef.get("hero", false) and hero_count(pid) > 0:
 		return "Your hero is already in the field"
 	if udef.get("hero", false) and p.hero_type != "" and p.hero_type != type_id:
 		return "Your chosen hero is " + DB.units[p.hero_type].name
 	if not udef.get("faction", "any") in [p.faction, "any"]:
 		return "Cannot train that here"
-	if udef.has("limit") and type_count(pid, type_id) >= int(udef.limit):
+	if udef.has("limit") and line_count(pid, type_id) >= int(udef.limit):
 		return "Only %d %s at a time" % [int(udef.limit), udef.name]
 	if udef.has("crown_land") and not udef.crown_land in p.crown_lands:
 		return "Requires the crown land of " + DB.crown_lands[udef.crown_land].name

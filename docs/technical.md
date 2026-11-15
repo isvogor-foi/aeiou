@@ -20,6 +20,8 @@ download it from godotengine.org if it's missing. Player-facing setup is in the 
 
 Ages 7–12 are work in progress (`"wip": true` in `data/ages.json`) and hidden from normal games. To play them, start with `tools/godot --path . -- --all-ages`; the skirmish menu then offers every age as a starting and last age.
 
+**Unit upgrade lines:** give a unit `"upgrades_to": "<next unit>"`; the next unit's `"age"` is when the line moves up. Buildings list only the line's first unit in `"trains"`, AI `army_mix` names lines by their first unit too, and scenarios spawn `tier(w, "<first unit>")`. Lines must stay within one faction and domain and move to a later age (checked by `test_upgrade_line_data`).
+
 The test runner picks up every `test_*` method in `tests/run_tests.gd`; the exit code is the number of failed checks.
 
 `devtools/` holds Python 3 asset scripts (`recolor.py`, `roofs.py`, `subdivide.py`) that need Pillow and NumPy. Their output is checked in, so they're only needed to regenerate assets.

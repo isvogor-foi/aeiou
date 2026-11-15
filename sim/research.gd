@@ -26,7 +26,8 @@ static func trainer_of(unit_type: String) -> String:
 			for t in d.get("trains", []):
 				if not _trainers.has(t):
 					_trainers[t] = bid
-	return _trainers.get(unit_type, "")
+	# Later tiers of a line count as trained where the line's first unit is.
+	return _trainers.get(unit_type, _trainers.get(DB.line_root(unit_type), ""))
 
 
 ## Name, cost, time and age requirement of `branch_id` at `level` (1-based).

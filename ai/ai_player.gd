@@ -109,7 +109,8 @@ func _snapshot() -> void:
 			continue
 		if e.kind == Entity.UNIT:
 			_units.append(e)
-			_count(e.type_id)
+			# Units count toward their line (army_mix names a line by its first unit).
+			_count(DB.line_root(e.type_id))
 			if e.is_worker():
 				_workers.append(e)
 			elif not e.def.get("fisher", false) and not e.def.has("capacity"):
@@ -121,7 +122,7 @@ func _snapshot() -> void:
 				_cities.append(e)
 			for item in e.queue:
 				if item.kind == "unit":
-					_count(item.type)
+					_count(DB.line_root(item.type))
 
 
 func _count_workers_of(type_id: String) -> int:
@@ -571,7 +572,8 @@ func _train_army() -> void:
 		# Keep a minimum army (the first wave's size) even while saving for the next age.
 		var below_wave := _fighters(_army).size() < roundi(float(style.wave_base) * float(diff.wave_scale)) \
 				and _age_progress < 0.8
-		if not (p.can_afford(DB.units[type].cost) if below_wave else _can_spend(DB.units[type].cost)):
+		var cost: Dictionary = DB.units[DB.tier(type, p.age)].cost
+		if not (p.can_afford(cost) if below_wave else _can_spend(cost)):
 			continue
 		if w.issue({"type": "train", "player": pid, "building": b.id, "unit": type}) == "":
 			_count(type)

@@ -1107,7 +1107,13 @@ func _entries_for_selection() -> Array:
 	if first.kind == Entity.BUILDING:
 		if first.constructing:
 			return []
-		for t in first.def.get("trains", []):
+		var shown := {}
+		for t0 in first.def.get("trains", []):
+			# A line shows its current tier (the button keeps the line's hotkey).
+			var t: String = DB.tier(t0, p.age) if int(DB.units[t0].get("age", 1)) <= p.age else t0
+			if shown.has(t):
+				continue
+			shown[t] = true
 			var u: Dictionary = DB.units[t]
 			# Shared buildings (docks) list both factions' ships; show only ours.
 			if not u.get("faction", "any") in [faction, "any"]:
@@ -1115,7 +1121,7 @@ func _entries_for_selection() -> Array:
 			var locked := _age_lock(int(u.get("age", 1)))
 			if locked == "" and u.has("crown_land") and not u.crown_land in p.crown_lands:
 				locked = "Requires the crown land of " + DB.crown_lands[u.crown_land].name
-			if locked == "" and u.has("limit") and gv.world.type_count(gv.me, t) >= int(u.limit):
+			if locked == "" and u.has("limit") and gv.world.line_count(gv.me, t) >= int(u.limit):
 				locked = "Only %d at a time" % int(u.limit)
 			if locked == "" and u.get("hero", false) and p.hero_type != "" and p.hero_type != t:
 				continue
@@ -1124,9 +1130,12 @@ func _entries_for_selection() -> Array:
 			var label: String = u.name
 			if u.get("hero", false) and p.hero_fallen:
 				label = "Revive " + u.name.get_slice(" ", u.name.get_slice_count(" ") - 1)
-			entries.append({"label": label, "hotkey": u.hotkey, "cost": u.cost,
+			var next: String = u.get("upgrades_to", "")
+			var later := "\nBecomes the %s in the %s." % [DB.units[next].name, DB.ages[int(DB.units[next].get("age", 1)) - 1].name] \
+					if next != "" and int(DB.units[next].get("age", 1)) <= gv.world.final_age() else ""
+			entries.append({"label": label, "hotkey": DB.units[t0].get("hotkey", u.get("hotkey", "")), "cost": u.cost,
 					"locked": locked, "icon": ["unit", t], "sub": _short_cost(u.cost),
-					"tooltip": "%s\n%s\nCost: %s" % [u.name, u.get("description", ""), DB.format_cost(u.cost)],
+					"tooltip": "%s\n%s\nCost: %s%s" % [u.name, u.get("description", ""), DB.format_cost(u.cost), later],
 					"action": {"kind": "train", "type": t}})
 		for branch_id in first.def.get("research", []):
 			entries.append(_research_entry(p, branch_id))
@@ -1229,9 +1238,10 @@ func _research_icon(branch_id: String) -> Dictionary:
 	var b := Research.branch(branch_id)
 	if b.has("scope"):
 		var faction: String = gv.world.players[gv.me].faction
+		var age: int = gv.world.players[gv.me].age
 		for t in DB.buildings[b.scope].get("trains", []):
 			if DB.units[t].get("faction", "any") in [faction, "any"] and DB.units[t].get("role", "") not in ["fisher", "transport", "support"]:
-				return {"icon": ["unit", t], "upgrade": true}
+				return {"icon": ["unit", DB.tier(t, age)], "upgrade": true}
 	return {"icon_tex": HudIcons.get_icon(b.get("icon", "research"))}
 
 

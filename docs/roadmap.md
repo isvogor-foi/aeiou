@@ -32,16 +32,26 @@ Most of the simulation already reads the age count from `data/ages.json`. These 
 - [x] **S** Saves: old saves must still load (they never contain ages above 6).
 - [x] **M** Tests: a 12-age smoke test (advance through every age; every unit, building and research of every age is reachable for both factions).
 
-## Phase 2: Units that upgrade (the "people upgrade")
+## Phase 2: Units that upgrade (the "people upgrade") ✔ done 2026-11-15
 
-Today a unit type never changes: a Musketeer stays a Musketeer. The new ages need upgrade lines, as in Rise of Nations.
+**As built:** a unit names its successor with `"upgrades_to"`, and the successor's own `"age"` is when the line moves up. Buildings keep listing a line by its first unit.
+- `DB.line_root`, `DB.tier(type, age)` and `DB.line_of` (`sim/db.gd`) answer every "which tier?" question.
+- Training (`World._train`) always queues the current tier at its own price; a unit still in training when the age arrives comes out as the new tier.
+- Age-ups refit every non-hero soldier of the player at once and for free (`World.refit_units`), keeping id, orders, health share, cooldowns, cargo and control groups; the view rebuilds the model; a "Refitted: …" message names what changed.
+- `"limit"` counts the whole line (`World.line_count`); scoped military research follows the line (`Research.trainer_of`).
+- HUD: the train tile shows the current tier with the line's hotkey, and the tooltip says what it becomes and when.
+- AI: counts its army by line and pays the current tier's price; `army_mix` in `data/ai.json` keeps naming lines by their first unit.
+- Scenarios: `tier(w, type_id)` gives the current tier for spawning.
+- Tests: the line data rules, and a temporary Musketeer → Test Rifleman line exercising training, refits, queues, prices and limits.
 
-- [ ] **M** **Unit lines in data:** `"upgrades_to": "rifleman", "at_age": 7` on each unit, forming lines such as Musketeer → Rifleman → Assault trooper. Trained units come out as the current tier.
-- [ ] **M** **Refit on age-up:** when a player reaches the age, existing soldiers become the new tier (keeping their health share, veterancy, control groups and orders). Decide whether that's automatic (RoN) or a paid research per line.
-- [ ] **S** HUD: command tiles and tooltips show the current tier and what comes next.
-- [ ] **S** AI: train by line, not by exact type id (`data/ai.json` build orders name lines).
-- [ ] **S** Scenarios: helpers that spawn "the current tier of a line" so chapters don't hard-code tiers.
-- [ ] **S** Tests: refit keeps orders and health share; obsolete types can't be trained.
+No real lines exist yet: the first ones arrive with Age 7's roster in Phase 4. Veterancy doesn't exist in the game, so there was nothing to carry over.
+
+- [x] **M** **Unit lines in data**
+- [x] **M** **Refit on age-up** (automatic, decided 2026-11-15)
+- [x] **S** HUD
+- [x] **S** AI
+- [x] **S** Scenarios
+- [x] **S** Tests
 
 ## Phase 3: Shared art systems
 

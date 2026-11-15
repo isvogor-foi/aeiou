@@ -380,6 +380,12 @@ func _consume_events() -> void:
 			"researched":
 				if ev.player == me:
 					hud.flash("Research complete: " + ev.name, 3.0)
+			"refit":
+				if ev.player == me:
+					var names: Array = []
+					for t in ev.units:
+						names.append("%d %s" % [ev.units[t], DB.units[t].name])
+					hud.flash("Refitted: " + ", ".join(names), 5.0)
 			"age_up":
 				if ev.player == me:
 					audio.play("fanfare")
