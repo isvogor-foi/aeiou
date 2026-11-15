@@ -5,6 +5,7 @@ extends RefCounted
 
 const Gear = preload("res://view3d/gear.gd")
 const Mounts = preload("res://view3d/mounts.gd")
+const Vehicles = preload("res://view3d/vehicles.gd")
 
 static var _cache := {}
 
@@ -25,6 +26,8 @@ static func build(kind: String, team: Color) -> Node3D:
 
 
 static func _raw(kind: String, team: Color) -> Node3D:
+	if kind in Vehicles.KINDS:
+		return Vehicles.raw(kind, team)
 	match kind:
 		"horse", "horse_heavy", "bone_horse", "supply_tractor", "bone_wagon", "war_wagon", "steam_walker":
 			return Mounts.build(kind, team)

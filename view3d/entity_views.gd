@@ -88,6 +88,7 @@ func _create(e) -> Dictionary:
 			r.naval = v.get("naval", false)
 			r.bar_height = (float(v.get("height", 0.9)) + 0.25) * Models.unit_scale(e.type_id) + r.fly
 			r.animated = _animated_parts(body)
+			r.rumble = float(v.get("rumble", 0.0))
 			if r.fly > 0.0:
 				body.position.y = r.fly
 				node.add_child(_shadow())
@@ -271,7 +272,14 @@ func _advance_anim(r: Dictionary, delta: float, step: float, cam: Camera3D) -> v
 
 func _sync_unit(e, r: Dictionary, alpha: float, delta: float, now: float) -> void:
 	var p: Vector2 = e.prev_pos.lerp(e.pos, alpha)
-	r.node.position = terrain.to3(p)
+	var p3: Vector3 = terrain.to3(p)
+	# Ground covered this frame, for wheels and tracks (forward is positive).
+	if r.has("last3"):
+		var step: Vector3 = p3 - r.last3
+		var fwd := Vector3(sin(r.yaw), 0.0, cos(r.yaw))
+		r.travel = step.length() * (1.0 if step.dot(fwd) >= 0.0 else -1.0)
+	r.last3 = p3
+	r.node.position = p3
 	if r.naval:
 		r.node.position.y = terrain.WATER_LEVEL
 		r.body.rotation.z = sin(now * 1.3 + e.id) * 0.05
@@ -282,6 +290,11 @@ func _sync_unit(e, r: Dictionary, alpha: float, delta: float, now: float) -> voi
 	r.node.rotation.y = r.yaw
 	var moving: bool = e.pos.distance_squared_to(e.prev_pos) > 0.04
 	r.moving = moving
+	if r.get("rumble", 0.0) > 0.0 and r.fly <= 0.0 and not r.naval:
+		# Engines shake the hull while driving and idle gently when parked.
+		var amp: float = r.rumble * (1.0 if moving else 0.25)
+		r.body.rotation.x = sin(now * 23.0 + e.id) * 0.012 * amp
+		r.body.position.y = absf(sin(now * 17.0 + e.id)) * 0.012 * amp
 	if now < r.attack_until and not moving:
 		return
 	if moving:
@@ -410,14 +423,34 @@ func _play(r: Dictionary, key: String, restart := false) -> void:
 func _animated_parts(root: Node) -> Array:
 	var out: Array = []
 	for n in root.find_children("*", "Node3D", true, false):
-		if n.has_meta("flap") or n.has_meta("spin") or n.has_meta("deploy") or n.has_meta("gallop") or n.has_meta("spin_z") or n.has_meta("nod"):
+		if n.has_meta("flap") or n.has_meta("spin") or n.has_meta("deploy") or n.has_meta("gallop") or n.has_meta("spin_z") or n.has_meta("nod") \
+				or n.has_meta("roll") or n.has_meta("tread") or n.has_meta("turret"):
 			out.append(n)
 	return out
 
 
 func _animate_parts(r: Dictionary, delta: float, now: float) -> void:
 	for n in r.animated:
-		if n.has_meta("flap"):
+		if n.has_meta("roll"):
+			# Wheels turn by the ground covered (radius in world units, cached).
+			if not n.has_meta("_wr"):
+				n.set_meta("_wr", float(n.get_meta("roll")) * n.global_transform.basis.x.length())
+			n.rotation.x = fmod(n.rotation.x + r.get("travel", 0.0) / float(n.get_meta("_wr")), TAU)
+		elif n.has_meta("tread"):
+			if not n.has_meta("_ws"):
+				n.set_meta("_ws", n.global_transform.basis.x.length())
+			var scroll: float = float(n.get_meta("_scroll", 0.0)) + r.get("travel", 0.0) / float(n.get_meta("_ws"))
+			n.set_meta("_scroll", fmod(scroll, 100.0))
+			for c in n.get_children():
+				if c is GeometryInstance3D:
+					c.set_instance_shader_parameter("scroll", scroll)
+		elif n.has_meta("turret"):
+			# Turn to the last target for a few seconds, then back to the front.
+			var aim := 0.0
+			if now < r.get("aim_until", 0.0):
+				aim = wrapf(r.aim_yaw - r.yaw, -PI, PI)
+			n.rotation.y = lerp_angle(n.rotation.y, aim, minf(1.0, delta * float(n.get_meta("turret"))))
+		elif n.has_meta("flap"):
 			n.rotation.z = float(n.get_meta("flap")) * sin(now * 9.0) * 0.55
 		elif n.has_meta("gallop"):
 			# Legs swing while moving and settle when standing.
@@ -498,6 +531,10 @@ func on_attack(source_id: int, target_pos: Vector2) -> void:
 		return
 	r.attack_until = Time.get_ticks_msec() / 1000.0 + ATTACK_ANIM_TIME
 	_play(r, "attack", true)
+	var e = gv.world.get_entity(source_id)
+	if e:
+		r.aim_yaw = atan2(target_pos.x - e.pos.x, target_pos.y - e.pos.y)
+		r.aim_until = r.attack_until + 2.5
 
 
 func _on_removed(id: int) -> void:

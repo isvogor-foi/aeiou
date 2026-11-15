@@ -565,6 +565,29 @@ func test_upgrade_lines() -> void:
 	DB.reset_lines()
 
 
+## Every vehicle in the kit builds, bakes, and keeps its moving parts live: wheels
+## on all of them, track belts on the tracked ones, a turret where there's a gun.
+func test_vehicle_kit() -> void:
+	const Machines = preload("res://view3d/machines.gd")
+	const Vehicles = preload("res://view3d/vehicles.gd")
+	for kind in Vehicles.KINDS:
+		var n: Node3D = Machines.build(kind, Color(0.8, 0.2, 0.2))
+		var parts: Array = n.find_children("*", "Node3D", true, false)
+		var rolls := parts.filter(func(c): return c.has_meta("roll")).size()
+		var treads := parts.filter(func(c): return c.has_meta("tread")).size()
+		var turrets := parts.filter(func(c): return c.has_meta("turret")).size()
+		check(n.get_child_count() > 0 and n.get_child(0) is MeshInstance3D, "%s bakes a hull mesh" % kind)
+		check(rolls >= 2, "%s has turning wheels (%d)" % [kind, rolls])
+		if kind in ["halftrack", "light_tank"]:
+			check(treads == 2, "%s has two track belts (%d)" % [kind, treads])
+		if kind in ["armoured_car", "halftrack", "light_tank"]:
+			check(turrets == 1, "%s has a turret (%d)" % [kind, turrets])
+		# A sealed turret is one mesh, not dozens of parts.
+		for t in parts.filter(func(c): return c.has_meta("turret")):
+			check(t.get_children().filter(func(c): return c is MeshInstance3D).size() == 1, "%s turret is baked" % kind)
+		n.free()
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

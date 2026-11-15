@@ -65,13 +65,14 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [ ] **S** Animations: check the Quaternius library covers SMG fire, prone/crouch, throwing (grenades) and carrying a radio; add procedural poses where it doesn't.
 - [ ] **S** `tests/unit_gallery.gd` renders every era.
 
-### Vehicles (`view3d/machines.gd`, `view3d/mounts.gd`)
-- [ ] **L** Vehicle kit: chassis, wheels with suspension, tracks with moving links, turrets that rotate to aim, exhausts with smoke, headlights. Built from primitives and baked, like the current machines.
-- [ ] **M** Cars and trucks: Austro-Daimler staff car and armoured car, lorry, motorcycle with sidecar, halftrack.
-- [ ] **M** Tanks: light tank, Porsche heavy tank, later walker refits.
+### Vehicles (`view3d/vehicles.gd`, routed through `view3d/machines.gd`)
+- [x] **L** Vehicle kit (2026-11-15): wheels that turn with the distance driven (`"roll"`), track belts whose tread scrolls (`"tread"`, a small instance-uniform shader), turrets that swing to the last target and back (`"turret"`), hull rumble while driving (`"rumble"` in visuals.json), exhaust smoke, headlights, seated crew. Moving parts are baked one mesh each; the rest of the vehicle is one mesh per material, as before. `tests/vehicle_gallery.gd` parks and drives them all; `test_vehicle_kit` checks every model.
+- [x] **M** Cars and trucks: Austro-Daimler staff car and armoured car, lorry, motorcycle with sidecar, halftrack.
+- [ ] **M** Tanks: ~~light tank~~ (done), Porsche heavy tank, later walker refits.
 - [ ] **M** Aircraft: biplane, zeppelin (update the Lohner Aethership), monoplane fighter, jet, rocket. Propellers spin, jets leave contrails.
-- [ ] **M** Concern machines: hearse car, corpse-truck, undead panzer, bone halftrack, corpse-zeppelin, bat-plane, wraith jet.
+- [ ] **M** Concern machines: ~~hearse car, corpse-truck~~ (done), undead panzer, bone halftrack, corpse-zeppelin, bat-plane, wraith jet.
 - [ ] **S** Movement feel: vehicles turn wide, accelerate and brake; tracks rotate in place. Check the formation and separation code copes with long, fast units.
+- [ ] **S** Existing machines (Landpanzer, Bone Juggernaut, crawlers) could move to the kit so their wheels and turrets come alive too.
 
 ### Buildings that keep evolving (`view3d/buildings.gd`)
 - [ ] **L** `_age_dress` for 7–12, cumulative like Ages 1–6:
