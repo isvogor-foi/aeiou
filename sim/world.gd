@@ -1419,7 +1419,11 @@ func is_hidden_by_stealth(player: int, e: Entity) -> bool:
 	var detect := float(st.detect) * TILE
 	for k in _unit_grid:
 		for u in _unit_grid[k]:
-			if u.alive and u.owner == player and u.pos.distance_to(e.pos) <= detect:
+			if not u.alive or u.owner != player:
+				continue
+			# Anyone close enough sees it; a "detector" (radar) sees it from much further.
+			var d: float = u.pos.distance_to(e.pos)
+			if d <= detect or (u.def.has("detector") and d <= float(u.def.detector) * TILE):
 				return false
 	return true
 

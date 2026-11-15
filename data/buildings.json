@@ -258,7 +258,8 @@
 			"jaeger",
 			"standschuetze",
 			"vampire_hunter",
-			"kaiserjaeger"
+			"kaiserjaeger",
+			"rocket_trooper"
 		],
 		"age": 2,
 		"cost": {
@@ -505,7 +506,8 @@
 			"steam_walker",
 			"skoda_mortar",
 			"aether_colossus",
-			"landpanzer"
+			"landpanzer",
+			"radar_truck"
 		],
 		"age": 4,
 		"cost": {

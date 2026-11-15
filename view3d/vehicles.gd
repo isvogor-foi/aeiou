@@ -15,7 +15,7 @@ static var _tread: ShaderMaterial
 
 
 ## Every vehicle kind (machines.gd routes these here; galleries and tests list them).
-const GROUND := ["staff_car", "armoured_car", "motorcycle", "lorry", "halftrack", "light_tank", "heavy_tank", "rocket_truck",
+const GROUND := ["staff_car", "armoured_car", "motorcycle", "lorry", "halftrack", "light_tank", "heavy_tank", "rocket_truck", "radar_truck",
 		"hearse", "corpse_truck", "undead_panzer", "bone_halftrack"]
 const AIR := ["biplane", "zeppelin", "monoplane", "jet", "corpse_zeppelin", "bat_plane", "wraith_jet"]
 ## Civilian traffic for the cities (view3d/traffic.gd): `team` is the body paint.
@@ -48,6 +48,8 @@ static func raw(kind: String, team: Color) -> Node3D:
 			return heavy_tank(team)
 		"rocket_truck":
 			return rocket_truck(team)
+		"radar_truck":
+			return radar_truck(team)
 		"undead_panzer":
 			return undead_panzer(team)
 		"bone_halftrack":
@@ -889,4 +891,38 @@ static func bus(paint: Color) -> Node3D:
 	Gear.part(root, Gear.box(Vector3(0.58, 0.04, 1.6)), cream, Vector3(0, 0.84, 0))
 	headlights(root, 0.2, 0.3, 0.8)
 	exhaust(root, Vector3(0.2, 0.22, -0.8))
+	return root
+
+
+## Radar truck: a lorry with a cabin of instruments and a big turning dish.
+static func radar_truck(team: Color) -> Node3D:
+	var root := Node3D.new()
+	var paint := m(Color(0.3, 0.32, 0.26), 0.3, 0.55)
+	var black := m(Color(0.07, 0.07, 0.08), 0.3, 0.5)
+	for s in [-1.0, 1.0]:
+		wheel(root, Vector3(s * 0.27, 0.15, 0.48), 0.15, 0.09)
+		wheel(root, Vector3(s * 0.28, 0.15, -0.3), 0.15, 0.12)
+		wheel(root, Vector3(s * 0.28, 0.15, -0.58), 0.15, 0.12)
+	Gear.part(root, Gear.box(Vector3(0.48, 0.08, 1.5)), black, Vector3(0, 0.24, 0))
+	Gear.part(root, Gear.box(Vector3(0.38, 0.2, 0.3)), paint, Vector3(0, 0.38, 0.6))
+	headlights(root, 0.17, 0.44, 0.75)
+	Gear.part(root, Gear.box(Vector3(0.5, 0.34, 0.3)), paint, Vector3(0, 0.48, 0.32))
+	Gear.part(root, Gear.box(Vector3(0.46, 0.12, 0.012)), m(Color(0.6, 0.75, 0.85), 0.0, 0.1), Vector3(0, 0.58, 0.475))
+	crew(root, Vector3(0.1, 0.4, 0.34), team, "cap")
+	# The instrument cabin with glowing scopes, and a team band.
+	Gear.part(root, Gear.box(Vector3(0.54, 0.38, 0.8)), paint, Vector3(0, 0.5, -0.26))
+	for x in [-0.12, 0.12]:
+		Gear.part(root, Gear.cyl(0.05, 0.01), Gear.mat(Color(0.4, 1.0, 0.5), 1.8), Vector3(x, 0.55, 0.15), Vector3(PI / 2, 0, 0))
+	for s in [-1.0, 1.0]:
+		Gear.part(root, Gear.box(Vector3(0.01, 0.06, 0.6)), Gear.mat(team), Vector3(s * 0.272, 0.6, -0.26))
+	# The dish turns all the time ("spin").
+	var dish := Node3D.new()
+	dish.position = Vector3(0, 0.69, -0.32)
+	dish.set_meta("spin", 1.2)
+	Gear.part(dish, Gear.cyl(0.03, 0.22), black, Vector3(0, 0.11, 0))
+	Gear.part(dish, Gear.sphere(0.32, true), m(Color(0.78, 0.8, 0.8), 0.5, 0.4), Vector3(0, 0.3, 0.05), Vector3(-1.25, 0, 0), Vector3(1, 0.3, 1))
+	Gear.part(dish, Gear.cyl(0.01, 0.3), black, Vector3(0, 0.32, 0.2), Vector3(PI / 2, 0, 0))
+	seal(dish)
+	root.add_child(dish)
+	exhaust(root, Vector3(0.2, 0.22, -0.72))
 	return root

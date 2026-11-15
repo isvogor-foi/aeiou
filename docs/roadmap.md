@@ -125,6 +125,9 @@ Tiers: Kress Gyrocopter → Biplane, Lohner Aethership → Aether Zeppelin, Jäg
 ### Age 9, Diesel: roster and chapter done 2026-11-15 (still "wip" until the balance pass lands)
 Tiers: Landpanzer → Porsche Heavy Tank, Armoured Car → Light Tank, Supply Lorry → Halftrack (supply and a 6-troop transport); new Arctic Trooper (Kaserne; "hardy": half attrition). Concern: Bone Juggernaut → Undead Panzer, Ghoul Rider → Bone Halftrack, Hearse → Corpse-Truck; Debt Collector → Frost Dead (Age 10, defined early for Chapter 9). Hero: Hedy Lamarr (Frequency Hopping jams and slows enemies; Great Escape). Scenario weather: snow and a polar night (dims the sun). Chapter 9 shipped with it.
 
+### Age 10, Radar: roster done 2026-11-15 (still "wip")
+Tiers: Škoda Siege Crawler → Aether Rocket Battery, Kaiserjäger → Paratrooper, Double Eagle → Monoplane Fighter; new Radar Truck (Fabrik; sight 16, `"detector": 9` exposes stealth from 9 tiles) and Rocket Trooper (Schießstand; anti-machine rockets). Concern: Debt Collector → Frost Dead, Abomination → Plated Abomination.
+
 ### Roster sketch (to refine age by age)
 
 | Age | Monarchy | The Concern |

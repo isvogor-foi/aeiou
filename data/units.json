@@ -554,7 +554,8 @@
 		},
 		"train_time": 30,
 		"hotkey": "W",
-		"glyph": "G"
+		"glyph": "G",
+		"upgrades_to": "monoplane"
 	},
 	"bat_swarm": {
 		"name": "Plague Balloon",
@@ -974,7 +975,8 @@
 		},
 		"train_time": 40,
 		"hotkey": "W",
-		"glyph": "M"
+		"glyph": "M",
+		"upgrades_to": "rocket_battery"
 	},
 	"hussar": {
 		"name": "Hussar",
@@ -1154,7 +1156,8 @@
 		},
 		"train_time": 26,
 		"hotkey": "R",
-		"glyph": "K"
+		"glyph": "K",
+		"upgrades_to": "paratrooper"
 	},
 	"aether_colossus": {
 		"name": "Aether Colossus",
@@ -1222,7 +1225,8 @@
 		},
 		"train_time": 34,
 		"hotkey": "H",
-		"glyph": "A"
+		"glyph": "A",
+		"upgrades_to": "plated_abomination"
 	},
 	"ghoul_rider": {
 		"name": "Ghoul Rider",
@@ -2884,5 +2888,187 @@
 		"cost": {},
 		"train_time": 1,
 		"sight": 11
+	},
+	"rocket_battery": {
+		"name": "Aether Rocket Battery",
+		"faction": "monarchy",
+		"role": "siege",
+		"domain": "ground",
+		"description": "A lorry with a rack of Aether rockets: a salvo that splashes across a wide area at long range. Sets up in 1s; minimum range.",
+		"hp": 320,
+		"armor": "machine",
+		"damage": 60,
+		"dtype": "explosive",
+		"range": 13,
+		"cooldown": 5.0,
+		"speed": 2.6,
+		"sight": 8,
+		"pop": 3,
+		"age": 10,
+		"passives": {
+			"setup": {
+				"time": 1.0
+			},
+			"min_range": 3,
+			"cleave": {
+				"radius": 2.0,
+				"share": 0.7
+			}
+		},
+		"bonus_vs": {
+			"structure": 1.0
+		},
+		"cost": {
+			"gold": 190,
+			"timber": 80,
+			"coal": 110
+		},
+		"train_time": 42,
+		"hotkey": "W",
+		"glyph": "M",
+		"accel": 1.5
+	},
+	"paratrooper": {
+		"name": "Paratrooper",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Jump troops with submachine guns, trained to land behind the line and fight light. Fires 8 quick shots, then reloads for 3s.",
+		"hp": 110,
+		"armor": "infantry",
+		"damage": 7,
+		"dtype": "ballistic",
+		"range": 3.5,
+		"cooldown": 0.4,
+		"speed": 3.0,
+		"sight": 10,
+		"pop": 1,
+		"age": 10,
+		"passives": {
+			"magazine": {
+				"shots": 8,
+				"reload": 3.0
+			}
+		},
+		"cost": {
+			"herbs": 70,
+			"gold": 60,
+			"timber": 10
+		},
+		"train_time": 26,
+		"hotkey": "R",
+		"glyph": "K"
+	},
+	"monoplane": {
+		"name": "Monoplane Fighter",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "air",
+		"description": "A metal monoplane with wing guns: rules the sky (+50% vs air) and strafes the ground.",
+		"hp": 280,
+		"armor": "air",
+		"damage": 9,
+		"dtype": "ballistic",
+		"range": 3.5,
+		"cooldown": 0.45,
+		"speed": 5.6,
+		"sight": 9,
+		"pop": 2,
+		"age": 10,
+		"bonus_vs": {
+			"air": 0.5
+		},
+		"cost": {
+			"herbs": 60,
+			"gold": 110,
+			"timber": 20,
+			"coal": 30
+		},
+		"train_time": 30,
+		"hotkey": "W",
+		"glyph": "G"
+	},
+	"plated_abomination": {
+		"name": "Plated Abomination",
+		"faction": "covenant",
+		"role": "melee",
+		"domain": "ground",
+		"description": "An abomination riveted into iron plate. Its Hook (D) drags a distant enemy into its arms.",
+		"hp": 760,
+		"armor": "machine",
+		"damage": 30,
+		"dtype": "blade",
+		"range": 0.7,
+		"cooldown": 1.6,
+		"speed": 2.1,
+		"sight": 7,
+		"pop": 3,
+		"age": 10,
+		"abilities": [
+			"hook"
+		],
+		"cost": {
+			"herbs": 110,
+			"gold": 110,
+			"coal": 70
+		},
+		"train_time": 36,
+		"hotkey": "H",
+		"glyph": "A"
+	},
+	"radar_truck": {
+		"name": "Radar Truck",
+		"faction": "monarchy",
+		"role": "support",
+		"domain": "ground",
+		"description": "Tesla's last gift: radar against the séance-fog. Sees very far, and exposes camouflaged and stealthed units within 9 tiles.",
+		"hp": 300,
+		"armor": "machine",
+		"damage": 0,
+		"dtype": "ballistic",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 2.8,
+		"accel": 1.5,
+		"sight": 16,
+		"detector": 9,
+		"pop": 2,
+		"age": 10,
+		"cost": {
+			"gold": 140,
+			"timber": 60,
+			"coal": 60
+		},
+		"train_time": 30,
+		"hotkey": "D",
+		"glyph": "R"
+	},
+	"rocket_trooper": {
+		"name": "Rocket Trooper",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "An infantryman with an Aether rocket tube: slow to reload, murderous against tanks, machines and walls.",
+		"hp": 90,
+		"armor": "infantry",
+		"damage": 42,
+		"dtype": "explosive",
+		"range": 6,
+		"cooldown": 4.0,
+		"speed": 2.4,
+		"sight": 8,
+		"pop": 1,
+		"age": 10,
+		"bonus_vs": {
+			"machine": 0.5
+		},
+		"cost": {
+			"herbs": 60,
+			"gold": 70,
+			"coal": 30
+		},
+		"train_time": 26,
+		"hotkey": "T",
+		"glyph": "B"
 	}
 }

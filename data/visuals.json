@@ -777,6 +777,52 @@
 			"figure": "hedy_lamarr",
 			"height": 1.2,
 			"anims": "officer"
+		},
+		"rocket_battery": {
+			"procedural": "rocket_truck",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0,
+			"shot": "rocket"
+		},
+		"paratrooper": {
+			"figure": "paratrooper",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "burst",
+			"burst": 4
+		},
+		"monoplane": {
+			"procedural": "monoplane",
+			"scale": 1.0,
+			"fly_height": 2.2,
+			"bank": true,
+			"circle": 0.8,
+			"shot": "burst",
+			"burst": 5
+		},
+		"plated_abomination": {
+			"figure": "plated_abomination",
+			"height": 1.9,
+			"anims": {
+				"idle": "Idle",
+				"walk": "Walk",
+				"attack": "Punch_Cross",
+				"death": "Death01",
+				"cast": "Punch_Jab"
+			}
+		},
+		"radar_truck": {
+			"procedural": "radar_truck",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0
+		},
+		"rocket_trooper": {
+			"figure": "rocket_trooper",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "rocket"
 		}
 	},
 	"buildings": {

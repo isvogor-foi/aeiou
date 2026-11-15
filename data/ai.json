@@ -47,19 +47,19 @@
 		"covenant": {
 			"name": "Raider",
 			"workers": [
-				16,
-				20,
-				24,
-				28,
+				18,
+				22,
+				26,
 				30,
-				32
+				32,
+				34
 			],
 			"age_up_workers": [
-				12,
+				10,
+				14,
 				18,
-				24,
-				26,
-				28
+				22,
+				24
 			],
 			"expand_workers": [
 				16,
@@ -71,7 +71,7 @@
 			],
 			"military_buildings": [
 				1,
-				2,
+				1,
 				2,
 				3,
 				3,
@@ -99,7 +99,7 @@
 				"bone_colossus": 0.03,
 				"bone_juggernaut": 0.05
 			},
-			"first_wave": 300,
+			"first_wave": 330,
 			"wave_interval": 150,
 			"wave_base": 6,
 			"wave_growth": 3,
@@ -198,11 +198,11 @@
 				36
 			],
 			"age_up_workers": [
-				12,
-				16,
+				10,
+				14,
+				18,
 				22,
-				26,
-				28
+				24
 			],
 			"expand_workers": [
 				14,

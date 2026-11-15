@@ -343,12 +343,12 @@ func _age_up() -> void:
 	if _workers.size() < int(_per_age(style.age_up_workers)):
 		return
 	var cost: Dictionary = DB.ages[p.age].cost
-	# Only start hoarding once the age-up is about a third paid for; until then keep spending.
+	# Start hoarding once the age-up is about a fifth paid for; until then keep spending.
 	var progress := 1.0
 	for k in cost:
 		progress = minf(progress, p.res[k] / maxf(1.0, float(cost[k])))
 	_age_progress = progress
-	_saving_for_age = progress >= 0.3
+	_saving_for_age = progress >= 0.22
 	if not p.can_afford(cost):
 		return
 	for c in _cities:

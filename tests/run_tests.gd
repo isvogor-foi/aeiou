@@ -729,6 +729,26 @@ func test_age7_roster() -> void:
 		check(int(DB.units[t].age) == 7, "%s is an Age 7 unit" % t)
 
 
+## Age 10: the new tiers exist, and a Radar Truck exposes a camouflaged Jäger
+## far beyond the usual spotting distance.
+func test_age10_radar() -> void:
+	for t in ["rocket_battery", "paratrooper", "monoplane", "plated_abomination", "frost_dead", "radar_truck", "rocket_trooper"]:
+		check(int(DB.units[t].age) == 10, "%s is an Age 10 unit" % t)
+	var w := _world()
+	var c := _city(w, 0).pos + Vector2(0, 8 * GameMap.TILE)
+	var jaeger := w.spawn_unit("jaeger", 0, c)
+	jaeger.still = 10.0
+	var foe := w.spawn_unit("reaver", 1, c + Vector2(6 * GameMap.TILE, 0))
+	w.tick()
+	jaeger.still = 10.0
+	check(w.is_hidden_by_stealth(1, jaeger), "a still Jäger is hidden from a soldier 6 tiles away")
+	var radar := w.spawn_unit("radar_truck", 1, c + Vector2(7 * GameMap.TILE, 0))
+	w.tick()
+	jaeger.still = 10.0
+	check(not w.is_hidden_by_stealth(1, jaeger), "a Radar Truck 7 tiles away exposes it")
+	check(foe.alive and radar.alive, "units survive the check")
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)
