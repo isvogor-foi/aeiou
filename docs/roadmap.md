@@ -160,7 +160,15 @@ Tiers: Aether Colossus → Viribus Mech, Bone Colossus → Necropolis Titan (bot
 - The Concern: **Concern Headquarters** (city), **Foundry**, **Séance Tower**, **Crematorium Reactor**, **Cold Storage** (population of the waiting dead), **Bone Silo**.
 - Wonders 7–12 (ideas): the Großglockner High Alpine Road, the Kaprun dam (1955), a Danube radio tower, the Federal Parliament of the crown lands.
 
-### Decisions to make on the way
+### Decisions made on the way (2026-11-15)
+- **New buildings:** none were needed: every tier trains where its line does (the Kaserne makes Riflemen, then armoured cars come from where Kürassiere did), and every building changes its look with the ages instead. The Motor Works, Airfield and the rest stay ideas.
+- **Oil:** not added; Coal stays the fuel of engines (Galicia's refinery is scenery).
+- **Superweapons:** campaign-only: the Aether bomb exists in Chapter 11 as a scripted choice, not in skirmish.
+- **Refits:** automatic on age-up.
+- **Air power:** planes are ordinary units (banking, circling while idle), no airfield sorties.
+- **Wonders 7–12:** not added.
+
+### Decisions to make on the way (original list)
 - [ ] **Oil as a new resource** from Age 8 or 9 (Galicia was a real oil region, and its city already has derricks), or keep Coal for engines?
 - [ ] **Superweapons:** the Aether bomb, and the Concern's answer. Rise of Nations used an Armageddon clock that ends the game for everyone if too many are used. Copy that, cap them at one per game, or keep them campaign-only?
 - [ ] **Refits:** automatic on age-up, or paid per line?
