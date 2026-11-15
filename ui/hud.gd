@@ -4,6 +4,7 @@ extends CanvasLayer
 ## bottom-left with the selection panel beside it, the minimap bottom-right;
 ## messages and story float at the top centre.
 
+const GameConfig = preload("res://sim/game_config.gd")
 const DB = preload("res://sim/db.gd")
 const Entity = preload("res://sim/entity.gd")
 const World = preload("res://sim/world.gd")
@@ -383,17 +384,19 @@ func _build_status_bar() -> void:
 	_state_icon = state[3]
 	_state_label = state[1]
 	bar.add_child(state[0])
-	var cheats := _chip_button(HudIcons.get_icon("spell"), "Cheats", Callable())
-	cheats.text = "Cheats"
-	cheats.pressed.connect(func(): _open_cheats(cheats))
-	bar.add_child(cheats)
-	_cheat_menu = PopupMenu.new()
-	_cheat_menu.add_check_item("Infinite resources", 0)
-	_cheat_menu.add_check_item("Reveal map  (Ctrl+F9)", 1)
-	_cheat_menu.add_check_item("Fast building and training", 2)
-	_cheat_menu.add_check_item("Fast research and ages", 3)
-	_cheat_menu.id_pressed.connect(_on_cheat)
-	add_child(_cheat_menu)
+	# The Cheats menu exists only when the game was started with -c.
+	if GameConfig.cheats():
+		var cheats := _chip_button(HudIcons.get_icon("spell"), "Cheats", Callable())
+		cheats.text = "Cheats"
+		cheats.pressed.connect(func(): _open_cheats(cheats))
+		bar.add_child(cheats)
+		_cheat_menu = PopupMenu.new()
+		_cheat_menu.add_check_item("Infinite resources", 0)
+		_cheat_menu.add_check_item("Reveal map  (Ctrl+F9)", 1)
+		_cheat_menu.add_check_item("Fast building and training", 2)
+		_cheat_menu.add_check_item("Fast research and ages", 3)
+		_cheat_menu.id_pressed.connect(_on_cheat)
+		add_child(_cheat_menu)
 	bar.add_child(_chip_button(HudIcons.get_icon("menu"), "Menu: save, load, quit [F10]", func(): gv.game_menu.toggle()))
 
 

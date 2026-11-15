@@ -119,7 +119,7 @@ func _build_branding() -> Control:
 	_motto.add_theme_font_size_override("font_size", 17)
 	_motto.add_theme_color_override("font_color", Color(Flags.GOLD, 0.85))
 	col.add_child(_motto)
-	var tag := MenuTheme.muted("Six ages of Aether and steam. Many crowns, one empire.", 15)
+	var tag := MenuTheme.muted("Twelve ages of Aether and steam. Many crowns, one empire.", 15)
 	tag.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	col.add_child(tag)
 	return col

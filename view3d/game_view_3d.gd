@@ -1054,7 +1054,8 @@ func _on_key(ev: InputEventKey) -> void:
 			return
 		KEY_F9:
 			if ev.ctrl_pressed:
-				reveal_all = not reveal_all
+				if GameConfig.cheats():
+					reveal_all = not reveal_all
 			elif FileAccess.file_exists(SaveGame.slot_path("quick")):
 				load_game(SaveGame.slot_path("quick"))
 			else:

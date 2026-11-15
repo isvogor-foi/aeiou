@@ -40,6 +40,8 @@ The first launch imports all the assets, which takes a minute or two. Later star
 
 New to the game? Start with **Tutorial** on the title screen, then **Campaign**.
 
+**Cheats:** start the game with `-c` (for example `godot --path . -c`) to show the Cheats menu and Ctrl+F9 in game, and to open every campaign chapter regardless of progress.
+
 Saves and campaign progress are kept in Godot's user folder. On Linux that's `~/.local/share/aeiou/`; on Windows, `%APPDATA%\aeiou`.
 
 ## Controls
@@ -62,7 +64,7 @@ Saves and campaign progress are kept in Godot's user folder. On Linux that's `~/
 | `+` / `-` | Game speed |
 | `F5` / `F9` | Quick-save / quick-load |
 | `Esc` (nothing selected) or `F10` | Game menu: save, load, main menu |
-| `Ctrl+F9` or ★ Cheats (top right) | Reveal the map; the Cheats menu also has infinite resources |
+| `Ctrl+F9` or ★ Cheats (top right) | Reveal the map; the Cheats menu also has infinite resources and fast building. Only when the game is started with `-c` (see below) |
 
 ## More
 

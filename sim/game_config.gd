@@ -30,6 +30,16 @@ static func all_ages() -> bool:
 	return "--all-ages" in OS.get_cmdline_user_args()
 
 
+## Cheats are hidden unless the game is started with -c (or --cheats):
+##   tools/godot --path . -c
+## They show the Cheats menu and Ctrl+F9, and open every campaign chapter.
+static func cheats() -> bool:
+	for a in OS.get_cmdline_args() + OS.get_cmdline_user_args():
+		if a == "-c" or a == "--cheats":
+			return true
+	return false
+
+
 ## Campaign or tutorial scenario to play ("" = skirmish), and a save file to load instead.
 static var scenario := ""
 static var load_path := ""

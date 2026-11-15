@@ -18,6 +18,8 @@ tools/godot --headless --path . -s tests/campaign_bot.gd  # charge each campaign
 `tools/godot` is the official Godot 4.7.2 Linux binary. It is not checked in;
 download it from godotengine.org if it's missing. Player-facing setup is in the [README](../README.md).
 
+**Cheats:** hidden unless the game starts with `-c` or `--cheats` (`tools/godot --path . -c`): then the in-game Cheats menu and Ctrl+F9 appear and every campaign chapter is open (`GameConfig.cheats()`).
+
 Ages 7–12 are work in progress (`"wip": true` in `data/ages.json`) and hidden from normal games. To play them, start with `tools/godot --path . -- --all-ages`; the skirmish menu then offers every age as a starting and last age.
 
 **Unit upgrade lines:** give a unit `"upgrades_to": "<next unit>"`; the next unit's `"age"` is when the line moves up. Buildings list only the line's first unit in `"trains"`, AI `army_mix` names lines by their first unit too, and scenarios spawn `tier(w, "<first unit>")`. Lines must stay within one faction and domain and move to a later age (checked by `test_upgrade_line_data`).

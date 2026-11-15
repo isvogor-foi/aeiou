@@ -7,6 +7,7 @@ extends RefCounted
 ## The human is always player 0 and the scripted enemy player 1.
 
 const DB = preload("res://sim/db.gd")
+const GameConfig = preload("res://sim/game_config.gd")
 const Entity = preload("res://sim/entity.gd")
 const GameMap = preload("res://sim/game_map.gd")
 
@@ -511,6 +512,9 @@ static func chapter_number(scenario_id: String) -> int:
 ## How many chapters of a campaign are open: at least the first once the campaign
 ## itself is unlocked (Campaign 2 needs Campaign 1's last chapter won), else 0.
 static func unlocked(camp: Dictionary = CAMPAIGNS[0]) -> int:
+	# Started with -c: every chapter is open.
+	if GameConfig.cheats():
+		return camp.chapters.size()
 	if camp.needs != "" and not is_won(camp.needs):
 		return 0
 	var cfg := ConfigFile.new()
