@@ -194,6 +194,6 @@ Tiers: Aether Colossus → Viribus Mech, Bone Colossus → Necropolis Titan (bot
 
 - [ ] **L** Balance the full ladder: `tests/run_balance.sh` across Classic, Modern and Full games; both sides about 50/50; game lengths per preset.
 - [x] **M** Performance (2026-11-15, Iris Xe, Medium, 75 v 75, `tests/bench_fps.gd`, `MODERN=1` for the modern mix): classic 27.5 fps; modern 27.3 fps, then 28.2 once wheels, tracks and turrets animate only on screen. Modern battles draw fewer calls (2,604 vs 3,064) but the views do more (7.5 vs 6.3 ms). City traffic is capped per quality setting (off on Low). Not done: vehicle LODs; a 400-unit modern stress test.
-- [ ] **M** AI: modern-age tactics (combined arms, air cover, anti-air, keeping tanks with infantry).
+- [x] **M** AI: anti-air (2026-11-15): seeing three or more enemy flyers, the AI weighs lines with an anti-air bonus and its own fighters 2.5x in its army mix (`_share`). Not done: combined-arms formations (tanks kept with infantry).
 - [ ] **S** Docs: README features and screenshot, technical.md, story.md "as built".
 - [ ] **M** Full playtest of both campaigns, then fix.

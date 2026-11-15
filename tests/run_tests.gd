@@ -766,6 +766,25 @@ func test_refit_clears_charge() -> void:
 	check(k.pos.distance_to(start) > GameMap.TILE, "the armoured car drives on")
 
 
+## The AI leans toward anti-air lines once it sees three or more enemy flyers.
+func test_ai_answers_air() -> void:
+	const AIPlayer = preload("res://ai/ai_player.gd")
+	var w := World.new()
+	w.new_game(3, ["monarchy", "covenant"], 1, "normal", "inland", {"explored": true})
+	var ai: AIPlayer = w.ais[0]
+	var mix: Dictionary = DB.ai.personalities.monarchy.army_mix
+	ai._snapshot()
+	var calm: float = ai._share(mix, "jaeger")
+	var city := _city(w, 0)
+	for i in 4:
+		w.spawn_unit("bat_swarm", 1, city.pos + Vector2(i * 20, 3 * GameMap.TILE))
+	w.update_fog()
+	ai._snapshot()
+	check(ai._enemy_air >= 3, "the AI sees the enemy flyers (%d)" % ai._enemy_air)
+	check(ai._share(mix, "jaeger") > calm * 2.0, "and weighs anti-air Jäger up")
+	check(is_equal_approx(ai._share(mix, "grenadier"), float(mix.grenadier)), "but not Grenadiers")
+
+
 func _barracks(w: World) -> int:
 	var city := _city(w, 0)
 	var b := w.spawn_building("kaserne", 0, _find_free(w, city.tile + Vector2i(0, 6), 3), true)

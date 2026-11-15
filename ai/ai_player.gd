@@ -40,6 +40,9 @@ var _army: Array = []
 var _buildings: Array = []
 var _cities: Array = []
 var _queued := {}
+## Enemy flyers we can see (updated each think): three or more and the army mix
+## leans toward lines that fight air.
+var _enemy_air := 0
 var _saving_for_age := false
 ## Buildings with no valid site anywhere near home (e.g. docks on a map without shore).
 var _no_site := {}
@@ -104,7 +107,11 @@ func _snapshot() -> void:
 	_buildings.clear()
 	_cities.clear()
 	_queued.clear()
+	_enemy_air = 0
 	for e in w.entities.values():
+		if e.alive and e.kind == Entity.UNIT and e.owner >= 0 and e.owner != pid and e.domain() == "air" and e.can_attack() \
+				and w.is_visible_to(pid, e):
+			_enemy_air += 1
 		if not e.alive or e.owner != pid:
 			continue
 		if e.kind == Entity.UNIT:
@@ -589,18 +596,28 @@ func _next_army_type(mix: Dictionary, b) -> String:
 	for t in mix:
 		total += _have(t)
 		if int(DB.units[t].get("age", 1)) <= p.age:
-			share_sum += float(mix[t])
+			share_sum += _share(mix, t)
 	var best := ""
 	var best_gap := -INF
 	for t in mix:
 		if not t in b.def.trains or int(DB.units[t].get("age", 1)) > p.age:
 			continue
 		# Shares are renormalised over the unit types this age unlocks.
-		var gap: float = float(mix[t]) / maxf(share_sum, 0.01) - float(_have(t)) / maxf(1.0, total)
+		var gap: float = _share(mix, t) / maxf(share_sum, 0.01) - float(_have(t)) / maxf(1.0, total)
 		if gap > best_gap:
 			best_gap = gap
 			best = t
 	return best
+
+
+## A line's share of the army; anti-air lines weigh 2.5x while enemy flyers are about.
+func _share(mix: Dictionary, t: String) -> float:
+	var s := float(mix[t])
+	if _enemy_air >= 3:
+		var d: Dictionary = DB.units[DB.tier(t, p.age)]
+		if float(d.get("bonus_vs", {}).get("air", 0.0)) > 0.0 or (d.get("domain", "ground") == "air" and d.get("role", "") != "transport"):
+			s *= 2.5
+	return s
 
 
 func _fighters(units: Array) -> Array:
