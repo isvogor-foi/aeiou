@@ -48,7 +48,8 @@
 				"after": 1.0,
 				"damage_taken": -0.25
 			}
-		}
+		},
+		"upgrades_to": "sturmtrupp"
 	},
 	"musketeer": {
 		"name": "Aether Musketeer",
@@ -79,7 +80,8 @@
 				"min": 4,
 				"damage": 0.3
 			}
-		}
+		},
+		"upgrades_to": "rifleman"
 	},
 	"thrall": {
 		"name": "Thrall",
@@ -130,7 +132,8 @@
 				"below": 0.5,
 				"damage": 0.3
 			}
-		}
+		},
+		"upgrades_to": "tommy_ghoul"
 	},
 	"hexcaster": {
 		"name": "Soul Caller",
@@ -160,7 +163,8 @@
 				"slow": 0.2,
 				"duration": 2.0
 			}
-		}
+		},
+		"upgrades_to": "gas_trooper"
 	},
 	"tross_wagon": {
 		"name": "Tross Wagon",
@@ -185,7 +189,8 @@
 		},
 		"train_time": 20,
 		"hotkey": "R",
-		"glyph": "S"
+		"glyph": "S",
+		"upgrades_to": "lorry"
 	},
 	"bone_cart": {
 		"name": "Bone Cart",
@@ -210,7 +215,8 @@
 		},
 		"train_time": 20,
 		"hotkey": "R",
-		"glyph": "S"
+		"glyph": "S",
+		"upgrades_to": "hearse"
 	},
 	"jaeger": {
 		"name": "Jäger",
@@ -273,7 +279,8 @@
 		},
 		"train_time": 25,
 		"hotkey": "Q",
-		"glyph": "M"
+		"glyph": "M",
+		"upgrades_to": "sanitaeter"
 	},
 	"kuerassier": {
 		"name": "Kürassier",
@@ -305,7 +312,8 @@
 		},
 		"train_time": 30,
 		"hotkey": "T",
-		"glyph": "K"
+		"glyph": "K",
+		"upgrades_to": "armoured_car"
 	},
 	"rudolf": {
 		"name": "Rudolf II",
@@ -369,7 +377,8 @@
 		"glyph": "B",
 		"bonus_vs": {
 			"air": 0.5
-		}
+		},
+		"upgrades_to": "debt_collector"
 	},
 	"necromancer": {
 		"name": "Necromancer",
@@ -862,7 +871,8 @@
 		},
 		"train_time": 28,
 		"hotkey": "U",
-		"glyph": "U"
+		"glyph": "U",
+		"upgrades_to": "motorcycle"
 	},
 	"vampire_hunter": {
 		"name": "Vampire Hunter",
@@ -2056,5 +2066,294 @@
 		"cost": {},
 		"train_time": 1,
 		"sight": 10
+	},
+	"sturmtrupp": {
+		"name": "Sturmtrupp",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Storm troops of the Federation with submachine guns: short range, a deadly hail of fire, and armour plates. Fires 8 quick shots, then reloads for 3s.",
+		"hp": 150,
+		"armor": "armoured",
+		"damage": 7,
+		"dtype": "ballistic",
+		"range": 3,
+		"cooldown": 0.4,
+		"speed": 2.4,
+		"sight": 7,
+		"pop": 1,
+		"cost": {
+			"herbs": 70,
+			"gold": 50,
+			"coal": 10
+		},
+		"train_time": 22,
+		"hotkey": "W",
+		"glyph": "W",
+		"passives": {
+			"magazine": {
+				"shots": 8,
+				"reload": 3.0
+			}
+		},
+		"age": 7
+	},
+	"rifleman": {
+		"name": "Rifleman",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "Federation line infantry with the Mannlicher repeater. Volley: +30% damage with 4 or more Riflemen close by.",
+		"hp": 85,
+		"armor": "infantry",
+		"damage": 15,
+		"dtype": "ballistic",
+		"range": 7,
+		"cooldown": 1.4,
+		"speed": 2.5,
+		"sight": 9,
+		"pop": 1,
+		"cost": {
+			"herbs": 50,
+			"gold": 40,
+			"timber": 20
+		},
+		"train_time": 22,
+		"hotkey": "E",
+		"glyph": "B",
+		"passives": {
+			"volley": {
+				"radius": 3.0,
+				"min": 4,
+				"damage": 0.3
+			}
+		},
+		"age": 7
+	},
+	"sanitaeter": {
+		"name": "Sanitäter",
+		"faction": "monarchy",
+		"role": "caster",
+		"domain": "ground",
+		"description": "Field medic of the Federation: Field Dressing and the Aether Ward, and a pistol for emergencies.",
+		"hp": 95,
+		"armor": "infantry",
+		"damage": 6,
+		"dtype": "ballistic",
+		"range": 4,
+		"cooldown": 2.0,
+		"speed": 2.4,
+		"sight": 8,
+		"pop": 1,
+		"age": 7,
+		"abilities": [
+			"heal",
+			"ward"
+		],
+		"cost": {
+			"herbs": 60,
+			"gold": 50,
+			"mana": 30
+		},
+		"train_time": 25,
+		"hotkey": "Q",
+		"glyph": "M"
+	},
+	"armoured_car": {
+		"name": "Austro-Daimler Armoured Car",
+		"faction": "monarchy",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "The cavalry's successor: a riveted car with a machine-gun turret. Fast on open ground, slow off the mark.",
+		"hp": 440,
+		"armor": "machine",
+		"damage": 8,
+		"dtype": "ballistic",
+		"range": 5,
+		"cooldown": 0.45,
+		"speed": 3.4,
+		"sight": 8,
+		"pop": 2,
+		"age": 7,
+		"cost": {
+			"gold": 120,
+			"timber": 40,
+			"coal": 60
+		},
+		"train_time": 32,
+		"hotkey": "T",
+		"glyph": "K",
+		"accel": 1.2
+	},
+	"motorcycle": {
+		"name": "Motorcycle Scout",
+		"faction": "monarchy",
+		"role": "ranged",
+		"crown_land": "galicia",
+		"domain": "ground",
+		"description": "Galicia's lancers on motorcycles: a rider and a sidecar gunner. The fastest thing on the map.",
+		"hp": 150,
+		"armor": "cavalry",
+		"damage": 6,
+		"dtype": "ballistic",
+		"range": 4,
+		"cooldown": 0.45,
+		"speed": 4.8,
+		"sight": 10,
+		"pop": 2,
+		"age": 7,
+		"cost": {
+			"herbs": 60,
+			"gold": 70,
+			"coal": 30
+		},
+		"train_time": 24,
+		"hotkey": "U",
+		"glyph": "U",
+		"accel": 0.6
+	},
+	"lorry": {
+		"name": "Supply Lorry",
+		"faction": "monarchy",
+		"role": "support",
+		"domain": "ground",
+		"description": "A canvas-covered lorry of the Federation's army service corps. Keeps nearby troops supplied: no attrition in enemy territory.",
+		"hp": 260,
+		"armor": "machine",
+		"damage": 0,
+		"dtype": "ballistic",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 3.2,
+		"sight": 6,
+		"pop": 1,
+		"supply_radius": 7,
+		"age": 7,
+		"cost": {
+			"timber": 60,
+			"gold": 50,
+			"coal": 20
+		},
+		"train_time": 20,
+		"hotkey": "R",
+		"glyph": "S",
+		"accel": 1.5
+	},
+	"tommy_ghoul": {
+		"name": "Tommy-gun Ghoul",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "The Concern's enforcers: the dead in good suits with drum-fed guns. Frenzy still drives them.",
+		"hp": 115,
+		"armor": "undead",
+		"damage": 6,
+		"dtype": "ballistic",
+		"range": 3.5,
+		"cooldown": 0.4,
+		"speed": 2.9,
+		"sight": 7,
+		"pop": 1,
+		"cost": {
+			"herbs": 60,
+			"gold": 40,
+			"coal": 10
+		},
+		"train_time": 18,
+		"hotkey": "W",
+		"glyph": "R",
+		"passives": {
+			"frenzy": {
+				"below": 0.5,
+				"damage": 0.3
+			}
+		},
+		"age": 7
+	},
+	"gas_trooper": {
+		"name": "Gas Trooper",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "A rubber-hooded corpse spraying soul gas. Wither: its hits slow the living.",
+		"hp": 85,
+		"armor": "undead",
+		"damage": 13,
+		"dtype": "soul",
+		"range": 4,
+		"cooldown": 1.3,
+		"speed": 2.4,
+		"sight": 8,
+		"pop": 1,
+		"cost": {
+			"herbs": 50,
+			"gold": 35,
+			"mana": 25
+		},
+		"train_time": 20,
+		"hotkey": "E",
+		"glyph": "H",
+		"passives": {
+			"wither": {
+				"slow": 0.2,
+				"duration": 2.0
+			}
+		},
+		"age": 7
+	},
+	"debt_collector": {
+		"name": "Debt Collector",
+		"faction": "covenant",
+		"role": "ranged",
+		"domain": "ground",
+		"description": "A clerk of the Concern who collects with a rifle. Patient, punctual and quite dead.",
+		"hp": 80,
+		"armor": "undead",
+		"damage": 14,
+		"dtype": "ballistic",
+		"range": 7,
+		"cooldown": 1.6,
+		"speed": 2.5,
+		"sight": 9,
+		"pop": 1,
+		"age": 7,
+		"cost": {
+			"herbs": 50,
+			"gold": 45,
+			"timber": 25
+		},
+		"train_time": 22,
+		"hotkey": "Q",
+		"glyph": "B",
+		"bonus_vs": {
+			"air": 0.5
+		}
+	},
+	"hearse": {
+		"name": "Hearse",
+		"faction": "covenant",
+		"role": "support",
+		"domain": "ground",
+		"description": "The Concern's black hearse keeps its dead supplied, and brings back what it can. No attrition in enemy territory nearby.",
+		"hp": 260,
+		"armor": "machine",
+		"damage": 0,
+		"dtype": "ballistic",
+		"range": 0,
+		"cooldown": 1,
+		"speed": 3.2,
+		"sight": 6,
+		"pop": 1,
+		"supply_radius": 7,
+		"age": 7,
+		"cost": {
+			"timber": 60,
+			"gold": 50,
+			"coal": 20
+		},
+		"train_time": 20,
+		"hotkey": "R",
+		"glyph": "S",
+		"accel": 1.5
 	}
 }

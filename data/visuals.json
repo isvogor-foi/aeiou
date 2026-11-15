@@ -609,6 +609,69 @@
 				"attack": "Sword_Attack",
 				"death": "Death01"
 			}
+		},
+		"sturmtrupp": {
+			"figure": "sturmtrupp",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "burst",
+			"burst": 4
+		},
+		"rifleman": {
+			"figure": "rifleman",
+			"height": 1.2,
+			"anims": "rifleman"
+		},
+		"sanitaeter": {
+			"figure": "sanitaeter",
+			"height": 1.2,
+			"anims": "medic"
+		},
+		"armoured_car": {
+			"procedural": "armoured_car",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 5.0,
+			"shot": "burst",
+			"burst": 6
+		},
+		"motorcycle": {
+			"procedural": "motorcycle",
+			"scale": 1.15,
+			"rumble": 1.0,
+			"turn": 7.0,
+			"shot": "burst",
+			"burst": 3
+		},
+		"lorry": {
+			"procedural": "lorry",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0
+		},
+		"tommy_ghoul": {
+			"figure": "tommy_ghoul",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "burst",
+			"burst": 5
+		},
+		"gas_trooper": {
+			"figure": "gas_trooper",
+			"height": 1.2,
+			"anims": "gunner",
+			"shot": "flame"
+		},
+		"debt_collector": {
+			"figure": "debt_collector",
+			"height": 1.2,
+			"anims": "rifleman"
+		},
+		"hearse": {
+			"procedural": "hearse",
+			"scale": 1.0,
+			"rumble": 1.0,
+			"turn": 4.0
 		}
 	},
 	"buildings": {

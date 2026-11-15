@@ -502,7 +502,9 @@ func test_upgrade_line_data() -> void:
 ## tier, an age-up refits the soldiers in place, and queues, limits and scoped
 ## research follow the line.
 func test_upgrade_lines() -> void:
+	var real_next = DB.units.musketeer.get("upgrades_to")
 	var rifle: Dictionary = DB.units.musketeer.duplicate(true)
+	rifle.erase("upgrades_to")
 	rifle.id = "test_rifleman"
 	rifle.name = "Test Rifleman"
 	rifle.age = 2
@@ -561,7 +563,10 @@ func test_upgrade_lines() -> void:
 
 	DB.units.erase("test_rifleman")
 	DB.visuals.units.erase("test_rifleman")
-	DB.units.musketeer.erase("upgrades_to")
+	if real_next == null:
+		DB.units.musketeer.erase("upgrades_to")
+	else:
+		DB.units.musketeer.upgrades_to = real_next
 	DB.reset_lines()
 
 
@@ -673,6 +678,32 @@ func test_music_tracks() -> void:
 	for track in AudioManager.TRACKS:
 		var stream = load(AudioManager.TRACKS[track])
 		check(stream != null and stream.get_length() > 60.0, "music %s loads (%s)" % [track, AudioManager.TRACKS[track]])
+
+
+## Age 7: with all ages open, a player in the Age of the Federation trains the new
+## tiers, and reaching it refits the army (Musketeers become Riflemen, and so on).
+func test_age7_roster() -> void:
+	var w := World.new()
+	w.new_game(7, ["monarchy", "covenant"], 0, "normal", "inland", {"all_ages": true, "start_age": 6})
+	w.ais.clear()
+	var p = w.players[0]
+	p.res = {"gold": 1e5, "timber": 1e5, "herbs": 1e5, "mana": 1e5, "coal": 1e5}
+	var city := _city(w, 0)
+	var c := city.pos + Vector2(0, 6 * GameMap.TILE)
+	var olds := {}
+	for t in ["grenadier", "musketeer", "field_alchemist", "kuerassier", "tross_wagon"]:
+		olds[t] = w.spawn_unit(t, 0, c + Vector2(olds.size() * 20, 0))
+	check(w.issue({"type": "advance_age", "player": 0, "building": city.id}) == "", "advance to Age 7")
+	_run(w, float(DB.ages[6].time) + 1.0)
+	check(p.age == 7, "reached the Age of the Federation")
+	var want := {"grenadier": "sturmtrupp", "musketeer": "rifleman", "field_alchemist": "sanitaeter", "kuerassier": "armoured_car", "tross_wagon": "lorry"}
+	for t in olds:
+		check(olds[t].type_id == want[t], "%s refitted as %s (%s)" % [t, want[t], olds[t].type_id])
+	var k := _barracks(w)
+	check(w.issue({"type": "train", "player": 0, "building": k, "unit": "musketeer"}) == "", "train at the Kaserne")
+	check(w.get_entity(k).queue[-1].type == "rifleman", "the Kaserne trains Riflemen")
+	for t in ["sturmtrupp", "rifleman", "sanitaeter", "armoured_car", "motorcycle", "lorry", "tommy_ghoul", "gas_trooper", "debt_collector", "hearse"]:
+		check(int(DB.units[t].age) == 7, "%s is an Age 7 unit" % t)
 
 
 func _barracks(w: World) -> int:

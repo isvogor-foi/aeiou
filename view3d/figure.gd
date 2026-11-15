@@ -154,6 +154,7 @@ const OUTFITS := {
 	"tank_crew": {"coat": BLACK, "trousers": BLACK, "boots": BLACK, "cuffs": BLACK, "style": "overalls", "hat": "tanker", "weapon": "pistol"},
 	"pilot": {"coat": BROWN, "trousers": FIELD_DARK, "boots": BLACK, "cuffs": BROWN, "style": "flight", "hat": "flight_helmet", "weapon": "pistol", "moustache": true},
 	"debt_bound": {"skin": BONE, "coat": Color(0.2, 0.19, 0.18), "trousers": Color(0.17, 0.16, 0.15), "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "bowler", "jaw": true, "weapon": "hammer"},
+	"debt_collector": {"skin": BONE, "coat": Color(0.2, 0.19, 0.18), "trousers": Color(0.17, 0.16, 0.15), "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "bowler", "jaw": true, "weapon": "bolt_rifle"},
 	"tommy_ghoul": {"skin": BONE, "coat": NIGHT, "trousers": NIGHT, "boots": BLACK, "cuffs": WHITE, "style": "suit", "hat": "fedora", "jaw": true, "vials": true, "weapon": "tommy_gun"},
 	"gas_trooper": {"skin": BONE, "coat": Color(0.14, 0.15, 0.13), "trousers": Color(0.14, 0.15, 0.13), "boots": BLACK, "cuffs": Color(0.14, 0.15, 0.13), "style": "overalls", "hat": "gas_hood", "tanks": "soul", "weapon": "gas_sprayer"},
 	"wireless_medium": {"skin": BONE, "coat": NIGHT, "trousers": NIGHT, "boots": NIGHT, "cuffs": SOUL_GLOW, "style": "robe", "headphones": true, "kit": "radio_pack", "jaw": true, "vials": true, "weapon": "soul_lantern"},
