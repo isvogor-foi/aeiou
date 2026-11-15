@@ -149,8 +149,9 @@ func _have(type_id: String) -> int:
 	return _queued.get(type_id, 0)
 
 
-func _age_index() -> int:
-	return clampi(p.age - 1, 0, 5)
+## An entry of a per-age table in ai.json; ages past its end use the last entry.
+func _per_age(table: Array):
+	return table[clampi(p.age - 1, 0, table.size() - 1)]
 
 
 func _faction() -> Dictionary:
@@ -163,7 +164,7 @@ func _can_spend(cost: Dictionary) -> bool:
 	if not p.can_afford(cost):
 		return false
 	var reserve := {}
-	if _saving_for_age and p.age < DB.ages.size():
+	if _saving_for_age and p.age < w.final_age():
 		for k in DB.ages[p.age].cost:
 			reserve[k] = reserve.get(k, 0.0) + float(DB.ages[p.age].cost[k])
 	var hero_id: String = p.hero_type if p.hero_type != "" else style.get("hero", _faction().get("hero", ""))
@@ -180,7 +181,7 @@ func _can_spend(cost: Dictionary) -> bool:
 
 func _economy() -> void:
 	# More workers, up to the plan for this age and the difficulty's ceiling.
-	var target := mini(int(style.workers[_age_index()]), int(diff.max_workers))
+	var target := mini(int(_per_age(style.workers)), int(diff.max_workers))
 	var worker_type: String = _faction().worker
 	# Frontier militia (Grenzer) double as workers once Croatia is ours.
 	if "croatia" in p.crown_lands and _have("grenzer") < roundi(_workers.size() * float(style.get("militia_share", 0.0))):
@@ -336,9 +337,9 @@ func _housing() -> void:
 func _age_up() -> void:
 	_saving_for_age = false
 	_age_progress = 0.0
-	if p.age >= DB.ages.size() or p.advancing_age:
+	if p.age >= w.final_age() or p.advancing_age:
 		return
-	if _workers.size() < int(style.age_up_workers[mini(_age_index(), style.age_up_workers.size() - 1)]):
+	if _workers.size() < int(_per_age(style.age_up_workers)):
 		return
 	var cost: Dictionary = DB.ages[p.age].cost
 	# Only start hoarding once the age-up is about a third paid for; until then keep spending.
@@ -412,7 +413,7 @@ func _first_complete(type_id: String):
 
 func _construction() -> void:
 	var military: String = _military_building()
-	var want := int(style.military_buildings[_age_index()])
+	var want := int(_per_age(style.military_buildings))
 	if _have(military) < want and _workers.size() >= 6:
 		_build(military, _home)
 	elif _have("library") == 0 and _workers.size() >= int(style.library_at_workers):

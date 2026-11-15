@@ -53,6 +53,9 @@ var rebels := -1
 var hungary_risen := false
 ## Difficulty the computer players were set up with (Hungary's AI uses it too).
 var ai_difficulty := "normal"
+## The last age of this match (skirmish "Last age", or the last playable age).
+## 0 in saves made before it existed: final_age() then falls back to the data.
+var max_age := 0
 ## Scripted scenario state (saved) and the script driving it (re-attached on load).
 var scenario := {}
 var scenario_logic: RefCounted = null
@@ -77,6 +80,9 @@ func new_game(seed_value: int, faction_ids: Array, human_index := 0, difficulty 
 	if options.has("hungary"):
 		rules.hungary.enabled = bool(options.hungary)
 	ai_difficulty = difficulty
+	var last := DB.last_age(bool(options.get("all_ages", false)))
+	var end := int(options.get("end_age", 0))
+	max_age = clampi(end if end > 0 else last, clampi(int(options.get("start_age", 1)), 1, last), last)
 	var layout := Generator.generate(map, seed_value, size, map_type)
 	territory.setup(map.width, map.height)
 	for i in faction_ids.size():
@@ -94,7 +100,7 @@ func new_game(seed_value: int, faction_ids: Array, human_index := 0, difficulty 
 			p.res[k] = float(rules.start_resources[k]) * res_mult
 		if res_mult > 1.0:
 			p.res.coal = maxf(p.res.coal, 100.0 * res_mult)
-		p.age = clampi(int(options.get("start_age", 1)), 1, DB.ages.size())
+		p.age = clampi(int(options.get("start_age", 1)), 1, max_age)
 		p.vis.resize(map.width * map.height)
 		if options.get("explored", false):
 			p.vis.fill(1)
@@ -788,7 +794,7 @@ func _complete_research(p, branch_id: String) -> void:
 
 
 func _complete_age(p) -> void:
-	p.age = mini(p.age + 1, DB.ages.size())
+	p.age = mini(p.age + 1, final_age())
 	if p.age >= int(rules.get("victory", {}).get("relics_spawn_age", 99)) and not relics_spawned:
 		_spawn_relics()
 	events.append({"type": "age_up", "player": p.index, "age": p.age, "name": DB.ages[p.age - 1].name})
@@ -1221,6 +1227,11 @@ func _drop_relics_in(holder: Entity) -> void:
 
 
 # --- Queries --------------------------------------------------------------------
+
+## The last age players can reach in this match.
+func final_age() -> int:
+	return max_age if max_age > 0 else DB.last_age()
+
 
 func get_entity(id: int) -> Entity:
 	return entities.get(id)
@@ -1868,7 +1879,7 @@ func _advance_age(pid: int, cmd: Dictionary) -> String:
 	if b == null or b.owner != pid or b.constructing or not b.def.get("advances_age", false):
 		return "Cannot advance here"
 	var p = players[pid]
-	if p.age >= DB.ages.size():
+	if p.age >= final_age():
 		return "Already in the final age"
 	if p.advancing_age:
 		return "Already advancing"

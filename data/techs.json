@@ -1,5 +1,5 @@
 {
-	"_comment": "Four research branches with six levels each. Level N requires age N. Cost at level N = cost * cost_growth^(N-1); time = time + time_step*(N-1). 'effects' apply once per level researched. Military upgrade lines ('scope': a building id) have three levels at the listed 'ages' and only strengthen troops trained in that building.",
+	"_comment": "Library branches have one level per age (twelve), and level N requires age N. Cost at level N = cost * cost_growth^(N-1); time = time + time_step*(N-1). 'effects' apply once per level researched. Military upgrade lines ('scope': a building id) have six levels at the listed 'ages' and only strengthen troops trained in that building.",
 	"effect_labels": {
 		"cap_gold": "Thaler cap +%s/s",
 		"cap_timber": "Timber cap +%s/s",
@@ -58,7 +58,13 @@
 				"Clockwork Looms",
 				"Theresian Cadastre",
 				"Aether Mills",
-				"The Abundance Engine"
+				"The Abundance Engine",
+				"Federal Customs Union",
+				"Electrification",
+				"Assembly Lines",
+				"Central Bank of the Crown Lands",
+				"The Aether Grid",
+				"Kaprun Hydropower"
 			],
 			"short": "Camer.",
 			"icon": "ledger"
@@ -86,7 +92,13 @@
 				"Star Forts",
 				"Military Frontier",
 				"Aether-Charged Bastions",
-				"The Unbreakable Line"
+				"The Unbreakable Line",
+				"Concrete Casemates",
+				"Barbed-Wire Belts",
+				"Anti-Tank Ditches",
+				"Flak Towers",
+				"Radar Fences",
+				"The Alpine Redoubt"
 			],
 			"short": "Fort.",
 			"icon": "fort"
@@ -114,7 +126,13 @@
 				"Semmelweis' Washing",
 				"Schönbrunn Botanics",
 				"Aether Tonics",
-				"The Vigour Engine"
+				"The Vigour Engine",
+				"Landsteiner's Blood Groups",
+				"Field X-Rays",
+				"Sulfa Powders",
+				"Penicillin",
+				"Blood Banks",
+				"The Polio Vaccine"
 			],
 			"short": "Medicine",
 			"icon": "medicine"
@@ -139,12 +157,18 @@
 			"levels": [
 				"Theresian Drill",
 				"Radetzky's Regulations",
-				"Aether-Steel Bayonets"
+				"Aether-Steel Bayonets",
+				"Storm-Troop Tactics",
+				"Combined Arms Doctrine",
+				"Mechanised Infantry"
 			],
 			"ages": [
 				1,
 				3,
-				5
+				5,
+				7,
+				9,
+				11
 			]
 		},
 		"rifling": {
@@ -167,12 +191,18 @@
 			"levels": [
 				"Rifled Barrels",
 				"Air-Rifle Reservoirs",
-				"Aether Sights"
+				"Aether Sights",
+				"Mannlicher Repeaters",
+				"Telescopic Sights",
+				"Automatic Rifles"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"aether_lore": {
@@ -195,12 +225,18 @@
 			"levels": [
 				"Field Elixirs",
 				"Golden Lane Formulae",
-				"Alchemists' Fire"
+				"Alchemists' Fire",
+				"Aether Valves",
+				"Meitner Fractions",
+				"Aether Fission"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"aeronautics": {
@@ -223,12 +259,18 @@
 			"levels": [
 				"Silk Envelopes",
 				"Aether Ballast",
-				"Eagle Engines"
+				"Eagle Engines",
+				"Aluminium Frames",
+				"Monoplane Wings",
+				"Jet Turbines"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"steamworks": {
@@ -251,12 +293,18 @@
 			"levels": [
 				"Pressure Boilers",
 				"Skoda Steel",
-				"Colossus Cores"
+				"Colossus Cores",
+				"Diesel Engines",
+				"Porsche Suspension",
+				"Reactor Drives"
 			],
 			"ages": [
 				4,
 				5,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"seamanship": {
@@ -279,12 +327,18 @@
 			"levels": [
 				"Adriatic Charts",
 				"Ironclad Plating",
-				"Tegetthoff's Tactics"
+				"Tegetthoff's Tactics",
+				"Wireless Fleet Signals",
+				"Submarine Hulls",
+				"Sonar"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"flesh_craft": {
@@ -307,12 +361,18 @@
 			"levels": [
 				"Stitched Sinew",
 				"Grave Iron",
-				"Unholy Vigour"
+				"Unholy Vigour",
+				"Gas-Hardened Flesh",
+				"Grafted Plate",
+				"Reactor Hearts"
 			],
 			"ages": [
 				1,
 				3,
-				5
+				5,
+				7,
+				9,
+				11
 			]
 		},
 		"bone_fletching": {
@@ -335,12 +395,18 @@
 			"levels": [
 				"Barbed Bones",
 				"Marrow Strings",
-				"Death-Sight"
+				"Death-Sight",
+				"Belt-Fed Bones",
+				"Ghost Optics",
+				"Soul Rounds"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"necromancy": {
@@ -363,12 +429,18 @@
 			"levels": [
 				"Grave Whispers",
 				"Soul Siphons",
-				"Lichcraft"
+				"Lichcraft",
+				"Wireless Séances",
+				"Mass Contracts",
+				"Soul Fission"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"wing_binding": {
@@ -391,12 +463,18 @@
 			"levels": [
 				"Bound Wings",
 				"Night Gliding",
-				"Wyrm Bonds"
+				"Wyrm Bonds",
+				"Corpse Zeppelins",
+				"Bat-Plane Rigging",
+				"Wraith Jets"
 			],
 			"ages": [
 				2,
 				4,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		},
 		"siege_horrors": {
@@ -419,12 +497,18 @@
 			"levels": [
 				"Plague Loads",
 				"Bone Engines",
-				"Colossal Horrors"
+				"Colossal Horrors",
+				"Undead Panzers",
+				"Frost Engines",
+				"Necropolis Titans"
 			],
 			"ages": [
 				4,
 				5,
-				6
+				6,
+				8,
+				10,
+				12
 			]
 		}
 	}

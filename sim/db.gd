@@ -68,6 +68,19 @@ static func display_name(def: Dictionary, faction: String = "") -> String:
 	return def.get("name", def.get("id", "?"))
 
 
+## The last playable age: ages marked "wip" in ages.json (content not built yet)
+## are left out unless `all_ages` is set (developers, tests).
+static func last_age(all_ages := false) -> int:
+	if all_ages:
+		return ages.size()
+	var n := 0
+	for a in ages:
+		if a.get("wip", false):
+			break
+		n += 1
+	return maxi(1, n)
+
+
 static func damage_mult(dtype: String, armor: String) -> float:
 	return float(damage.matrix.get(dtype, {}).get(armor, 1.0))
 

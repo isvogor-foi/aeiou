@@ -10,6 +10,8 @@ static var map_type := "inland"
 ## Skirmish options (see rules.json "skirmish").
 static var map_size := "normal"
 static var start_age := 1
+## The last age of the match; 0 means the last playable age.
+static var end_age := 0
 static var resources := "standard"
 static var victories := {"territory": true, "wonders": true, "relics": true}
 static var speed_index := 1
@@ -19,8 +21,15 @@ static var reveal := "normal"
 
 ## The options dictionary World.new_game() takes.
 static func options() -> Dictionary:
-	return {"map_size": map_size, "start_age": start_age, "resources": resources, "victories": victories.duplicate(),
+	return {"map_size": map_size, "start_age": start_age, "end_age": end_age, "all_ages": all_ages(),
+			"resources": resources, "victories": victories.duplicate(),
 			"explored": reveal != "normal"}
+## Developers can play the unfinished ages (marked "wip" in ages.json):
+##   tools/godot --path . -- --all-ages
+static func all_ages() -> bool:
+	return "--all-ages" in OS.get_cmdline_user_args()
+
+
 ## Campaign or tutorial scenario to play ("" = skirmish), and a save file to load instead.
 static var scenario := ""
 static var load_path := ""

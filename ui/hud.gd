@@ -1157,7 +1157,7 @@ func _entries_for_selection() -> Array:
 						"locked": "Ready in %ds" % ceili(left) if left > 0.0 else "",
 						"tooltip": "Sacrifice the nearest soldier to restore %d Dread." % int(cfg.tithe_gain),
 						"action": {"kind": "tithe"}})
-		if first.def.get("advances_age", false) and p.age < DB.ages.size():
+		if first.def.get("advances_age", false) and p.age < gv.world.final_age():
 			var next: Dictionary = DB.ages[p.age]
 			entries.append({"label": "Advance", "hotkey": "U", "cost": next.cost,
 					"locked": "Already advancing" if p.advancing_age else "",

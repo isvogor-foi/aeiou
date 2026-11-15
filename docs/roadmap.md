@@ -10,23 +10,27 @@ Sizes: **S** an hour or two, **M** a day, **L** several days.
 
 ## Phase 0: Finish what's open (before any new content)
 
-- [ ] **S** Settle the `main` / `origin/main` split (reset to `origin/main`, or force-push) and commit the pending work.
+- [x] **S** Settle the `main` / `origin/main` split (reset to `origin/main`, or force-push) and commit the pending work.
 - [ ] **M** Playtest Campaign 1, chapters 1–6; fix what turns up (Chapter 2's Grave Engine and Chapter 5's Empress are the balance suspects).
 - [ ] **L** Phase 8 balance for Ages 1–6 (see the to-do list in technical.md): pacing to 25–35 minutes, 50/50 fairness, victory tuning. Ages 7–12 will be balanced against this baseline, so it should be stable first.
 
-## Phase 1: Foundations for 12 ages (engine, no new content)
+## Phase 1: Foundations for 12 ages (engine, no new content) ✔ done 2026-11-15
+
+**Decided:** engine work before the Ages 1–6 balance pass (that pass now runs just before Phase 4); research extends to 12 levels; refits are automatic on age-up (Phase 2); unfinished ages are hidden until built.
+
+**As built:** ages 7–12 are in `data/ages.json` marked `"wip": true`; `DB.last_age()` is the last finished age; each match keeps its own `World.max_age` (skirmish "Last age", saved with the match; old saves fall back to the data); `--all-ages` on the command line opens the unfinished ages for developers. Library branches have 12 levels, military lines 6 (at ages 1/3/5/7/9/11 or 2/4/6/8/10/12). The AI's per-age tables reuse their last entry past their end; an AI-vs-AI test climbed to Age 12 without errors. Relics (Age 5), charters (Age 5) and Hungary's rise (a timer) need no change: a game that starts at Age 7 simply has them from the start. Research costs above level 6 follow the old growth curve and get tuned in Phase 6.
 
 Most of the simulation already reads the age count from `data/ages.json`. These places assume six:
 
-- [ ] **S** `ai/ai_player.gd` `_age_index()` clamps to 0–5; make the per-age tables in `data/ai.json` any length (pad with the last entry).
-- [ ] **S** `view3d/buildings.gd` `_age_palette` / `_age_dress` stop at Age 6; open them to 12 (the art comes in Phase 3).
-- [ ] **S** `tests/building_gallery.gd` loops ages 1–6; `tests/run_tests.gd` asserts exactly 6 ages. Read the count from the data instead.
-- [ ] **M** **Research beyond level 6:** library branches (Cameralism, Fortification, Medicine) and the military lines are 6 levels with "level N needs age N". Decide: extend each to 12 levels, or add new modern branches (e.g. Electrification, Motorisation, Radio). Then update `data/techs.json`, the HUD research tiles and the AI research order.
-- [ ] **M** **Skirmish age range:** today the menu offers a starting age of 1–4. Add an *ending* age too, with presets: Classic (1–6), Modern (7–12), Full (1–12). A 12-age game must still fit a sensible length.
-- [ ] **S** Rules tied to ages: relics appear at Age 5 (`relics_spawn_age`), charters at Age 5 (`charter_age`), Hungary's rise. Check each still makes sense in a game that starts at 7.
-- [ ] **S** Age-up costs and times for 7–12 in `data/ages.json` (placeholders first, tuned in Phase 6).
-- [ ] **S** Saves: old saves must still load (they never contain ages above 6).
-- [ ] **M** Tests: a 12-age smoke test (advance through every age; every unit, building and research of every age is reachable for both factions).
+- [x] **S** `ai/ai_player.gd` `_age_index()` clamps to 0–5; make the per-age tables in `data/ai.json` any length (pad with the last entry).
+- [x] **S** `view3d/buildings.gd` `_age_palette` / `_age_dress` stop at Age 6; open them to 12 (the art comes in Phase 3).
+- [x] **S** `tests/building_gallery.gd` loops ages 1–6; `tests/run_tests.gd` asserts exactly 6 ages. Read the count from the data instead.
+- [x] **M** **Research beyond level 6:** library branches (Cameralism, Fortification, Medicine) and the military lines are 6 levels with "level N needs age N". Decide: extend each to 12 levels, or add new modern branches (e.g. Electrification, Motorisation, Radio). Then update `data/techs.json`, the HUD research tiles and the AI research order.
+- [x] **M** **Skirmish age range:** today the menu offers a starting age of 1–4. Add an *ending* age too, with presets: Classic (1–6), Modern (7–12), Full (1–12). A 12-age game must still fit a sensible length.
+- [x] **S** Rules tied to ages: relics appear at Age 5 (`relics_spawn_age`), charters at Age 5 (`charter_age`), Hungary's rise. Check each still makes sense in a game that starts at 7.
+- [x] **S** Age-up costs and times for 7–12 in `data/ages.json` (placeholders first, tuned in Phase 6).
+- [x] **S** Saves: old saves must still load (they never contain ages above 6).
+- [x] **M** Tests: a 12-age smoke test (advance through every age; every unit, building and research of every age is reachable for both factions).
 
 ## Phase 2: Units that upgrade (the "people upgrade")
 

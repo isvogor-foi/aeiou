@@ -48,7 +48,8 @@ const STYLES := {
 
 
 ## `style` is a crown land / pact / "hungary", or "" for the faction's default.
-## `age` (1-6) dresses it for its era (see _age_palette and _age_dress); 0 = undated.
+## `age` (1-12) dresses it for its era (see _age_palette and _age_dress); 0 = undated.
+## Ages 7-12 still look like Age 6 until their dressing is built (docs/roadmap.md, Phase 3).
 static func build(kind: String, faction: String, team: Color, style := "", age := 0) -> Node3D:
 	var key := "%s/%s/%s/%s/%d" % [kind, faction, style, team.to_html(), age]
 	if not _cache.has(key):

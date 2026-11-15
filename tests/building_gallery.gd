@@ -72,7 +72,7 @@ func _run() -> void:
 		await process_frame
 	if OS.get_cmdline_user_args().size() > 1 and OS.get_cmdline_user_args()[1] == "ages":
 		# The same buildings dressed for each age.
-		for age in range(1, 7):
+		for age in range(1, DB.ages.size() + 1):
 			for p in w.players:
 				p.age = age
 			for i in 3:

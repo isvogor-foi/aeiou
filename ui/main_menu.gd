@@ -370,10 +370,19 @@ func _build_skirmish() -> Control:
 	right.add_child(MenuTheme.section("Rules"))
 	var rules := _grid()
 	right.add_child(rules)
-	var ages := {}
-	for a in [1, 2, 3, 4]:
-		ages[str(a)] = DB.ages[a - 1].name
-	_option(rules, "start_age", "Starting age", ages, str(GameConfig.start_age))
+	# Only finished ages are offered (all of them with --all-ages).
+	var last := DB.last_age(GameConfig.all_ages())
+	var starts := {}
+	var ends := {}
+	for a in range(1, last + 1):
+		if a < last and (a <= 4 or a >= 7):
+			starts[str(a)] = DB.ages[a - 1].name
+		if a >= 2:
+			ends[str(a)] = DB.ages[a - 1].name
+	_option(rules, "start_age", "Starting age", starts, str(GameConfig.start_age))
+	var end := GameConfig.end_age if GameConfig.end_age > 0 else last
+	_option(rules, "end_age", "Last age", ends, str(mini(end, last)),
+			"The match ends its age ladder here: no one can advance past it.")
 	_option(rules, "resources", "Resources", RESOURCES, GameConfig.resources)
 	_option(rules, "speed", "Game speed", SPEEDS, str(GameConfig.speed_index))
 	var checks := VBoxContainer.new()
@@ -601,6 +610,7 @@ func _start() -> void:
 	GameConfig.map_type = _picked("map_type")
 	GameConfig.map_size = _picked("map_size")
 	GameConfig.start_age = int(_picked("start_age"))
+	GameConfig.end_age = maxi(int(_picked("end_age")), GameConfig.start_age)
 	GameConfig.resources = _picked("resources")
 	GameConfig.speed_index = int(_picked("speed"))
 	GameConfig.reveal = _picked("reveal")

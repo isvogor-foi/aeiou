@@ -1,11 +1,9 @@
 extends RefCounted
 ## Research branches and the per-player modifiers they grant. Tech data lives in
-## data/techs.json as branches of six levels; level N needs age N.
+## data/techs.json. Library branches have one level per age (level N needs age N);
+## military lines list the age of each level in "ages".
 
 const DB = preload("res://sim/db.gd")
-
-const MAX_LEVEL := 6
-
 
 static func branch(id: String) -> Dictionary:
 	return DB.techs.branches[id]
@@ -86,4 +84,9 @@ static func _num(v: float) -> String:
 
 
 static func roman(n: int) -> String:
-	return ["", "I", "II", "III", "IV", "V", "VI"][clampi(n, 0, MAX_LEVEL)]
+	var out := ""
+	for pair in [[10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"]]:
+		while n >= pair[0]:
+			out += pair[1]
+			n -= pair[0]
+	return out

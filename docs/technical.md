@@ -18,6 +18,8 @@ tools/godot --headless --path . -s tests/campaign_bot.gd  # charge each campaign
 `tools/godot` is the official Godot 4.7.2 Linux binary. It is not checked in;
 download it from godotengine.org if it's missing. Player-facing setup is in the [README](../README.md).
 
+Ages 7–12 are work in progress (`"wip": true` in `data/ages.json`) and hidden from normal games. To play them, start with `tools/godot --path . -- --all-ages`; the skirmish menu then offers every age as a starting and last age.
+
 The test runner picks up every `test_*` method in `tests/run_tests.gd`; the exit code is the number of failed checks.
 
 `devtools/` holds Python 3 asset scripts (`recolor.py`, `roofs.py`, `subdivide.py`) that need Pillow and NumPy. Their output is checked in, so they're only needed to regenerate assets.

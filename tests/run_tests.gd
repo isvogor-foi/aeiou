@@ -96,7 +96,18 @@ func test_data_integrity() -> void:
 		check(DB.units.has(f.worker), "%s worker missing" % fid)
 		for b in f.buildable:
 			check(DB.buildings.has(b), "%s buildable %s missing" % [fid, b])
-	check(DB.ages.size() == 6, "expected 6 ages, got %d" % DB.ages.size())
+	check(DB.ages.size() == 12, "expected 12 ages, got %d" % DB.ages.size())
+	for i in DB.ages.size():
+		check(int(DB.ages[i].age) == i + 1, "ages are numbered in order (%d)" % (i + 1))
+	for i in 6:
+		check(not DB.ages[i].get("wip", false), "ages 1-6 are finished")
+	# Nothing may need an age that doesn't exist.
+	for table in [DB.units, DB.buildings]:
+		for id in table:
+			check(int(table[id].get("age", 1)) <= DB.ages.size(), "%s needs a missing age" % id)
+	for bid in DB.techs.branches:
+		for level in range(1, Research.max_level(bid) + 1):
+			check(Research.level_info(bid, level).age <= DB.ages.size(), "%s %d needs a missing age" % [bid, level])
 
 
 func test_damage_matrix() -> void:
@@ -428,6 +439,42 @@ func test_age_up_raises_city_limit() -> void:
 	_run(w, float(DB.ages[1].time) + 1.0)
 	check(p.age == 2, "reached age 2 (age %d)" % p.age)
 	check(w.city_limit(0) == 3, "age 2 allows 3 cities")
+
+
+## The age ladder: finished ages only by default, a per-match last age, and with
+## all ages unlocked a player climbs from the first to the twelfth.
+func test_age_ladder() -> void:
+	check(Research.roman(4) == "IV" and Research.roman(9) == "IX" and Research.roman(12) == "XII", "roman numerals to XII")
+	var w := _world()
+	check(w.final_age() == DB.last_age(), "a normal match ends at the last finished age (%d)" % w.final_age())
+	var p = w.players[0]
+	var city := _city(w, 0)
+	p.res = {"gold": 1e6, "timber": 1e6, "herbs": 1e6, "mana": 1e6, "coal": 1e6}
+	p.age = w.final_age()
+	check(w.issue({"type": "advance_age", "player": 0, "building": city.id}) != "", "no advancing past the last age")
+	w = World.new()
+	w.new_game(5, ["monarchy", "covenant"], 0, "normal", "inland", {"end_age": 3})
+	check(w.final_age() == 3, "skirmish Last age caps the ladder (%d)" % w.final_age())
+	w = World.new()
+	w.new_game(5, ["monarchy", "covenant"], 0, "normal", "inland", {"start_age": 4, "end_age": 2})
+	check(w.final_age() == 4, "the last age is never below the starting age (%d)" % w.final_age())
+	# All twelve, the developer way.
+	w = World.new()
+	w.new_game(5, ["monarchy", "covenant"], 0, "normal", "inland", {"all_ages": true})
+	w.ais.clear()
+	check(w.final_age() == DB.ages.size(), "all_ages opens every age")
+	p = w.players[0]
+	city = _city(w, 0)
+	p.res = {"gold": 1e6, "timber": 1e6, "herbs": 1e6, "mana": 1e6, "coal": 1e6}
+	while p.age < DB.ages.size():
+		var was: int = p.age
+		check(w.issue({"type": "advance_age", "player": 0, "building": city.id}) == "", "advance from age %d" % was)
+		_run(w, float(DB.ages[was].time) + 1.0)
+		if p.age == was:
+			check(false, "stuck in age %d" % was)
+			break
+	check(p.age == DB.ages.size(), "climbed to age %d" % p.age)
+	check(w.issue({"type": "advance_age", "player": 0, "building": city.id}) != "", "the twelfth age is the last")
 
 
 func _barracks(w: World) -> int:
