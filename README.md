@@ -1,6 +1,6 @@
 # A.E.I.O.U.
 
-A 3D real-time strategy game where steam meets magic. The **Aetheric Monarchy**, an alternate Habsburg empire powered by Aether, alchemy and Tesla coils, fights the **Umbral Covenant**, an army of the dead, across six ages of history.
+A 3D real-time strategy game where steam meets magic. The **Aetheric Monarchy**, an alternate Habsburg empire powered by Aether, alchemy and Tesla coils, fights the **Umbral Covenant**, an army of the dead, across twelve ages of history, from the Margraves to the Age of Rockets.
 
 ![A Monarchy city in the Age of the Congress, with a battle at its gates](docs/images/screenshot.png)
 
@@ -9,11 +9,13 @@ A 3D real-time strategy game where steam meets magic. The **Aetheric Monarchy**,
 - **Two factions:**
   - **The Aetheric Monarchy:** grenadiers, Aether musketeers, steam tanks, airships and the Aether Colossus.
   - **The Umbral Covenant:** reavers, necromancers, bone drakes and plague engines.
-- **Six ages**, from the Margraves to the Aether Monarchy, each with new units, buildings and research.
+- **Twelve ages**, from the Margraves to the Age of Rockets. Units upgrade with the ages (Musketeers become Riflemen, Kürassiere become armoured cars, then light tanks), buildings grow neon signs, radar dishes and glass wings, and from the 1920s the cities fill with traffic.
 - **Cities and borders:** found cities, push your borders out by building, and capture enemy cities rather than razing them. Keep distant cities loyal or they revolt to Hungary.
 - **Crown lands:** proclaim your cities as Croatia, Carniola, Bohemia, Galicia or Transylvania, each with its own regiment. The Covenant swears Dark Pacts instead.
 - **Heroes, abilities and wonders**, and four ways to win: conquest, territory, wonders, or the five A.E.I.O.U. relics.
-- **A six-chapter campaign, 1914–1918:** the shot at Sarajevo misses, and Archduke Franz Ferdinand must hold an empire of equals together against a crown prince who was never really dead.
+- **Two campaigns, twelve chapters:**
+  - *Viribus Unitis* (1914–1918): the shot at Sarajevo misses, and Archduke Franz Ferdinand must hold an empire of equals together against a crown prince who was never really dead.
+  - *The Undying Century* (1926–1955): the lich-magnate Szentkirályi rebuilds the dead as a company, and the Federation fights him from Houdini's séances to Franz Josef Land, the Carpathians and the Aether bomb.
 - **Skirmish** against a computer opponent (Easy, Normal or Hard) on inland, coastal or island maps, and a short **tutorial**.
 
 ## Requirements

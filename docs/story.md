@@ -82,7 +82,7 @@ Each chapter then opens with a short briefing card (date, place, a two- or three
 | 5 | `m5_empress.gd` | Capture 3 ritual circles within 8 minutes; the Pale Empress rises at 45/60/80/100% health for 0/1/2/3 circles left burning. Rudolf leaves for Buda. |
 | 6 | `m6_viribus.gd` | Hold the five relics, then storm Buda: Rudolf boss, the Iron Emperor and all crown lands join. Franz Joseph dies when Rudolf falls. |
 
-## Campaign 2: The Undying Century (1926–1955), draft
+## Campaign 2: The Undying Century (1926–1955)
 
 Decided with the user on 2026-11-15. Six more chapters, one per new age (7–12). Nothing is built yet.
 
@@ -141,6 +141,16 @@ Triumph again, smaller in its cost but heavier in its meaning: the Federation ou
 | **Ferdinand Porsche** (b. Bohemia 1875) | Builds the tanks of the Diesel age. |
 | **Nikola Tesla** | Until his death in January 1943 (Chapter 10). |
 | **Harry Houdini** | Dies in 1926; his freed soul may return once, as a ghost hero, in Chapter 12. |
+
+### The chapters as built (2026-11-15)
+| # | Script | Play |
+|---|---|---|
+| 7 | `m7_rosabelle.gd` | Close three séance parlours (words of Houdini's code; his ghost joins), then storm the Concern's counting-house; Szentkirályi appears and walks away. Reinforcements bring Landpanzers. |
+| 8 | `m8_black_thursday.gd` | Four crown-land cities; buy-outs every 70s send collectors to loiter in a city's borders and drain its loyalty; charters, garrisons and quick answers hold the Federation for 12 minutes. Three lands lost loses. |
+| 9 | `m9_ice_crown.gd` | Snow. Build a Kaserne before the light goes; hold Camp Tegetthoff through the polar night (Frost Dead waves, a supply zeppelin); sunrise freezes the attackers; destroy the foundry and the Ice Engine. Hedy Lamarr must survive. |
+| 10 | `m10_long_winter.gd` | Hold three Carpathian passes (contested points) against the winter offensive; Tesla's radar comes online at 4:00; break through to the winter headquarters. Tesla must survive. |
+| 11 | `m11_aether_bomb.gd` | Take two relay pylons, then choose: drop the Aether bomb (wins at once, scars the plain) or go in on foot against the Reactor Lich. Remembered. Lise Meitner must survive. |
+| 12 | `m12_treaty.gd` | Break the necropolis gates, then end Szentkirályi as the crown lands send their regiments. The bomb's scar and a weakened Count, or Houdini's ghost. The Treaty; a wedding if no bomb fell. |
 
 ## Open questions
 1. **Hungary in skirmish games.** In the story it's Rudolf's ally; in skirmish it's currently a third side hostile to everyone. Keep that, or ally it with the Covenant?

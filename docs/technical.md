@@ -64,7 +64,7 @@ Rules of thumb:
   - Losing all cities means defeat.
 - **Gather caps:** per-resource income limits, shown in the top bar as `+rate/cap`.
 - **Library:** Cameralism (economy), Fortification and Medicine, 6 levels each. Level N needs age N. Soldier upgrades come from the military buildings (see Phase 8 fixes).
-- **Ages:** advance at a city through all six ages. Age raises the city limit and unlocks content.
+- **Ages:** advance at a city through the ages (twelve since the second campaign). Age raises the city limit and unlocks content.
 
 **3D view:**
 - Gently rolling terrain, lakes, forests, and borders drawn on the ground.
@@ -280,17 +280,10 @@ Performance is finished:
 
 The plan for Ages 7–12 and Campaign 2 is in [roadmap.md](roadmap.md).
 
-**To do (Phase 8, paused):**
-1. **Baseline batch.** Run `tests/run_balance.sh <out_dir> 3 6 normal 60` (18 AI-vs-AI games, both sides, all maps), then summarise with `tests/balance_report.py`.
-2. **Pacing to 25–35 minutes:**
-   - Aether income (cap 0.8/s) makes the late age-ups very slow.
-   - AI armies are small (Normal `army_cap` 45; peaks of about 70 per side), and its first wave comes at 5–8 minutes.
-   - Age costs and times need checking against these.
-3. **Fairness about 50/50:** mirror-test both sides on every map type. The Covenant tends to fall an age behind.
-4. **Victories:**
-   - Territory (share and hold time): easier now that buildings push borders out.
-   - Relics: longer hold, and capturing a city should take its relics.
-   - Wonders: costs and hold time against the new pace.
-   - The military upgrades (+10% per level) against the pace.
-5. **Missions:** playtest the six chapters; re-verify Chapter 4 (Vienna) after pacing changes (an idle garrison falls at about 8:20 of 10:00, so the player must build).
-6. **Performance, optional:** in big crowds, unit separation (about 3.5 ms) and per-unit view sync (about 20 µs per unit) are the next costs.
+**Phase 8 balance (done 2026-11-15 for Ages 1–6):** five AI-vs-AI batches; the last gave Monarchy 7, Covenant 6, 3 timeouts, decided games a median 33 minutes, Age 3 reached in most games. The table and the settings kept are in [roadmap.md](roadmap.md) (Phase 0).
+
+**Still open:**
+1. **Victories:** territory, relics (longer hold; capturing a city should take its relics), wonders, and the military upgrades against the new pace.
+2. **Ages 7–12 balance:** the full 12-age ladder (roadmap Phase 6).
+3. **Missions:** playtest all twelve chapters by hand; each has been bot-played (`tests/campaign_bot.gd`).
+4. **Performance, optional:** in big crowds, unit separation (about 3.5 ms) and per-unit view sync (about 20 µs per unit) are the next costs; vehicles and city traffic add live parts to profile.
