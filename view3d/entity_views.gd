@@ -257,7 +257,9 @@ func sync(alpha: float, delta: float) -> void:
 				if r.body.get_child_count() > 0 and r.body.get_child(0).has_meta("spin"):
 					r.body.rotation.y += delta * 0.6
 				_sync_relic(e, r)
-		_animate_parts(r, delta, now)
+		# Wheels, tracks, turrets, rotors: only for what the camera can see.
+		if not r.animated.is_empty() and cam.is_position_in_frustum(r.node.global_position):
+			_animate_parts(r, delta, now)
 	_unit_views = units
 	for id in views.keys():
 		if not seen.has(id):
