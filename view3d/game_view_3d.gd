@@ -577,14 +577,20 @@ func entity_at_mouse():
 	for e in world.entities.values():
 		if not e.alive or e.kind != Entity.UNIT or not is_shown(e):
 			continue
-		# Test where the unit is drawn (a circling plane is not over its ground spot).
+		# Test where the unit is drawn (a circling plane is not over its ground spot),
+		# along its whole height: a click on a giant's chest is a click on the giant.
 		var drawn = entity_views.pick_point(e.id)
 		var p3: Vector3 = drawn if drawn != null else entity_point(e) + Vector3(0, entity_views.pick_height(e.id), 0)
-		if camera.is_position_behind(p3):
+		var span: float = entity_views.pick_span(e.id)
+		var low: Vector3 = p3 - Vector3(0, 0.3, 0)
+		var high: Vector3 = low + Vector3(0, span, 0)
+		if camera.is_position_behind(low) or camera.is_position_behind(high):
 			continue
-		var d := camera.unproject_position(p3).distance_to(m)
-		# Aircraft are bigger targets than a soldier: give them a wider circle.
-		if entity_views.is_flyer(e.id):
+		var a2 := camera.unproject_position(low)
+		var b2 := camera.unproject_position(high)
+		var d := Geometry2D.get_closest_point_to_segment(m, a2, b2).distance_to(m)
+		# Aircraft and giants are bigger targets than a soldier.
+		if entity_views.is_flyer(e.id) or span > 2.0:
 			d *= 0.55
 		if d < best_d:
 			best_d = d

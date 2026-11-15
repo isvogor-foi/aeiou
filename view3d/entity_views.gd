@@ -98,9 +98,12 @@ func _create(e) -> Dictionary:
 				body.position.y = r.fly
 				node.add_child(_shadow())
 			var team: Color = gv.world.players[e.owner].color
-			node.add_child(_ring(0.45, Color(team, 0.75)))
+			# The team (and hero) rings show only while the unit is selected.
+			r.rings = [_ring(0.45, Color(team, 0.75))]
+			node.add_child(r.rings[0])
 			if e.is_hero():
-				node.add_child(_ring(0.75, Color(1.0, 0.82, 0.3, 0.9)))
+				r.rings.append(_ring(0.75, Color(1.0, 0.82, 0.3, 0.9)))
+				node.add_child(r.rings[-1])
 			r.shield = _shield_bubble(r.bar_height)
 			node.add_child(r.shield)
 			r.sel = _ring(0.58, Color(0.35, 1.0, 0.35, 0.95))
@@ -236,6 +239,8 @@ func sync(alpha: float, delta: float) -> void:
 		if not shown:
 			continue
 		r.sel.visible = gv.is_selected(e.id)
+		for ring in r.get("rings", []):
+			ring.visible = r.sel.visible
 		match e.kind:
 			Entity.UNIT:
 				units += 1
@@ -524,6 +529,14 @@ func pick_point(id: int):
 	if r == null or not r.has("body") or r.body == null:
 		return null
 	return r.body.global_position + Vector3(0, 0.3 if r.fly > 0.0 else 0.4, 0)
+
+
+## A unit's drawn height (feet to head, or a flyer's body), for picking.
+func pick_span(id: int) -> float:
+	var r = views.get(id)
+	if r == null:
+		return 0.8
+	return 0.6 if r.fly > 0.0 else maxf(0.6, r.bar_height - 0.25)
 
 
 ## True for units that are hard to hit with a small pick circle (aircraft).
