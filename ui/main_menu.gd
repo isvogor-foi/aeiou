@@ -106,7 +106,7 @@ func _build_branding() -> Control:
 	_emblem.custom_minimum_size = Vector2(240, 160)
 	col.add_child(_emblem)
 	var title := Label.new()
-	title.text = "Rise of Magic"
+	title.text = "A.E.I.O.U."
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 64)
 	title.add_theme_color_override("font_color", Flags.GOLD)
@@ -437,7 +437,7 @@ func _update_faction() -> void:
 	_realm_name.text = f.name
 	_desc.text = "%s\n\nYour enemy: %s." % [f.description, foe.name]
 	_emblem.texture = Flags.texture(f.get("flag", "habsburg"), 4)
-	_motto.text = "A · E · I · O · U\nAustriae Est Imperare Orbi Universo" if f.has("motto") else "We do not die.\nWe wait."
+	_motto.text = "Austriae Est Imperare Orbi Universo" if f.has("motto") else "We do not die.\nWe wait."
 
 
 # --- Campaign, load, settings ------------------------------------------------------

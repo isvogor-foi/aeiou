@@ -1,4 +1,4 @@
-# Rise of Magic: story bible
+# A.E.I.O.U.: story bible
 
 Decided with the user on 2026-11-09. Inspired by Dragony's concept album *Viribus Unitis* (2021) and the single *The Dead Queen's Race* (2023): an alternate end of the Habsburg monarchy with steampunk, magic and the undead. **We keep the spirit and the shared historical figures but write our own plot, motives and names.**
 

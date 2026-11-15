@@ -10,7 +10,9 @@ config_version=5
 
 [application]
 
-config/name="Rise of Magic"
+config/name="A.E.I.O.U."
+config/use_custom_user_dir=true
+config/custom_user_dir_name="aeiou"
 config/description="A steampunk-meets-magic real-time strategy game."
 run/main_scene="res://ui/main_menu.tscn"
 config/features=PackedStringArray("4.7")

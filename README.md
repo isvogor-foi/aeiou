@@ -1,4 +1,4 @@
-# Rise of Magic
+# A.E.I.O.U.
 
 A 3D real-time strategy game where steam meets magic. The **Aetheric Monarchy**, an alternate Habsburg empire powered by Aether, alchemy and Tesla coils, fights the **Umbral Covenant**, an army of the dead, across six ages of history.
 
@@ -38,7 +38,7 @@ The first launch imports all the assets, which takes a minute or two. Later star
 
 New to the game? Start with **Tutorial** on the title screen, then **Campaign**.
 
-Saves and campaign progress are kept in Godot's user folder. On Linux that's `~/.local/share/godot/app_userdata/Rise of Magic/`.
+Saves and campaign progress are kept in Godot's user folder. On Linux that's `~/.local/share/aeiou/`; on Windows, `%APPDATA%\aeiou`.
 
 ## Controls
 

@@ -1,4 +1,4 @@
-# Rise of Magic: technical notes
+# A.E.I.O.U.: technical notes
 
 Godot 4 (typed GDScript), single-player against a scripted AI. For what the game is and how to start it, see the [README](../README.md); for the setting, see [story.md](story.md) and [aetheric_monarchy.md](aetheric_monarchy.md).
 
