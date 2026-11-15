@@ -6,6 +6,7 @@ extends RefCounted
 
 const Gear = preload("res://view3d/gear.gd")
 const Machines = preload("res://view3d/machines.gd")
+const Vehicles = preload("res://view3d/vehicles.gd")
 const Props = preload("res://view3d/props.gd")
 
 static var _mats := {}
@@ -29,6 +30,8 @@ static func mat(color: Color, emissive := 0.0, alpha := 1.0) -> StandardMaterial
 
 
 static func build(kind: String, team: Color) -> Node3D:
+	if kind in Vehicles.KINDS:
+		return Machines.build(kind, team)
 	match kind:
 		"griffin":
 			return _griffin()
@@ -98,8 +101,6 @@ static func build(kind: String, team: Color) -> Node3D:
 		"pier":
 			return _pier()
 		"landpanzer", "juggernaut", "gyrocopter", "plague_balloon", "siege_crawler", "corpse_crawler", "aether_train":
-			return Machines.build(kind, team)
-		"staff_car", "armoured_car", "motorcycle", "lorry", "halftrack", "light_tank", "hearse", "corpse_truck":
 			return Machines.build(kind, team)
 		"aether_well", "farmstead", "headframe", "coal_cart":
 			return Props.build(kind)

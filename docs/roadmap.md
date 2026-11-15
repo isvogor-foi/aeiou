@@ -68,9 +68,9 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 ### Vehicles (`view3d/vehicles.gd`, routed through `view3d/machines.gd`)
 - [x] **L** Vehicle kit (2026-11-15): wheels that turn with the distance driven (`"roll"`), track belts whose tread scrolls (`"tread"`, a small instance-uniform shader), turrets that swing to the last target and back (`"turret"`), hull rumble while driving (`"rumble"` in visuals.json), exhaust smoke, headlights, seated crew. Moving parts are baked one mesh each; the rest of the vehicle is one mesh per material, as before. `tests/vehicle_gallery.gd` parks and drives them all; `test_vehicle_kit` checks every model.
 - [x] **M** Cars and trucks: Austro-Daimler staff car and armoured car, lorry, motorcycle with sidecar, halftrack.
-- [ ] **M** Tanks: ~~light tank~~ (done), Porsche heavy tank, later walker refits.
-- [ ] **M** Aircraft: biplane, zeppelin (update the Lohner Aethership), monoplane fighter, jet, rocket. Propellers spin, jets leave contrails.
-- [ ] **M** Concern machines: ~~hearse car, corpse-truck~~ (done), undead panzer, bone halftrack, corpse-zeppelin, bat-plane, wraith jet.
+- [x] **M** Tanks: light tank, Porsche heavy tank, Aether rocket truck (walker refits come with their ages).
+- [x] **M** Aircraft: biplane, Aether zeppelin, monoplane fighter, jet. Propellers spin (with a blur disc), jets leave contrails that stay behind in the world; planes bank into turns and, with `"circle"` in visuals.json, orbit slowly while idle. (The Lohner Aethership keeps its own model.)
+- [x] **M** Concern machines: hearse, corpse-truck, undead panzer, bone halftrack, corpse-zeppelin, bat-plane (flapping membrane wings), wraith jet (soul-green trail).
 - [ ] **S** Movement feel: vehicles turn wide, accelerate and brake; tracks rotate in place. Check the formation and separation code copes with long, fast units.
 - [ ] **S** Existing machines (Landpanzer, Bone Juggernaut, crawlers) could move to the kit so their wheels and turrets come alive too.
 

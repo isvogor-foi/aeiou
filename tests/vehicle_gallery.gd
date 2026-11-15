@@ -11,7 +11,6 @@ const GameMap = preload("res://sim/game_map.gd")
 const DB = preload("res://sim/db.gd")
 const Vehicles = preload("res://view3d/vehicles.gd")
 
-const CONCERN := ["hearse", "corpse_truck"]
 
 
 func _initialize() -> void:
@@ -36,12 +35,17 @@ func _run() -> void:
 		var d: Dictionary = DB.units.landpanzer.duplicate(true)
 		d.id = "gallery_" + kind
 		d.name = kind.capitalize()
-		d.faction = "covenant" if kind in CONCERN else "monarchy"
+		d.faction = "covenant" if kind in Vehicles.CONCERN else "monarchy"
 		d.speed = 2.2
 		d.range = 5.0
 		d.erase("abilities")
 		DB.units[d.id] = d
-		DB.visuals.units[d.id] = {"procedural": kind, "scale": 1.0, "rumble": 1.0}
+		var air: bool = kind in Vehicles.AIR
+		d.domain = "air" if air else "ground"
+		DB.visuals.units[d.id] = {"procedural": kind, "scale": 1.0, "rumble": 0.0 if air else 1.0}
+		if air:
+			DB.visuals.units[d.id].merge({"fly_height": 2.2, "bank": kind != "zeppelin" and kind != "corpse_zeppelin",
+					"circle": 0.0 if "zeppelin" in kind else 0.7})
 	GameConfig.map_seed = 4242
 	var gv = load("res://view3d/game3d.tscn").instantiate()
 	gv.edge_scroll = false
@@ -64,21 +68,28 @@ func _run() -> void:
 			w.map.terrain[w.map.idx(t)] = GameMap.GRASS
 			w.map.dirty_tiles.append(t)
 	w.map.rebuild_solids()
+	# Ground vehicles in the first row, aircraft in a second.
 	var ids: Array = []
-	var x := 8.0
-	for kind in Vehicles.KINDS:
-		var owner := 1 if kind in CONCERN else 0
-		var u = w.spawn_unit("gallery_" + kind, owner, Vector2(x, y0) * GameMap.TILE)
-		u.facing = Vector2.DOWN
-		ids.append(u.id)
-		x += 2.2
+	for row in [Vehicles.GROUND, Vehicles.AIR]:
+		var x := 6.0
+		for kind in row:
+			var owner := 1 if kind in Vehicles.CONCERN else 0
+			var u = w.spawn_unit("gallery_" + kind, owner, Vector2(x, y0 + (0 if row == Vehicles.GROUND else 5)) * GameMap.TILE)
+			u.facing = Vector2.DOWN
+			ids.append(u.id)
+			x += 2.2 if row == Vehicles.GROUND else 3.0
 	gv.paused = true
 	for i in 3:
 		await process_frame
-	await _shot(gv, out + "/v_parked_a.png", Vector2(11.5, y0), 6.0)
-	await _shot(gv, out + "/v_parked_b.png", Vector2(18.0, y0), 6.0)
-	await _shot(gv, out + "/v_parked_c.png", Vector2(24.0, y0), 6.0)
-	await _shot(gv, out + "/v_overview.png", Vector2(16.0, y0 + 1), 12.0)
+	await _shot(gv, out + "/v_parked_a.png", Vector2(10.0, y0), 6.0)
+	await _shot(gv, out + "/v_parked_b.png", Vector2(16.5, y0), 6.0)
+	await _shot(gv, out + "/v_parked_c.png", Vector2(23.0, y0), 6.0)
+	await _shot(gv, out + "/v_parked_d.png", Vector2(29.0, y0), 6.0)
+	# Aircraft fly 2.2 up, so from the tilted camera they show about 3 tiles up-screen.
+	await _shot(gv, out + "/v_air_a.png", Vector2(10.0, y0 + 2), 7.0)
+	await _shot(gv, out + "/v_air_b.png", Vector2(17.5, y0 + 2), 7.0)
+	await _shot(gv, out + "/v_air_c.png", Vector2(24.5, y0 + 2), 7.0)
+	await _shot(gv, out + "/v_overview.png", Vector2(18.0, y0 + 3), 14.0)
 	# Drive south while shooting at a target off to the east: turrets swing round.
 	var dummy = w.spawn_unit("bone_golem", 1, Vector2(34, y0 + 4) * GameMap.TILE)
 	dummy.hp = 1e6
@@ -93,8 +104,8 @@ func _run() -> void:
 		if i % 10 == 0:
 			for id in ids:
 				gv.entity_views.on_attack(id, dummy.pos)
-	await _shot(gv, out + "/v_driving.png", Vector2(16.0, y0 + 4), 12.0, 1)
-	await _shot(gv, out + "/v_driving_close.png", Vector2(12.0, y0 + 5), 6.0, 30)
+	await _shot(gv, out + "/v_driving.png", Vector2(18.0, y0 + 7), 14.0, 1)
+	await _shot(gv, out + "/v_driving_close.png", Vector2(19.0, y0 + 11), 7.0, 30)
 	print("drove for %.1fs" % ((Time.get_ticks_msec() - t0) / 1000.0))
 	# The moving parts really moved: wheel angles, tread offsets and turret yaw.
 	for i in ids.size():

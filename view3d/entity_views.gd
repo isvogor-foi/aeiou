@@ -89,6 +89,8 @@ func _create(e) -> Dictionary:
 			r.bar_height = (float(v.get("height", 0.9)) + 0.25) * Models.unit_scale(e.type_id) + r.fly
 			r.animated = _animated_parts(body)
 			r.rumble = float(v.get("rumble", 0.0))
+			r.bank = v.get("bank", false)
+			r.circle = float(v.get("circle", 0.0))
 			if r.fly > 0.0:
 				body.position.y = r.fly
 				node.add_child(_shadow())
@@ -280,15 +282,16 @@ func _sync_unit(e, r: Dictionary, alpha: float, delta: float, now: float) -> voi
 		r.travel = step.length() * (1.0 if step.dot(fwd) >= 0.0 else -1.0)
 	r.last3 = p3
 	r.node.position = p3
+	var moving: bool = e.pos.distance_squared_to(e.prev_pos) > 0.04
+	var target_yaw := atan2(e.facing.x, e.facing.y)
+	var was_yaw: float = r.yaw
+	r.yaw = lerp_angle(r.yaw, target_yaw, minf(1.0, delta * TURN_SPEED))
+	r.node.rotation.y = r.yaw
 	if r.naval:
 		r.node.position.y = terrain.WATER_LEVEL
 		r.body.rotation.z = sin(now * 1.3 + e.id) * 0.05
 	elif r.fly > 0.0:
-		r.body.position.y = r.fly + sin(now * 2.0 + e.id) * 0.08
-	var target_yaw := atan2(e.facing.x, e.facing.y)
-	r.yaw = lerp_angle(r.yaw, target_yaw, minf(1.0, delta * TURN_SPEED))
-	r.node.rotation.y = r.yaw
-	var moving: bool = e.pos.distance_squared_to(e.prev_pos) > 0.04
+		_sync_flight(e, r, moving, wrapf(r.yaw - was_yaw, -PI, PI) / maxf(delta, 0.001), delta, now)
 	r.moving = moving
 	if r.get("rumble", 0.0) > 0.0 and r.fly <= 0.0 and not r.naval:
 		# Engines shake the hull while driving and idle gently when parked.
@@ -303,6 +306,24 @@ func _sync_unit(e, r: Dictionary, alpha: float, delta: float, now: float) -> voi
 		_play(r, "work")
 	else:
 		_play(r, "idle")
+
+
+## Flyers bob; planes ("bank") lean into turns, and with "circle" they orbit their
+## spot slowly while idle instead of hanging in the air.
+func _sync_flight(e, r: Dictionary, moving: bool, turn_rate: float, delta: float, now: float) -> void:
+	var bob: float = sin(now * 2.0 + e.id) * 0.08
+	var lean := 0.0
+	if r.circle > 0.0:
+		r.orbit = lerpf(r.get("orbit", 0.0), 0.0 if moving else 1.0, minf(1.0, delta * 1.2))
+		var a: float = now * 0.8 + e.id
+		r.body.position = Vector3(cos(a) * r.circle * r.orbit, r.fly + bob, sin(a) * r.circle * r.orbit)
+		r.body.rotation.y = lerp_angle(0.0, -a, r.orbit)
+		lean = -0.45 * r.orbit
+	else:
+		r.body.position.y = r.fly + bob
+	if r.bank:
+		lean += clampf(-turn_rate * 0.25, -0.7, 0.7)
+		r.body.rotation.z = lerp_angle(r.body.rotation.z, lean, minf(1.0, delta * 4.0))
 
 
 ## Cities fly their crown land's flag next to the imperial one.
