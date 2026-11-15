@@ -101,7 +101,9 @@ static func landpanzer(team: Color) -> Node3D:
 	var root := Node3D.new()
 	var hull := m(Color(0.34, 0.36, 0.3), 0.55, 0.45)
 	var dark := m(Color(0.22, 0.23, 0.2), 0.5, 0.5)
-	tracks(root, 0.86, 1.36, 0.3)
+	# Moving tracks and road wheels from the vehicle kit.
+	for side in [-1.0, 1.0]:
+		Vehicles.track(root, side * 0.43, 1.36, 0.3)
 	Gear.part(root, Gear.box(Vector3(0.66, 0.26, 1.2)), hull, Vector3(0, 0.42, -0.02))
 	# Sloped glacis and rear deck.
 	Gear.part(root, Gear.box(Vector3(0.66, 0.06, 0.34)), hull, Vector3(0, 0.5, 0.6), Vector3(-0.55, 0, 0))
@@ -115,15 +117,18 @@ static func landpanzer(team: Color) -> Node3D:
 		Gear.part(root, Gear.torus(0.17, 0.19), Gear.brass(), Vector3(x, 0.72, -0.42), Vector3(0, 0, PI / 2))
 	stack(root, Vector3(-0.16, 0.8, -0.56), 0.42)
 	stack(root, Vector3(0.16, 0.8, -0.56), 0.36)
-	# Turret: drum, dome, brass rim, team band, hatch, cannon with a muzzle brake.
-	Gear.part(root, Gear.cyl(0.27, 0.2), hull, Vector3(0, 0.68, 0.08))
-	Gear.part(root, Gear.sphere(0.27, true), hull, Vector3(0, 0.78, 0.08), Vector3.ZERO, Vector3(1, 0.55, 1))
-	Gear.part(root, Gear.torus(0.26, 0.29), Gear.brass(), Vector3(0, 0.6, 0.08))
-	Gear.part(root, Gear.cyl(0.275, 0.06), Gear.mat(team), Vector3(0, 0.72, 0.08))
-	Gear.part(root, Gear.cyl(0.08, 0.04), Gear.brass(), Vector3(0.08, 0.92, 0.0))
-	Gear.part(root, Gear.cyl(0.05, 0.78), dark, Vector3(0, 0.74, 0.55), Vector3(PI / 2, 0, 0))
-	Gear.part(root, Gear.cyl(0.075, 0.12), dark, Vector3(0, 0.74, 0.96), Vector3(PI / 2, 0, 0))
-	Gear.part(root, Gear.torus(0.05, 0.075), Gear.brass(), Vector3(0, 0.74, 0.3), Vector3(PI / 2, 0, 0))
+	# Turret (it turns to its target): drum, dome, brass rim, team band, hatch,
+	# cannon with a muzzle brake.
+	var t := Vehicles.turret(root, Vector3(0, 0.6, 0.08), 2.0)
+	Gear.part(t, Gear.cyl(0.27, 0.2), hull, Vector3(0, 0.08, 0))
+	Gear.part(t, Gear.sphere(0.27, true), hull, Vector3(0, 0.18, 0), Vector3.ZERO, Vector3(1, 0.55, 1))
+	Gear.part(t, Gear.torus(0.26, 0.29), Gear.brass(), Vector3(0, 0.0, 0))
+	Gear.part(t, Gear.cyl(0.275, 0.06), Gear.mat(team), Vector3(0, 0.12, 0))
+	Gear.part(t, Gear.cyl(0.08, 0.04), Gear.brass(), Vector3(0.08, 0.32, -0.08))
+	Gear.part(t, Gear.cyl(0.05, 0.78), dark, Vector3(0, 0.14, 0.47), Vector3(PI / 2, 0, 0))
+	Gear.part(t, Gear.cyl(0.075, 0.12), dark, Vector3(0, 0.14, 0.88), Vector3(PI / 2, 0, 0))
+	Gear.part(t, Gear.torus(0.05, 0.075), Gear.brass(), Vector3(0, 0.14, 0.22), Vector3(PI / 2, 0, 0))
+	Vehicles.seal(t)
 	# Aether vents and a headlamp.
 	for x in [-0.22, 0.22]:
 		Gear.part(root, Gear.box(Vector3(0.1, 0.03, 0.06)), Gear.aether(), Vector3(x, 0.57, -0.2))
@@ -202,7 +207,8 @@ static func juggernaut(team: Color) -> Node3D:
 	var root := Node3D.new()
 	var iron := m(Color(0.18, 0.17, 0.19), 0.5, 0.55)
 	var bone := m(Color(0.86, 0.82, 0.7), 0.0, 0.7)
-	tracks(root, 0.88, 1.36, 0.3, true)
+	for side in [-1.0, 1.0]:
+		Vehicles.track(root, side * 0.44, 1.36, 0.3, true)
 	Gear.part(root, Gear.box(Vector3(0.68, 0.3, 1.18)), iron, Vector3(0, 0.44, 0))
 	# Bone ribs arching over the hull.
 	for i in 5:

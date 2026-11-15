@@ -53,7 +53,7 @@ No real lines exist yet: the first ones arrive with Age 7's roster in Phase 4. V
 - [x] **S** Scenarios
 - [x] **S** Tests
 
-## Phase 3: Shared art systems
+## Phase 3: Shared art systems ✔ done 2026-11-15
 
 Each of these is a toolkit that every age then uses. Build and gallery-test each before making content.
 
@@ -72,7 +72,7 @@ Each of these is a toolkit that every age then uses. Build and gallery-test each
 - [x] **M** Aircraft: biplane, Aether zeppelin, monoplane fighter, jet. Propellers spin (with a blur disc), jets leave contrails that stay behind in the world; planes bank into turns and, with `"circle"` in visuals.json, orbit slowly while idle. (The Lohner Aethership keeps its own model.)
 - [x] **M** Concern machines: hearse, corpse-truck, undead panzer, bone halftrack, corpse-zeppelin, bat-plane (flapping membrane wings), wraith jet (soul-green trail).
 - [x] **S** Movement feel (2026-11-15): `"accel"` in units.json (seconds to full speed) makes a vehicle pull away at a quarter speed after every stop (simulation, saved); `"turn"` in visuals.json slows how fast the hull swings round (view only; given to the existing wagons, tanks and crawlers). Wide turning circles in the pathfinder were left out: too costly for what they add. Phase 4 vehicles should set both.
-- [ ] **S** Existing machines (Landpanzer, Bone Juggernaut, crawlers) could move to the kit so their wheels and turrets come alive too.
+- [x] **S** Existing machines on the kit: the Landpanzer (moving tracks, a turning turret) and the Bone Juggernaut (moving bone tracks). The crawlers and wagons keep their baked models.
 
 ### Buildings that keep evolving (`view3d/buildings.gd`)
 - [x] **L** Ages 7–12 dressing (2026-11-15), cumulative like Ages 1–6 (`_modern_dress` in `view3d/buildings.gd`):

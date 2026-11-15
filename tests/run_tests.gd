@@ -590,6 +590,12 @@ func test_vehicle_kit() -> void:
 		for t in parts.filter(func(c): return c.has_meta("turret")):
 			check(t.get_children().filter(func(c): return c is MeshInstance3D).size() == 1, "%s turret is baked" % kind)
 		n.free()
+	# The older tanks now use the kit too.
+	for kind in ["landpanzer", "juggernaut"]:
+		var n: Node3D = Machines.build(kind, Color(0.8, 0.2, 0.2))
+		var parts: Array = n.find_children("*", "Node3D", true, false)
+		check(parts.filter(func(c): return c.has_meta("tread")).size() == 2, "%s has moving tracks" % kind)
+		n.free()
 
 
 ## Era variants: "id@N" outfits apply from Age N on, latest first; every variant
